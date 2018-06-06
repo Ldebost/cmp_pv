@@ -1,0 +1,14 @@
+{
+  "name": "cmp",
+  "version": "1.0.0",
+  "description": "",
+  "main": "cmp.js",
+  "scripts": {
+    "dev": "ws"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "local-web-server": "^2.5.2"
+  }
+}
