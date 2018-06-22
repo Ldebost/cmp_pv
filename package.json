@@ -4,11 +4,13 @@
   "description": "",
   "main": "cmp.js",
   "scripts": {
-    "dev": "ws"
+    "dev": "ws",
+    "deploy": "uglifyjs cmp.js --compress --mangle -o cmp.min.js | uglifyjs stub.js --compress --mangle -o stub.min.js"
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "local-web-server": "^2.5.2"
+    "local-web-server": "^2.5.2",
+    "uglify-js": "^3.4.1"
   }
 }

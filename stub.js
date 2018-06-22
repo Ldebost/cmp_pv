@@ -1,6 +1,6 @@
 /**
  * == STUB ==
- * Stock les messages envoyés au CMP en attendant son chargement
+ * Stock les messages envoyÃ©s au CMP en attendant son chargement
  * Doc : https://github.com/InteractiveAdvertisingBureau/GDPR-Transparency-and-Consent-Framework
  **/
 (function() {

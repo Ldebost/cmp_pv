@@ -130,18 +130,18 @@ var cmp_pv = {
 		},
 
 		getPublisherConsents: function (purposeIds, callback) {
-
+			var consent = {
+				metadata: '',
+				gdprApplies: cmp_pv.conf.gdprApplies,
+				hasGlobalScope: cmp_pv.conf.hasGlobalScope,
+				standardPurposeConsents: cmp_pv.consentString.data.purposesAllowed,
+				customPurposeConsents: cmp_pv.consentString.data.customPurposesAllowed,
+			};
+			callback(consent, true);
 		},
 
 		getVendorList: function (vendorListVersion, callback) {
-			const {vendorList} = this.store;
-			const {vendorListVersion: listVersion} = vendorList || {};
-			if (!vendorListVersion || vendorListVersion === listVersion) {
-				callback(vendorList, true);
-			}
-			else {
-				callback(null, false);
-			}
+			callback(cmp_pv.globalVendorList, (cmp_pv.globalVendorList != null));
 		},
 
 		showConsentUi: function (_, callback) {
@@ -190,6 +190,13 @@ var cmp_pv = {
 			}
 			return false;
 		},
+		loadPublisherCookie: function(){
+			var data = this.readCookie(this.publisherCookieName);
+			if("undefined" !== typeof data){
+				return cmp_pv.consentString.decodePublisherConsentData(data);
+			}
+			return false;
+		},
 		writeVendorCookie: function(){
 			var data = cmp_pv.consentString.generateVendorConsentString();
 			if(cmp_pv.conf.hasGlobalScope){
@@ -209,23 +216,11 @@ var cmp_pv = {
 		},
 		loadConsent: function(){
 			if(!this.loadVendorCookie()){
-				this.data = {
-					version: 1,
-					created: new Date(),
-					lastUpdated: new Date(),
-					cmpId: 1,
-					cmpVersion: 1,
-					consentScreen: 1,
-					consentLanguage: 'FR',
-					vendorListVersion: cmp_pv.globalVendorList.vendorListVersion,
-					purposesAllowed: [],
-					maxVendorId: null,
-					encodingType: null,
-					bitField: null,
-					defaultConsent: null,
-				};
+				cmp_pv.consentString.data = cmp_pv.consentString.generateVendorConsentData();
 			}
-
+			if(!this.loadPublisherCookie()){
+				
+			}
 		}
 	},
 
@@ -234,26 +229,36 @@ var cmp_pv = {
 		const:{
 			VERSION_BIT_OFFSET: 0,
 			VERSION_BIT_SIZE: 6,
+			CMP_ID: 1,
+			CMP_VERSION: 1,
 
 			// Version 1
 			vendor_1: [
-				{ name: 'version', type: 'int', numBits: 6},
-				{ name: 'created', type: 'date', numBits: 36 },
-				{ name: 'lastUpdated', type: 'date', numBits: 36 },
-				{ name: 'cmpId', type: 'int', numBits: 12 },
-				{ name: 'cmpVersion', type: 'int', numBits: 12 },
-				{ name: 'consentScreen', type: 'int', numBits: 6 },
-				{ name: 'consentLanguage', type: '6bitchar', numBits: 12 },
-				{ name: 'vendorListVersion', type: 'int', numBits: 12 },
-				{ name: 'purposesAllowed', type: 'bits', numBits: 24 },
-				{ name: 'maxVendorId', type: 'int', numBits: 16 },
-				{ name: 'encodingType', type: 'bool', numBits: 1 },
-				{ name: 'bitField', type: 'bits', numBits: function(obj){ return obj.maxVendorId; }, validator: function(obj){ return !obj.encodingType; } },
-				{ name: 'defaultConsent', type: 'bool', numBits: 1, validator: function(obj){ return obj.encodingType; } },
-				{ name: 'numEntries', type: 'int', numBits: 12, validator: function(obj){ return obj.encodingType; } },
+				{ name: 'version', type: 'int', numBits: 6, default: 1 },
+				{ name: 'created', type: 'date', numBits: 36, default: new Date() },
+				{ name: 'lastUpdated', type: 'date', numBits: 36, default: new Date() },
+				{ name: 'cmpId', type: 'int', numBits: 12, default: 1 },
+				{ name: 'cmpVersion', type: 'int', numBits: 12, default: 1 },
+				{ name: 'consentScreen', type: 'int', numBits: 6, default: 1 },
+				{ name: 'consentLanguage', type: '6bitchar', numBits: 12, default: 'FR' },
+				{ name: 'vendorListVersion', type: 'int', numBits: 12, default: function() { return cmp_pv.globalVendorList.vendorListVersion } },
+				{ name: 'purposesAllowed', type: 'bits', numBits: 24, default: function(){ return cmp_pv.consentString.defaultBits(0, this.numBits)} },
+				{ name: 'maxVendorId', type: 'int', numBits: 16, 
+					default: function() {
+						var maxVendorId = 1;
+						for(var i=0; i<cmp_pv.globalVendorList.vendors.length; i++){
+							if(cmp_pv.globalVendorList.vendors[i].id > maxVendorId) maxVendorId = cmp_pv.globalVendorList.vendors[i].id;
+						}
+						return maxVendorId;
+					}
+				},
+				{ name: 'encodingType', type: 'bool', numBits: 1, default: false },
+				{ name: 'bitField', type: 'bits', numBits: function(obj){ return obj.maxVendorId; }, validator: function(obj){ return !obj.encodingType; }, default: function(obj) { return cmp_pv.consentString.defaultBits(0, obj.maxVendorId);} },
+				{ name: 'defaultConsent', type: 'bool', numBits: 1, validator: function(obj){ return obj.encodingType; }, default: false },
+				{ name: 'numEntries', type: 'int', numBits: 12, validator: function(obj){ return obj.encodingType; }, default: 0 },
 			],
 			metadata_1: [
-				{ name: 'version', type: 'int', numBits: 6},
+				{ name: 'version', type: 'int', numBits: 6 },
 				{ name: 'created', type: 'date', numBits: 36 },
 				{ name: 'lastUpdated', type: 'date', numBits: 36 },
 				{ name: 'cmpId', type: 'int', numBits: 12 },
@@ -263,18 +268,18 @@ var cmp_pv = {
 				{ name: 'purposesAllowed', type: 'bits', numBits: 24 },
 			],
 			publisher_1: [
-				{ name: 'version', type: 'int', numBits: 6},
-				{ name: 'created', type: 'date', numBits: 36 },
-				{ name: 'lastUpdated', type: 'date', numBits: 36 },
-				{ name: 'cmpId', type: 'int', numBits: 12 },
-				{ name: 'cmpVersion', type: 'int', numBits: 12 },
-				{ name: 'consentScreen', type: 'int', numBits: 6 },
-				{ name: 'consentLanguage', type: '6bitchar', numBits: 12 },
-				{ name: 'vendorListVersion', type: 'int', numBits: 12 },
-				{ name: 'publisherPurposesVersion', type: 'int', numBits: 12 },
-				{ name: 'standardPurposesAllowed', type: 'bits', numBits: 24 },
-				{ name: 'numberCustomPurposes', type: 'int', numBits: 6 },
-				{ name: 'CustomPurposesBitField', type: 'bits', numBits: function(obj){ return obj.numberCustomPurposes; } },
+				{ name: 'version', type: 'int', numBits: 6, default: 1 },
+				{ name: 'created', type: 'date', numBits: 36, default: new Date() },
+				{ name: 'lastUpdated', type: 'date', numBits: 36, default: new Date() },
+				{ name: 'cmpId', type: 'int', numBits: 12, default: this.CMP_ID },
+				{ name: 'cmpVersion', type: 'int', numBits: 12, default: this.CMP_VERSION },
+				{ name: 'consentScreen', type: 'int', numBits: 6, default: 1 },
+				{ name: 'consentLanguage', type: '6bitchar', numBits: 12, default: 'FR' },
+				{ name: 'vendorListVersion', type: 'int', numBits: 12, default: function() { return cmp_pv.globalVendorList.vendorListVersion } },
+				{ name: 'publisherPurposesVersion', type: 'int', numBits: 12, default: 1 },
+				{ name: 'standardPurposesAllowed', type: 'bits', numBits: 24, default: function() { return cmp_pv.consentString.defaultBits(0, this.numBits) } },
+				{ name: 'numberCustomPurposes', type: 'int', numBits: 6, default: 0 },
+				{ name: 'CustomPurposesBitField', type: 'bits', numBits: function(obj){ return obj.numberCustomPurposes; }, default: function() { return cmp_pv.consentString.defaultBits(0, obj.numberCustomPurposes) } },
 			],
 
 			// Autres
@@ -283,7 +288,7 @@ var cmp_pv = {
 		},
 		data: {
 			bitString: "",
-			version: null,
+			version: 1,
 			created: null,
 			lastUpdated: null,
 			cmpId: null,
@@ -296,9 +301,16 @@ var cmp_pv = {
 			encodingType: null,
 			bitField: [],
 			defaultConsent: null,
+			customPurposesAllowed: []
 		},
 
 		decodeVendorConsentData: function(cookieValue){
+			return this.decodeCookieData('vendor_', cookieValue);
+		},
+		decodePublisherConsentData: function(cookieValue){
+			return this.decodeCookieData('publisher_', cookieValue);
+		},
+		decodeCookieData: function(type, cookieValue){
 			this.data.bitString = this.decodeBase64UrlSafe(cookieValue);
 			var cookieVersion = this.decodeBitsToInt(this.const.VERSION_BIT_OFFSET, this.const.VERSION_BIT_SIZE);
 			if (typeof cookieVersion !== 'number') {
@@ -306,7 +318,7 @@ var cmp_pv = {
 				return false;
 			}
 
-			this.data = this.decodeConsentData(this.const['vendor_'+cookieVersion]);
+			this.data = this.decodeConsentData(this.const[type+cookieVersion]);
 			return true;
 		},
 		generateVendorConsentMetadata: function(){
@@ -467,6 +479,24 @@ var cmp_pv = {
 			}
 			return inputBits;
 		},
+		defaultBits: function(val, numBits){
+			var obj = {};
+			for(var i=1; i<=numBits; i++){
+				obj[i] = val;
+			}
+			return obj;
+		},
+		generateConsentData: function(fields){
+			var obj = {};
+			for(var i=0; i<fields.length; i++){
+				var field = fields[i];
+				obj[field.name] = ('function' === typeof field.default)?field.default(obj):field.default;
+			}
+			return obj;
+		},
+		generateVendorConsentData: function(){
+			return this.generateConsentData(this.const['vendor_'+this.data.version]);
+		}
 	},
 
 	/** **/
