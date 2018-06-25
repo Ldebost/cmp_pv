@@ -5,7 +5,7 @@
   "main": "cmp.js",
   "scripts": {
     "dev": "ws",
-    "deploy": "uglifyjs cmp.js --compress --mangle -o cmp.min.js | uglifyjs stub.js --compress --mangle -o stub.min.js"
+    "deploy": "uglifyjs polyfills/promise.polyfill.js cmp.js --compress --mangle -o cmp.min.js | uglifyjs stub.js --compress --mangle -o stub.min.js"
   },
   "author": "",
   "license": "ISC",

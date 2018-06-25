@@ -49,30 +49,56 @@ var cmp_pv = {
 	conf:{
 		gdprApplies: true,
 		hasGlobalScope: false,
+		domain: 'paruvendu-dev.fr'
 	},
 
 	/** Commandes **/
 	commands: {
 		init: function () {
-			if(cmp_pv.ui.dom !== null) return cmp_pv.ui.show();
+			if(cmp_pv.ui.dom !== null) return cmp_pv.ui.show(true);
 
 			//
 			return Promise.all([
 				cmp_pv._fetchGlobalVendorList()
 			]).then(function(){
 				// Load consent
-				cmp_pv.cookie.loadConsent();
+				var res = cmp_pv.cookie.loadConsent();
 
 				// Create UI
 				cmp_pv.ui.dom = document.createElement('div');
-				cmp_pv.ui.dom.id = "CMP";
+				cmp_pv.ui.dom.id = "CMP_PV";
 				cmp_pv.ui.dom.style.display = 'none';
 
-				var html = ''; 
+				var css = '';
+				css += '#CMP_PV {position: fixed; bottom: 0; background: #fafafa; color: #010101; padding: 5px 10px;font-family:Tahoma, Geneva, sans-serif; font-size: 14px;box-shadow: 0px 0px 5px #949494;width: calc(100% - 20px);}';
+				css += '#CMP_PV p{margin:0;}';
+				css += '#CMP_PV a{color:#ff5457; text-decoration: underline; cursor: pointer;}';
+				css += '#CMP_PV a:hover{color:#ff3b3f; text-decoration: none;}';
+				css += '#CMP_PV button{background-color: #ff5457;font-size: 20px;font-weight: bold;color: #fff;cursor: pointer;border-radius: 2px;padding:5px; text-decoration: none;border:none;}';
+				css += '#CMP_PV button:hover{background-color: #ff3b3f;}';
+				css += '#CMP_PV #step1{display: table-row;}';
+				css += '#CMP_PV #step1>*{display: table-cell;}';
+				css += '#CMP_PV #step1>div{min-width: 280px; text-align: center;padding-left: 20px;}';
+				css += '#CMP_PV #step1>div>*{display: block;}';
+				css += '#CMP_PV #step1>div>button{width: 100%; margin: 5px 0;}';
+				css += '#CMP_PV #step2>div>ul{list-style:none; box-shadow: 0 3px 1px -2px rgba(0,0,0,.2), 0 2px 2px 0 rgba(0,0,0,.14), 0 1px 5px 0 rgba(0,0,0,.12);padding: 0;}';
+				css += '#CMP_PV #step2>div>ul>li{box-shadow: 1px 1px 2px 1px rgba(0,0,0,.2);background: #fff;max-width: 600px;}';
+				css += '#CMP_PV #step2>div>ul>li>h4::after{content:\'\\276c\'; display: block; position: absolute; right: 30px;top: 7px;font-size: 25px;transform: rotate(0.75turn);transition: all 0.5s;}';
+				css += '#CMP_PV #step2>div>ul>li>h4{padding: 14px 18px; margin:0;font-weight:normal;cursor:pointer;position:relative;}';
+				css += '#CMP_PV #step2>div>ul>li>h4:hover{background: #f9f9f9;}';
+				css += '#CMP_PV #step2>div>ul>li>p{display:none;}';
+				
+				var sheet = document.createElement('style');
+				sheet.innerHTML = css;
+				document.head.appendChild(sheet);
+				
+				var html = '';
 				html += '<div id="step1">';
 				html += '	<p>Nos partenaires et nous-mêmes utilisons différentes technologies, telles que les cookies, pour personnaliser les contenus et les publicités, proposer des fonctionnalités sur les réseaux sociaux et analyser le trafic. Merci de cliquer sur le bouton ci-dessous pour donner votre accord. Vous pouvez changer d’avis et modifier vos choix à tout moment.</p>';
-				html += '	<a href="javascript:cmp_pv.cookie.saveConsent();">J\'ACCEPTE</a>';
-				html += '	<a href="javascript:cmp_pv.ui.showStep(2);">Afficher toutes les utilisations prévues</a>';
+				html += '	<div>';
+				html += '		<button onclick="cmp_pv.cookie.saveConsent();">J\'accepte</button>';
+				html += '		<a onclick="cmp_pv.ui.showStep(2);">Afficher toutes les utilisations prévues</a>';
+				html += '	</div>';
 				html += '</div>';
 				html += '<div id="step2" style="display: none;">';
 				html += '	<div>';
@@ -95,8 +121,12 @@ var cmp_pv = {
 				document.body.appendChild(cmp_pv.ui.dom);
 
 				// ready
-				cmp_pv.cmpReady = true;
-				cmp_pv.processCommandQueue();
+				if(res){
+					cmp_pv.cmpReady = true;
+					cmp_pv.processCommandQueue();
+				}else{
+					cmp_pv.commands['showConsentUi'](null, function(){})
+				}
 			})
 		},
 
@@ -134,8 +164,8 @@ var cmp_pv = {
 				metadata: '',
 				gdprApplies: cmp_pv.conf.gdprApplies,
 				hasGlobalScope: cmp_pv.conf.hasGlobalScope,
-				standardPurposeConsents: cmp_pv.consentString.data.purposesAllowed,
-				customPurposeConsents: cmp_pv.consentString.data.customPurposesAllowed,
+				standardPurposeConsents: cmp_pv.consentString.dataPub.purposesAllowed,
+				customPurposeConsents: cmp_pv.consentString.dataPub.customPurposesAllowed,
 			};
 			callback(consent, true);
 		},
@@ -145,19 +175,19 @@ var cmp_pv = {
 		},
 
 		showConsentUi: function (_, callback) {
-			callback(cmp_pv.ui.show());
+			callback(cmp_pv.ui.show(true));
 		},
 	},
 
 	/** UI **/
 	ui: {
 		dom: null,
-		show: function(){
+		show: function(bool){
 			if(cmp_pv.ui.dom === null){
 				console.error("DOM UI is not present, please initialize ('init') before.");
 				return false;
 			}
-			cmp_pv.ui.dom.style.display = 'block';
+			cmp_pv.ui.dom.style.display = (!bool)?'none':'block';
 			return true;
 		},
 		showStep: function(step){
@@ -179,9 +209,10 @@ var cmp_pv = {
 				return parts.pop().split(';').shift();
 			}
 		},
-		writeCookie: function(name, value, maxAgeSeconds, path) {
+		writeCookie: function(name, value, maxAgeSeconds, path, domain) {
 			var maxAge = maxAgeSeconds === null ? '' : ";max-age="+maxAgeSeconds;
-			document.cookie = name+"="+value+";path="+path+maxAge;
+			var valDomain ="";// domain === null ? '' : ';domain='+domain;
+			document.cookie = name+"="+value+";path="+path+maxAge+valDomain;
 		},
 		loadVendorCookie: function(){
 			var data = this.readCookie(this.vendorCookieName);
@@ -199,28 +230,36 @@ var cmp_pv = {
 		},
 		writeVendorCookie: function(){
 			var data = cmp_pv.consentString.generateVendorConsentString();
-			if(cmp_pv.conf.hasGlobalScope){
-				
-			}else{
-				this.writeCookie(this.vendorCookieName, data, 33696000, '/');	
-			}
+			this.writeCookie(this.vendorCookieName, data, 33696000, '/', cmp_pv.conf.domain);
 		},
 		writePublisherCookie: function(){
 			var data = cmp_pv.consentString.generatePublisherConsentString();
-			this.writeCookie(this.publisherCookieName, data, 33696000, '/');
+			this.writeCookie(this.publisherCookieName, data, 33696000, '/', null);
 		},
 		saveConsent: function(){
+			// Maj dates
 			cmp_pv.consentString.data.lastUpdated = new Date();
+			cmp_pv.consentString.dataPub.lastUpdated = new Date();
+			
+			// Save cookies
 			this.writeVendorCookie();
 			this.writePublisherCookie();
+			
+			// Hide UI
+			cmp_pv.ui.show(false);
+			
+			// Process commands
+			cmp_pv.cmpReady = true;
+			cmp_pv.processCommandQueue();
 		},
 		loadConsent: function(){
-			if(!this.loadVendorCookie()){
-				cmp_pv.consentString.data = cmp_pv.consentString.generateVendorConsentData();
-			}
-			if(!this.loadPublisherCookie()){
-				
-			}
+			var resV = this.loadVendorCookie();
+			if(!resV) cmp_pv.consentString.data = cmp_pv.consentString.generateVendorConsentData();
+			
+			var resP = this.loadPublisherCookie(); 
+			if(!resP) cmp_pv.consentString.dataPub = cmp_pv.consentString.generatePublisherConsentData();
+			
+			return resV && resP;
 		}
 	},
 
@@ -237,8 +276,8 @@ var cmp_pv = {
 				{ name: 'version', type: 'int', numBits: 6, default: 1 },
 				{ name: 'created', type: 'date', numBits: 36, default: new Date() },
 				{ name: 'lastUpdated', type: 'date', numBits: 36, default: new Date() },
-				{ name: 'cmpId', type: 'int', numBits: 12, default: 1 },
-				{ name: 'cmpVersion', type: 'int', numBits: 12, default: 1 },
+				{ name: 'cmpId', type: 'int', numBits: 12, default: function(){ return cmp_pv.consentString.const.CMP_ID } },
+				{ name: 'cmpVersion', type: 'int', numBits: 12, default: function(){ return cmp_pv.consentString.const.CMP_VERSION } },
 				{ name: 'consentScreen', type: 'int', numBits: 6, default: 1 },
 				{ name: 'consentLanguage', type: '6bitchar', numBits: 12, default: 'FR' },
 				{ name: 'vendorListVersion', type: 'int', numBits: 12, default: function() { return cmp_pv.globalVendorList.vendorListVersion } },
@@ -271,15 +310,15 @@ var cmp_pv = {
 				{ name: 'version', type: 'int', numBits: 6, default: 1 },
 				{ name: 'created', type: 'date', numBits: 36, default: new Date() },
 				{ name: 'lastUpdated', type: 'date', numBits: 36, default: new Date() },
-				{ name: 'cmpId', type: 'int', numBits: 12, default: this.CMP_ID },
-				{ name: 'cmpVersion', type: 'int', numBits: 12, default: this.CMP_VERSION },
+				{ name: 'cmpId', type: 'int', numBits: 12, default: function(){ return cmp_pv.consentString.const.CMP_ID } },
+				{ name: 'cmpVersion', type: 'int', numBits: 12, default: function(){ return cmp_pv.consentString.const.CMP_VERSION } },
 				{ name: 'consentScreen', type: 'int', numBits: 6, default: 1 },
 				{ name: 'consentLanguage', type: '6bitchar', numBits: 12, default: 'FR' },
 				{ name: 'vendorListVersion', type: 'int', numBits: 12, default: function() { return cmp_pv.globalVendorList.vendorListVersion } },
 				{ name: 'publisherPurposesVersion', type: 'int', numBits: 12, default: 1 },
 				{ name: 'standardPurposesAllowed', type: 'bits', numBits: 24, default: function() { return cmp_pv.consentString.defaultBits(0, this.numBits) } },
 				{ name: 'numberCustomPurposes', type: 'int', numBits: 6, default: 0 },
-				{ name: 'CustomPurposesBitField', type: 'bits', numBits: function(obj){ return obj.numberCustomPurposes; }, default: function() { return cmp_pv.consentString.defaultBits(0, obj.numberCustomPurposes) } },
+				{ name: 'customPurposesBitField', type: 'bits', numBits: function(obj){ return obj.numberCustomPurposes; }, default: function(obj) { return cmp_pv.consentString.defaultBits(0, obj.numberCustomPurposes) } },
 			],
 
 			// Autres
@@ -300,37 +339,53 @@ var cmp_pv = {
 			maxVendorId: null,
 			encodingType: null,
 			bitField: [],
-			defaultConsent: null,
-			customPurposesAllowed: []
+			defaultConsent: null
+		},
+		
+		dataPub:{
+			bitString: "",
+			version: 1,
+			created: null,
+			lastUpdated: null,
+			cmpId: null,
+			cmpVersion: null,
+			consentScreen: null,
+			consentLanguage: null,
+			vendorListVersion: null,
+			publisherPurposesVersion: null,
+			purposesAllowed: [],
+			customPurposesAllowed: [],
+			numberCustomPurposes: null,
+			customPurposesBitField: []
 		},
 
 		decodeVendorConsentData: function(cookieValue){
-			return this.decodeCookieData('vendor_', cookieValue);
+			return this.decodeCookieData('vendor_', 'data', cookieValue);
 		},
 		decodePublisherConsentData: function(cookieValue){
-			return this.decodeCookieData('publisher_', cookieValue);
+			return this.decodeCookieData('publisher_', 'dataPub', cookieValue);
 		},
-		decodeCookieData: function(type, cookieValue){
-			this.data.bitString = this.decodeBase64UrlSafe(cookieValue);
-			var cookieVersion = this.decodeBitsToInt(this.const.VERSION_BIT_OFFSET, this.const.VERSION_BIT_SIZE);
+		decodeCookieData: function(type, varname, cookieValue){
+			this[varname].bitString = this.decodeBase64UrlSafe(cookieValue);
+			var cookieVersion = this.decodeBitsToInt(this[varname], this.const.VERSION_BIT_OFFSET, this.const.VERSION_BIT_SIZE);
 			if (typeof cookieVersion !== 'number') {
 				console.error('Could not find cookieVersion to decode');
 				return false;
 			}
 
-			this.data = this.decodeConsentData(this.const[type+cookieVersion]);
+			this[varname] = this.decodeConsentData(this.const[type+cookieVersion], this[varname]);
 			return true;
 		},
 		generateVendorConsentMetadata: function(){
-			var inputBits = this.encodeConsentData(this.const['metadata_'+this.data.version]);
+			var inputBits = this.encodeConsentData(this.const['metadata_'+this.data.version], this.data);
 			return this.encodeBase64UrlSafe(inputBits);
 		},
 		generateVendorConsentString: function(){
-			var inputBits = this.encodeConsentData(this.const['vendor_'+this.data.version]);
+			var inputBits = this.encodeConsentData(this.const['vendor_'+this.data.version], this.data);
 			return this.encodeBase64UrlSafe(inputBits);
 		},
 		generatePublisherConsentString: function(){
-			var inputBits = this.encodeConsentData(this.const['publisher_'+this.data.version]);
+			var inputBits = this.encodeConsentData(this.const['publisher_'+this.dataPub.version], this.dataPub);
 			return this.encodeBase64UrlSafe(inputBits);
 		},
 		padLeft: function(string, padding) {
@@ -346,20 +401,20 @@ var cmp_pv = {
 			}
 			return padString;
 		},
-		decodeBitsToInt: function(start, length) {
-			return parseInt(this.data.bitString.substr(start, length), 2);
+		decodeBitsToInt: function(datas, start, length) {
+			return parseInt(datas.bitString.substr(start, length), 2);
 		},
-		decodeBitsToDate: function(start, length) {
-			return new Date(this.decodeBitsToInt(start, length) * 100);
+		decodeBitsToDate: function(datas, start, length) {
+			return new Date(this.decodeBitsToInt(datas, start, length) * 100);
 		},
-		decodeBitsToBool: function(start) {
-			return parseInt(this.data.bitString.substr(start, 1), 2) === 1;
+		decodeBitsToBool: function(datas, start) {
+			return parseInt(datas.bitString.substr(start, 1), 2) === 1;
 		},
-		decode6BitCharacters: function(start, length) {
+		decode6BitCharacters: function(datas, start, length) {
 			var decoded = '';
 			var decodeStart = start;
 			while (decodeStart < start + length) {
-				decoded += String.fromCharCode(this.const.SIX_BIT_ASCII_OFFSET + this.decodeBitsToInt(decodeStart, 6));
+				decoded += String.fromCharCode(this.const.SIX_BIT_ASCII_OFFSET + this.decodeBitsToInt(datas, decodeStart, 6));
 				decodeStart += 6;
 			}
 			return decoded;
@@ -379,22 +434,22 @@ var cmp_pv = {
 
 			return bitString;
 		},
-		decodeConsentData: function(fields){
+		decodeConsentData: function(fields, datas){
 			var obj = {};
 			var start = 0;
 			for(var i=0; i<fields.length; i++){
 				var field = fields[i];
 				var length = ('function' === typeof field.numBits) ? field.numBits(obj) : field.numBits;
 				switch (field.type) {
-					case 'int':			obj[field.name] = this.decodeBitsToInt(start, length); break;
-					case 'date':		obj[field.name] = this.decodeBitsToDate(start, length); break;
-					case '6bitchar':	obj[field.name] = this.decode6BitCharacters(start, length); break;
-					case 'bool':		obj[field.name] = this.decodeBitsToBool(start); break;
+					case 'int':			obj[field.name] = this.decodeBitsToInt(datas, start, length); break;
+					case 'date':		obj[field.name] = this.decodeBitsToDate(datas, start, length); break;
+					case '6bitchar':	obj[field.name] = this.decode6BitCharacters(datas, start, length); break;
+					case 'bool':		obj[field.name] = this.decodeBitsToBool(datas, start); break;
 					case 'bits':
 						var z = 1;
 						obj[field.name] = {};
 						for (var y = start; y < start+length; y++) {
-							obj[field.name][z] = this.decodeBitsToBool(y);
+							obj[field.name][z] = this.decodeBitsToBool(datas, y);
 							z++;
 						}
 						break;
@@ -456,19 +511,19 @@ var cmp_pv = {
 				.replace(/\//g, '_')
 				.replace(/=+$/, '');
 		},
-		encodeConsentData: function(fields){
+		encodeConsentData: function(fields, datas){
 			var inputBits = "";
 			for(var i=0; i<fields.length; i++){
 				var field = fields[i];
-				if('function' === typeof field.validator && !field.validator(this.data)) continue;
-				var length = ('function' === typeof field.numBits) ? field.numBits(this.data) : field.numBits;
+				if('function' === typeof field.validator && !field.validator(datas)) continue;
+				var length = ('function' === typeof field.numBits) ? field.numBits(datas) : field.numBits;
 				switch (field.type) {
-					case 'int':			inputBits += this.encodeIntToBits(this.data[field.name], length); break;
-					case 'date':		inputBits += this.encodeDateToBits(this.data[field.name], length); break;
-					case '6bitchar':	inputBits += this.encode6BitCharacters(this.data[field.name], length); break;
-					case 'bool':		inputBits += this.encodeBoolToBits(this.data[field.name]); break;
+					case 'int':			inputBits += this.encodeIntToBits(datas[field.name], length); break;
+					case 'date':		inputBits += this.encodeDateToBits(datas[field.name], length); break;
+					case '6bitchar':	inputBits += this.encode6BitCharacters(datas[field.name], length); break;
+					case 'bool':		inputBits += this.encodeBoolToBits(datas[field.name]); break;
 					case 'bits':
-						var data = this.data[field.name];
+						var data = datas[field.name];
 						for (var y = 1; y <= length; y++) {
 							inputBits += this.encodeBoolToBits(data[y]);
 						}
@@ -496,6 +551,9 @@ var cmp_pv = {
 		},
 		generateVendorConsentData: function(){
 			return this.generateConsentData(this.const['vendor_'+this.data.version]);
+		},
+		generatePublisherConsentData: function(){
+			return this.generateConsentData(this.const['publisher_'+this.dataPub.version]);
 		}
 	},
 

@@ -4,17 +4,25 @@
     <meta charset="UTF-8">
     <script src="stub.js" type="application/javascript"></script>
 </head>
-<body>
+<body style="padding: 0; margin: 0;">
     <script>
 		window.__cmp('init');
-		// console.log("BOOd4pyOOj3e8AKABCENAjAAAAAXMAAAgAAYEBAUKgGAwAA0CAAIABgBAiAAgQ1AzAbIeGmiAAQugCFAYABAABAADAE");
-		// window.__cmp('getVendorConsents', null, function(a, b){console.log(a)});
-		// window.__cmp('getConsentData', null, function(a, b){console.log(a)});
-		// window.__cmp('showConsentUi', null, function(a, b){console.log(a)});
-		window.__cmp('getPublisherConsents', null, function(a, b){console.log(a)});
-		window.__cmp('getVendorList', null, function(a, b){console.log(a)});
+		function showResult(data){
+			console.log(data);
+			document.getElementById('res').innerHTML = JSON.stringify(data, null, 4);
+		}
     </script>
-    <script src="promise.polyfill.js" type="application/javascript" async></script>
+    <!--<script src="promise.polyfill.js" type="application/javascript" async></script>-->
     <script src="cmp.js" type="application/javascript" async></script>
+	<div>
+		<button onclick="window.__cmp('showConsentUi', null, function(a, b){showResult(a);});">showConsentUi</button>
+		<button onclick="window.__cmp('getVendorConsents', null, function(a, b){showResult(a);});">getVendorConsents</button>
+		<button onclick="window.__cmp('getConsentData', null, function(a, b){showResult(a)});">getConsentData</button>
+		<button onclick="window.__cmp('getPublisherConsents', null, function(a, b){showResult(a)});">getPublisherConsents</button>
+		<button onclick="window.__cmp('getVendorList', null, function(a, b){showResult(a)});">getVendorList</button>
+	</div>
+	<div id="res" style="white-space: pre; font-family: monospace;">
+		
+	</div>
 </body>
 </html>
