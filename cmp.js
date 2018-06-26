@@ -76,17 +76,42 @@ var cmp_pv = {
 				css += '#CMP_PV a:hover{color:#ff3b3f; text-decoration: none;}';
 				css += '#CMP_PV button{background-color: #ff5457;font-size: 20px;font-weight: bold;color: #fff;cursor: pointer;border-radius: 2px;padding:5px; text-decoration: none;border:none;}';
 				css += '#CMP_PV button:hover{background-color: #ff3b3f;}';
+				css += '#CMP_PV .switch{position: relative;display: inline-block;width: 60px;height: 16px;cursor: pointer;}';
+				css += '#CMP_PV .switch input {display:none;}';
+				css += '#CMP_PV .slider{position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; -webkit-transition: .4s; transition: .4s;border-radius: 34px;}';
+				css += '#CMP_PV .slider:before{position: absolute;content: "";height: 26px;width: 26px;left: 0;bottom: -4px;background-color: #9E9E9E;-webkit-transition: .4s;transition: .4s;border-radius: 50%;}';
+				css += '#CMP_PV input:checked + .slider{background-color: #8BC34A;}';
+				css += '#CMP_PV input:focus + .slider{box-shadow: 0 0 1px #8BC34A;}';
+				css += '#CMP_PV input:checked + .slider:before {transform: translateX(34px);}';
 				css += '#CMP_PV #step1{display: table-row;}';
 				css += '#CMP_PV #step1>*{display: table-cell;}';
 				css += '#CMP_PV #step1>div{min-width: 280px; text-align: center;padding-left: 20px;}';
 				css += '#CMP_PV #step1>div>*{display: block;}';
 				css += '#CMP_PV #step1>div>button{width: 100%; margin: 5px 0;}';
-				css += '#CMP_PV #step2>div>ul{list-style:none; box-shadow: 0 3px 1px -2px rgba(0,0,0,.2), 0 2px 2px 0 rgba(0,0,0,.14), 0 1px 5px 0 rgba(0,0,0,.12);padding: 0;}';
-				css += '#CMP_PV #step2>div>ul>li{box-shadow: 1px 1px 2px 1px rgba(0,0,0,.2);background: #fff;max-width: 600px;}';
-				css += '#CMP_PV #step2>div>ul>li>h4::after{content:\'\\276c\'; display: block; position: absolute; right: 30px;top: 7px;font-size: 25px;transform: rotate(0.75turn);transition: all 0.5s;}';
-				css += '#CMP_PV #step2>div>ul>li>h4{padding: 14px 18px; margin:0;font-weight:normal;cursor:pointer;position:relative;}';
-				css += '#CMP_PV #step2>div>ul>li>h4:hover{background: #f9f9f9;}';
-				css += '#CMP_PV #step2>div>ul>li>p{display:none;}';
+				css += '#CMP_PV #step2 .container{width: 1000px; margin:auto;}';
+				css += '#CMP_PV #step2 .container .purposes, #CMP_PV #step2 .container .vendors {list-style:none; box-shadow: 0 3px 1px -2px rgba(0,0,0,.2), 0 2px 2px 0 rgba(0,0,0,.14), 0 1px 5px 0 rgba(0,0,0,.12);padding: 0;max-width: 500px;float: left;}';
+				css += '#CMP_PV #step2 .container .purposes li{display: table;border-bottom: 1px solid rgba(0, 0, 0, 0.11);background: #fff; width: 500px;}';
+				css += '#CMP_PV #step2 .container .purposes li:last-child{border-bottom: none;}';
+				css += '#CMP_PV #step2 .container .purposes li>h4 .arrow{padding: 0 16px 0 0;width: 28px;text-align: right;}';
+				css += '#CMP_PV #step2 .container .purposes li>h4 .arrow:after{content:\'\\276c\'; font-size: 25px;transition: all 0.5s;display: inline-block;height: 40px;}';
+				css += '#CMP_PV #step2 .container .purposes li>h4{display:table-row;margin:0;font-weight:normal;cursor:pointer;}';
+				css += '#CMP_PV #step2 .container .purposes li>h4:hover{background: #f9f9f9;}';
+				css += '#CMP_PV #step2 .container .purposes li>h4>span{display: table-cell;padding: 14px 18px;}';
+				css += '#CMP_PV #step2 .container .purposes li>h4>label{display: table-cell;border-top: 14px solid transparent;border-bottom: 14px solid transparent;}';
+				css += '#CMP_PV #step2 .container .purposes li>div{display:none;position: absolute;left: 500px;top: 0px;height: 100%;width: calc(100% - 500px);}';
+				css += '#CMP_PV #step2 .container .purposes li.active>h4{background: #F44336;color: white;}';
+				css += '#CMP_PV #step2 .container .purposes li.active>div{display:block;}';
+				css += '#CMP_PV #step2 .container .purposes li.active>h4 .arrow::after{transform: rotate(0.5turn);}';
+				css += '#CMP_PV #step2 .container .vendors{height: 250px;overflow: hidden; overflow-y: auto;background: white;}';
+				css += '#CMP_PV #step2 .container .vendors li{padding: 2px 5px;}';
+				css += '#CMP_PV #step2 .container .vendors li>span{display:inline-block; width: 80%;}';
+				css += '#CMP_PV #step2 .container .vendors li .switch{height: 10px;width: 52px;}';
+				css += '#CMP_PV #step2 .container .vendors li .slider:before{height: 18px; width: 18px;}';
+				css += '#CMP_PV #step2 .container .vendors.pid1 li:not(.pid1){display: none;}';
+				css += '#CMP_PV #step2 .container .vendors.pid2 li:not(.pid2){display: none;}';
+				css += '#CMP_PV #step2 .container .vendors.pid3 li:not(.pid3){display: none;}';
+				css += '#CMP_PV #step2 .container .vendors.pid4 li:not(.pid4){display: none;}';
+				css += '#CMP_PV #step2 .container .vendors.pid5 li:not(.pid5){display: none;}';
 				
 				var sheet = document.createElement('style');
 				sheet.innerHTML = css;
@@ -104,13 +129,19 @@ var cmp_pv = {
 				html += '	<div>';
 				html += '		<a href="javascript:cmp_pv.ui.showStep(1);">&lsaquo; Retour</a>';
 				html += '	</div>';
-				html += '	<div>';
-				html += '		<ul>';
+				html += '	<div class="container">';
+				html += '		<ul class="purposes">';
 				for(var i = 0; i<cmp_pv.globalVendorList.purposes.length; i++){
-					html += '			<li>';
-					html += '				<h4>'+ cmp_pv.globalVendorList.purposes[i].name +'</h4>';
-					html += '				<p>'+ cmp_pv.globalVendorList.purposes[i].description +'</p>';
-					html += '			</li>';
+					var vendor = cmp_pv.globalVendorList.purposes[i];
+					html += '		<li id="purpose_'+vendor.id+'" onclick="cmp_pv.ui.showPurpose('+vendor.id+');">';
+					html += '			<h4><span>'+ vendor.name +'</span><label class="switch"><input type="checkbox" onchange="cmp_pv.ui.switchPurpose('+vendor.id+', this.checked);"><span class="slider"></span></label><span class="arrow"></span></h4>';
+					// html += '				<div>'+ vendor.description +'</div>';
+					html += '		</li>';
+				}
+				html += '		</ul>';
+				html += '		<ul id="vendors" class="vendors">';
+				for(var y=0; y<cmp_pv.globalVendorList.vendors.length; y++){
+					html += '		<li data-id="" class="pid'+cmp_pv.globalVendorList.vendors[y].purposeIds.join(' pid')+'"><span>'+cmp_pv.globalVendorList.vendors[y].name+'</span><label class="switch"><input type="checkbox"><span class="slider"></span></label></li>';
 				}
 				html += '		</ul>';
 				html += '	</div>';
@@ -193,6 +224,18 @@ var cmp_pv = {
 		showStep: function(step){
 			for(var i = 1; i<4; i++){
 				document.getElementById('step'+i).style.display = (i === step)?'block':'none';
+			}
+		},
+		showPurpose: function(purpose){
+			for(var i = 1; i<=5; i++){
+				document.getElementById('purpose_'+i).className = (i === purpose)?'active':'';
+			}
+			document.getElementById('vendors').className = 'vendors pid'+purpose;
+		},
+		switchPurpose: function(purpose, checked){
+			var matches = document.querySelectorAll("#vendors .pid"+purpose+" input");
+			for (var i = 0; i < matches.length; i++) {
+				matches[i].checked = checked;
 			}
 		}
 	},

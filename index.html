@@ -11,8 +11,9 @@
 			console.log(data);
 			document.getElementById('res').innerHTML = JSON.stringify(data, null, 4);
 		}
+		window.__cmp('showConsentUi', null, function(){});
     </script>
-    <!--<script src="promise.polyfill.js" type="application/javascript" async></script>-->
+    <script src="polyfills/promise.polyfill.js" type="application/javascript" async></script>
     <script src="cmp.js" type="application/javascript" async></script>
 	<div>
 		<button onclick="window.__cmp('showConsentUi', null, function(a, b){showResult(a);});">showConsentUi</button>
