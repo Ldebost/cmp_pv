@@ -72,9 +72,9 @@ var cmp_pv = {
 				var css = '';
 				css += '#CMP_PV {position: fixed; bottom: 0; background: #fafafa; color: #010101; padding: 5px 10px;font-family:Tahoma, Geneva, sans-serif; font-size: 14px;box-shadow: 0px 0px 5px #949494;width: calc(100% - 20px);}';
 				css += '#CMP_PV p{margin:0;}';
-				css += '#CMP_PV a{color:#ff5457; text-decoration: underline; cursor: pointer;}';
+				css += '#CMP_PV a{color:#F44336; text-decoration: underline; cursor: pointer;}';
 				css += '#CMP_PV a:hover{color:#ff3b3f; text-decoration: none;}';
-				css += '#CMP_PV button{background-color: #ff5457;font-size: 20px;font-weight: bold;color: #fff;cursor: pointer;border-radius: 2px;padding:5px; text-decoration: none;border:none;}';
+				css += '#CMP_PV button{background-color: #F44336;font-size: 20px;font-weight: bold;color: #fff;cursor: pointer;border-radius: 2px;padding:5px; text-decoration: none;border:none;}';
 				css += '#CMP_PV button:hover{background-color: #ff3b3f;}';
 				css += '#CMP_PV .switch{position: relative;display: inline-block;width: 60px;height: 16px;cursor: pointer;}';
 				css += '#CMP_PV .switch input {display:none;}';
@@ -88,27 +88,29 @@ var cmp_pv = {
 				css += '#CMP_PV #step1>div{min-width: 280px; text-align: center;padding-left: 20px;}';
 				css += '#CMP_PV #step1>div>*{display: block;}';
 				css += '#CMP_PV #step1>div>button{width: 100%; margin: 5px 0;}';
-				css += '#CMP_PV #step2 .container{width: 1000px; margin:auto;}';
+				css += '#CMP_PV #step2 .container{width: 1000px; margin:10px auto;}';
 				css += '#CMP_PV #step2 .container:after{content:\'\';display:block;clear:both;}';
-				css += '#CMP_PV #step2 .container .purposes, #CMP_PV #step2 .container .vendors {list-style:none; box-shadow: 0 3px 1px -2px rgba(0,0,0,.2), 0 2px 2px 0 rgba(0,0,0,.14), 0 1px 5px 0 rgba(0,0,0,.12);padding: 0;max-width: 500px;float: left;}';
-				css += '#CMP_PV #step2 .container .purposes li{display: table;border-bottom: 1px solid rgba(0, 0, 0, 0.11);background: #fff; width: 500px;}';
+				css += '#CMP_PV #step2 .container .purposes, #CMP_PV #step2 .container .vendors {list-style:none; box-shadow: 0 3px 1px -2px rgba(0,0,0,.2), 0 2px 2px 0 rgba(0,0,0,.14), 0 1px 5px 0 rgba(0,0,0,.12);padding: 0;max-width: 500px;float: left;margin:0;}';
+				css += '#CMP_PV #step2 .container .purposes li{display: table;border-bottom: 1px solid rgba(0, 0, 0, 0.11);background: #3c3c3c; width: 500px;color: white;}';
 				css += '#CMP_PV #step2 .container .purposes li:last-child{border-bottom: none;}';
+				css += '#CMP_PV #step2 .container .purposes li>h4 .title{border-left: 3px solid transparent;}';
 				css += '#CMP_PV #step2 .container .purposes li>h4 .arrow{padding: 0 16px 0 0;width: 28px;text-align: right;}';
 				css += '#CMP_PV #step2 .container .purposes li>h4 .arrow:after{content:\'\\276c\'; font-size: 25px;transition: all 0.5s;display: inline-block;height: 40px;}';
-				css += '#CMP_PV #step2 .container .purposes li>h4{display:table-row;margin:0;font-weight:normal;cursor:pointer;}';
-				css += '#CMP_PV #step2 .container .purposes li>h4:hover{background: #f9f9f9;}';
+				css += '#CMP_PV #step2 .container .purposes li>h4{display:table-row;margin:0;font-weight:normal;cursor:pointer;height: 46px;}';
+				css += '#CMP_PV #step2 .container .purposes li>h4:hover{background: #5f5f5f;}';
 				css += '#CMP_PV #step2 .container .purposes li>h4>span{display: table-cell;padding: 14px 18px;vertical-align: middle;}';
 				css += '#CMP_PV #step2 .container .purposes li>h4>label{display: table-cell;border-top: 14px solid transparent;border-bottom: 14px solid transparent;}';
 				css += '#CMP_PV #step2 .container .purposes li>div{display:none;position: absolute;left: 500px;top: 0px;height: 100%;width: calc(100% - 500px);}';
-				css += '#CMP_PV #step2 .container .purposes li.active>h4{background: #F44336;color: white;}';
-				css += '#CMP_PV #step2 .container .purposes li.active>div{display:block;}';
+				css += '#CMP_PV #step2 .container .purposes li.active>h4 .title{border-left: 3px solid #F44336;}';
 				css += '#CMP_PV #step2 .container .purposes li.active>h4 .arrow::after{transform: rotate(0.5turn);}';
-				css += '#CMP_PV #step2 .container .vendors{height: 250px;overflow: hidden; overflow-y: auto;background: white;}';
+				css += '#CMP_PV #step2 .container .vendors{height: 234px;overflow: hidden; overflow-y: auto;background: white;}';
+				css += '#CMP_PV #step2 .container .vendors ul{list-style:none;}';
 				css += '#CMP_PV #step2 .container .vendors li{padding: 2px 5px;}';
 				css += '#CMP_PV #step2 .container .vendors li>span{display:inline-block; width: 80%;}';
 				css += '#CMP_PV #step2 .container .vendors li .switch{height: 10px;width: 52px;}';
 				css += '#CMP_PV #step2 .container .vendors li .slider{height: 10px;}';
 				css += '#CMP_PV #step2 .container .vendors li .slider:before{height: 18px; width: 18px;}';
+				css += '#CMP_PV #step2 .container .vendors .purposes_desc{margin:0; padding:2px;background:#F44336;color:white;font-size: 12px;text-align: justify;}';
 				css += '#CMP_PV #step2 .container .vendors.pid1 li:not(.pid1){display: none;}';
 				css += '#CMP_PV #step2 .container .vendors.pid2 li:not(.pid2){display: none;}';
 				css += '#CMP_PV #step2 .container .vendors.pid3 li:not(.pid3){display: none;}';
@@ -136,17 +138,24 @@ var cmp_pv = {
 				for(var i = 0; i<cmp_pv.globalVendorList.purposes.length; i++){
 					var purpose = cmp_pv.globalVendorList.purposes[i];
 					html += '		<li id="purpose_'+purpose.id+'" onclick="cmp_pv.ui.showPurpose('+purpose.id+');">';
-					html += '			<h4><span>'+ purpose.name +'</span><label class="switch"><input type="checkbox" onchange="cmp_pv.ui.switchPurpose('+purpose.id+', this.checked);"' +((cmp_pv.consentString.data.purposesAllowed[purpose.id])?'checked':'')+'><span class="slider"></span></label><span class="arrow"></span></h4>';
-					// html += '				<div>'+ purpose.description +'</div>';
+					html += '			<h4><span class="title">'+ cmp_pv.ui.language['fr'].purposes[purpose.id].name +'</span><label class="switch"><input type="checkbox" onchange="cmp_pv.ui.switchPurpose('+purpose.id+', this.checked);"' +((cmp_pv.consentString.data.purposesAllowed[purpose.id])?'checked':'')+'><span class="slider"></span></label><span class="arrow"></span></h4>';
 					html += '		</li>';
 				}
 				html += '		</ul>';
-				html += '		<ul id="vendors" class="vendors">';
+				html += '		<div id="vendors" class="vendors">';
+				html += '			<ul class="purposes_desc">';
+				for(var z = 0; z<cmp_pv.globalVendorList.purposes.length; z++){
+					purpose = cmp_pv.globalVendorList.purposes[z];
+					html += '			<li class="pid'+purpose.id+'">'+ cmp_pv.ui.language['fr'].purposes[purpose.id].description +'</li>';
+				}
+				html += '			</ul>';
+				html += '			<ul>';
 				for(var y=0; y<cmp_pv.globalVendorList.vendors.length; y++){
 					var vendor = cmp_pv.globalVendorList.vendors[y];
-					html += '		<li class="pid'+vendor.purposeIds.join(' pid')+'"><span>'+vendor.name+'</span><label class="switch"><input type="checkbox" value="'+vendor.id+'" '+((cmp_pv.consentString.data.bitField[vendor.id])?'checked':'')+'><span class="slider"></span></label></li>';
+					html += '			<li class="pid'+vendor.purposeIds.join(' pid')+'"><span>'+vendor.name+'</span><label class="switch"><input type="checkbox" value="'+vendor.id+'" '+((cmp_pv.consentString.data.bitField[vendor.id])?'checked':'')+'><span class="slider"></span></label></li>';
 				}
-				html += '		</ul>';
+				html += '			</ul>';
+				html += '		</div>';
 				html += '	</div>';
 				html += '</div>';
 				html += '<div id="step3" style="display: none;">';
@@ -154,6 +163,9 @@ var cmp_pv = {
 				cmp_pv.ui.dom.innerHTML = html;
 				document.body.appendChild(cmp_pv.ui.dom);
 
+				// Select first
+				cmp_pv.ui.showPurpose(1);
+				
 				// ready
 				if(res){
 					cmp_pv.cmpReady = true;
@@ -165,23 +177,35 @@ var cmp_pv = {
 		},
 
 		getVendorConsents: function (vendorIds, callback) {
+			var vendorList = {};
+			if (vendorIds && vendorIds.length) {
+				for(var i = 0; i<vendorIds.length; i++){
+					vendorList[vendorIds[i]] = !!cmp_pv.consentString.data.bitField[vendorIds[i]];
+				}
+			}else{
+				vendorList = cmp_pv.consentString.data.bitField;
+			}
 			var consent = {
 				metadata: cmp_pv.consentString.generateVendorConsentMetadata(),
 				gdprApplies: cmp_pv.conf.gdprApplies,
 				hasGlobalScope: cmp_pv.conf.hasGlobalScope,
 				purposeConsents: cmp_pv.consentString.data.purposesAllowed,
-				vendorConsents: cmp_pv.consentString.data.bitField,
+				vendorConsents: vendorList,
 			};
 
 			callback(consent, true);
 		},
 
 		getConsentData: function (consentStringVersion, callback) {
-			var consent = {
-				consentData: cmp_pv.consentString.generateVendorConsentString(),
-				gdprApplies: cmp_pv.conf.gdprApplies,
-				hasGlobalScope: cmp_pv.conf.hasGlobalScope,
-			};
+			if(!consentStringVersion) consentStringVersion = 1;
+			var consent = null;
+			if(typeof cmp_pv.consentString.const['vendor_'+consentStringVersion] !== 'undefined'){
+				consent = {
+					consentData: cmp_pv.consentString.generateVendorConsentString(),
+					gdprApplies: cmp_pv.conf.gdprApplies,
+					hasGlobalScope: cmp_pv.conf.hasGlobalScope,
+				};
+			}
 			callback(consent, true);
 		},
 
@@ -194,12 +218,24 @@ var cmp_pv = {
 		},
 
 		getPublisherConsents: function (purposeIds, callback) {
+			var standard = {};
+			var custom = {};
+			if (purposeIds && purposeIds.length) {
+				var maxStandard = Object.keys(cmp_pv.consentString.dataPub.standardPurposesAllowed).length;
+				for(var i = 0; i<purposeIds.length; i++){
+					if(purposeIds[i]<=maxStandard) standard[purposeIds[i]] = !!cmp_pv.consentString.dataPub.standardPurposesAllowed[purposeIds[i]];
+					else custom[purposeIds[i]] = !!cmp_pv.consentString.dataPub.customPurposesBitField[purposeIds[i]];
+				}
+			}else{
+				standard = cmp_pv.consentString.dataPub.standardPurposesAllowed;
+				custom = cmp_pv.consentString.dataPub.customPurposesBitField;
+			}
 			var consent = {
 				metadata: '',
 				gdprApplies: cmp_pv.conf.gdprApplies,
 				hasGlobalScope: cmp_pv.conf.hasGlobalScope,
-				standardPurposeConsents: cmp_pv.consentString.dataPub.purposesAllowed,
-				customPurposeConsents: cmp_pv.consentString.dataPub.customPurposesAllowed,
+				standardPurposeConsents: standard,
+				customPurposeConsents: custom,
 			};
 			callback(consent, true);
 		},
@@ -237,10 +273,38 @@ var cmp_pv = {
 		},
 		switchPurpose: function(purpose, checked){
 			cmp_pv.consentString.data.purposesAllowed[purpose] = checked;
+			cmp_pv.consentString.dataPub.standardPurposesAllowed[purpose] = checked;
 			var matches = document.querySelectorAll("#vendors .pid"+purpose+" input");
 			for (var i = 0; i < matches.length; i++) {
 				cmp_pv.consentString.data.bitField[matches[i].value] = checked;
 				matches[i].checked = checked;
+			}
+		},
+		// https://vendorlist.consensu.org/purposes-fr.json
+		language: {
+			'fr':{
+				"purposes": {
+					1: {
+						"name": "Conservation et acc\u00e8s aux informations ",
+						"description": "La conservation d\u2019informations ou l\u2019acc\u00e8s \u00e0 des informations d\u00e9j\u00e0 conserv\u00e9es sur votre appareil, par exemple des identifiants publicitaires, des identifiants de l\u2019appareil, des cookies et des technologies similaires."
+					}, 
+					2: {
+						"name": "Personnalisation",
+						"description": "Collecte et traitement d\u2019informations relatives \u00e0 votre utilisation de ce service afin de vous adresser ult\u00e9rieurement des publicit\u00e9s et/ou du contenu personnalis\u00e9s dans d\u2019autres contextes, par exemple sur d\u2019autres sites ou applications. En g\u00e9n\u00e9ral, le contenu du site ou de l\u2019application est utilis\u00e9 pour faire des d\u00e9ductions concernant vos int\u00e9r\u00eats, ce qui sera utile dans le cadre de s\u00e9lections ult\u00e9rieures de publicit\u00e9 et/ou de contenu."
+					}, 
+					3: {
+						"name": "S\u00e9lection, diffusion et signalement de publicit\u00e9s",
+						"description": "Collecte d\u2019informations qui sont en suite associ\u00e9es \u00e0 celles rassembl\u00e9es pr\u00e9c\u00e9demment, afin de s\u00e9lectionner et diffuser des publicit\u00e9s \u00e0 votre \u00e9gard, puis \u00e9valuer leur diffusion ainsi que leur efficacit\u00e9. Cela comprend : le fait d\u2019utiliser des informations collect\u00e9es pr\u00e9c\u00e9demment relativement \u00e0 vos int\u00e9r\u00eats afin de s\u00e9lectionner des publicit\u00e9s ; le traitement de donn\u00e9es indiquant quelles publicit\u00e9s ont \u00e9t\u00e9 affich\u00e9es et \u00e0 quelle fr\u00e9quence, \u00e0 quel moment et o\u00f9 elles ont \u00e9t\u00e9 affich\u00e9es ; et le fait de savoir si vous avez r\u00e9agi par rapport auxdites publicit\u00e9s, par exemple si vous avez cliqu\u00e9 dessus ou effectu\u00e9 un achat. Cela ne comprend pas la Personnalisation qui consiste en la collecte et le traitement d\u2019informations relatives \u00e0 votre utilisation de ce service afin de vous adresser ult\u00e9rieurement des publicit\u00e9s et/ou du contenu personnalis\u00e9s dans d\u2019autres contextes, par exemple sur des sites ou applications."
+					}, 
+					4: {
+						"name": "S\u00e9lection, diffusion et signalement de contenu",
+						"description": "La collecte d\u2019informations que l\u2019on associe \u00e0 celles rassembl\u00e9es pr\u00e9c\u00e9demment afin de s\u00e9lectionner et diffuser des contenus \u00e0 votre \u00e9gard, puis \u00e9valuer leur diffusion ainsi que leur efficacit\u00e9. Cela comprend : le fait d\u2019utiliser des informations collect\u00e9es pr\u00e9c\u00e9demment relativement \u00e0 vos int\u00e9r\u00eats afin de s\u00e9lectionner du contenu ; le traitement de donn\u00e9es indiquant quel contenu a \u00e9t\u00e9 affich\u00e9, \u00e0 quelle fr\u00e9quence, pendant combien de temps, \u00e0 quel moment et o\u00f9 il a \u00e9t\u00e9 affich\u00e9 ; et le fait de savoir si vous avez r\u00e9agi par rapport audit contenu, par exemple si vous cliqu\u00e9 dessus. Cela ne comprend pas la Personnalisation qui consiste en la collecte et le traitement d\u2019informations relatives \u00e0 votre utilisation de ce service afin de vous adresser, ult\u00e9rieurement du contenu et/ou des publicit\u00e9s personnalis\u00e9s dans d\u2019autres contextes, par exemple sur des sites ou applications."
+					}, 
+					5: {
+						"name": "\u00c9valuation",
+						"description": "La collecte d\u2019informations relatives \u00e0 votre utilisation du contenu et association desdites informations avec celles pr\u00e9c\u00e9demment collect\u00e9es afin d\u2019\u00e9valuer, de comprendre et de rendre compte de la fa\u00e7on dont vous utilisez le service. Cela ne comprend pas la Personnalisation, la collecte d\u2019informations relatives \u00e0 votre utilisation de ce service afin de vous adresser ult\u00e9rieurement du contenu et/ou des publicit\u00e9s personnalis\u00e9s dans d\u2019autres contextes, c\u2019est-\u00e0-dire sur d\u2019autres services, tels que des sites ou des applications."
+					}
+				}
 			}
 		}
 	},
@@ -401,8 +465,7 @@ var cmp_pv = {
 			consentLanguage: null,
 			vendorListVersion: null,
 			publisherPurposesVersion: null,
-			purposesAllowed: [],
-			customPurposesAllowed: [],
+			standardPurposesAllowed: [],
 			numberCustomPurposes: null,
 			customPurposesBitField: []
 		},
