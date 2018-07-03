@@ -2,22 +2,78 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+	<style>
+		body{
+			padding: 0; 
+			margin: 0;
+		}
+		#menu {
+			background: #333;
+			font-size: 0;
+		}
+		#menu button{
+			padding: 14px 16px;
+			background: transparent;
+			color: white;
+			border: none;
+			cursor: pointer;
+			outline: 0;
+		}
+		#menu button:hover:not(.active){
+			background-color: #000;
+		}
+		#menu button.active{
+			background-color: #4CAF50;
+		}
+		#API{
+			background: #f2f2f2;
+			font-size: 0;
+			border-bottom: 1px solid #bfbfbf;
+		}
+		#API button{
+			background: #e7e7e7;
+			padding: 14px 16px;
+			color: #292929;
+			border: none;
+			cursor: pointer;
+			border-right: 1px solid #bfbfbf;
+			height: 43px;
+		}
+		#API button:hover{
+			background: #dcdcdc;
+		}
+		#Iframe, #ifrCall{
+			border: 0;
+			width: 100%;
+			height: 44px;
+		}
+	</style>
     <script src="stub.js" type="application/javascript"></script>
 </head>
-<body style="padding: 0; margin: 0;">
+<body>
     <script>
 		window.__cmp('init');
 		function showResult(data){
 			console.log(data);
 			document.getElementById('res').innerHTML = JSON.stringify(data, null, 4);
 		}
+		function showTab(tab){
+			var not = (tab === 'API')?'Iframe':'API';
+			document.getElementById(not).style.display = 'none';
+			document.getElementById(not+'menu').className = '';
+			document.getElementById(tab).style.display = 'block';
+			document.getElementById(tab+'menu').className = 'active';
+		}
 		window.__cmp('showConsentUi', null, function(){});
     </script>
-    <script src="polyfills/promise.polyfill.js" type="application/javascript" async></script>
-    <script src="cmp.js" type="application/javascript" async></script>
-    <!--<script src="cmp.min.js" type="application/javascript" async></script>-->
-	<div>
+    
+	<div id="menu">
+		<button id="APImenu" onclick="showTab('API');" class="active">API</button>
+		<button id="Iframemenu" onclick="showTab('Iframe');">iframe</button>
+	</div>
+	<div id="API">
 		<button onclick="window.__cmp('showConsentUi', null, function(a, b){showResult(a);});">showConsentUi</button>
+		<button onclick="window.__cmp('ping', null, function(a, b){showResult(a);});">ping</button>
 		<button onclick="window.__cmp('getVendorConsents', null, function(a, b){showResult(a);});">getVendorConsents</button>
 		<button onclick="window.__cmp('getVendorConsents', [1,2,3,4,5,1000], function(a, b){showResult(a);});">getVendorConsents [1,2,3,4,5,1000]</button>
 		<button onclick="window.__cmp('getConsentData', null, function(a, b){showResult(a)});">getConsentData</button>
@@ -25,7 +81,16 @@
 		<button onclick="window.__cmp('getPublisherConsents', null, function(a, b){showResult(a)});">getPublisherConsents</button>
 		<button onclick="window.__cmp('getPublisherConsents', [1,2,3,40], function(a, b){showResult(a)});">getPublisherConsents [1,2,3,40]</button>
 		<button onclick="window.__cmp('getVendorList', null, function(a, b){showResult(a)});">getVendorList</button>
+		<button onclick="window.__cmp('getVendorList', 25, function(a, b){showResult(a)});">getVendorList 25</button>
+	</div>
+	<div id="Iframe" style="display: none;">
+		<iframe id="ifrCall" src="iframe.html"></iframe>
 	</div>
 	<div id="res" style="white-space: pre; font-family: monospace;"></div>
+	
+	<!-- Chargement du CMP -->
+	<script src="polyfills/promise.polyfill.js" type="application/javascript" async></script>
+    <script src="cmp.js" type="application/javascript" async></script>
+	<!--<script src="cmp.min.js" type="application/javascript" async></script>-->
 </body>
 </html>

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+	<style>
+		body{
+			padding: 0;
+			margin: 0;
+		}
+		#API{
+			background: #f2f2f2;
+			font-size: 0;
+			border-bottom: 1px solid #bfbfbf;
+		}
+		#API button{
+			background: #e7e7e7;
+			padding: 14px 16px;
+			color: #292929;
+			border: none;
+			cursor: pointer;
+			border-right: 1px solid #bfbfbf;
+			height: 43px;
+		}
+		#API button:hover{
+			background: #dcdcdc;
+		}
+	</style>
+</head>
+<body>
+	<script>
+		window.addEventListener("message", function(event) {
+			var json = typeof event.data === "string" ? JSON.parse(event.data) : event.data;
+			if(json.__cmpReturn) {
+				console.log(json);
+				window.top.document.getElementById('res').innerHTML = JSON.stringify(json.__cmpReturn.returnValue, null, 4);
+			}
+		}, false);
+		function __call(command){
+			this.callId = this.callId || 0;
+			var message = {
+				__cmpCall: {
+					callId: 'iframe:' + (++this.callId),
+					command: command
+				}
+			};
+			window.top.postMessage(message, '*');
+		}
+	</script>
+	<div id="API">
+		<button onclick="__call('showConsentUi', null, function(a, b){showResult(a);});">showConsentUi</button>
+	</div>
+</body>
+</html>
