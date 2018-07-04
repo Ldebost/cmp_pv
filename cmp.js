@@ -37,7 +37,8 @@ var cmp_pv = {
 		gdprApplies: true,
 		hasGlobalScope: false,
 		cookieDomain: 'paruvendu-dev.fr',
-		urlVendorList: 'https://vendorlist.consensu.org/vendorlist.json'
+		urlVendorList: 'https://vendorlist.consensu.org/vendorlist.json',
+		urlCookiesUsage: 'https://www.paruvendu.fr/communfo/defaultcommunfo/defaultcommunfo/infosLegales#pc',
 	},
 
 	/** Commandes **/
@@ -225,7 +226,7 @@ var cmp_pv = {
 
 				var html = '';
 				html += '<div id="step1">';
-				html += '	<p>Nos partenaires et nous-mêmes utilisons différentes technologies, telles que les cookies, pour personnaliser les contenus et les publicités, proposer des fonctionnalités sur les réseaux sociaux et analyser le trafic. Merci de cliquer sur le bouton ci-dessous pour donner votre accord. Vous pouvez changer d’avis et modifier vos choix à tout moment.</p>';
+				html += '	<p>Nos partenaires et nous-mêmes utilisons différentes technologies, telles que les cookies, pour personnaliser les contenus et les publicités, proposer des fonctionnalités sur les réseaux sociaux et analyser le trafic. Merci de cliquer sur le bouton ci-dessous pour donner votre accord. Vous pouvez changer d’avis et modifier vos choix à tout moment. <a target="_blank" href="'+cmp_pv.conf.urlCookiesUsage+'">En savoir plus.</a></p>';
 				html += '	<div>';
 				html += '		<button onclick="cmp_pv.cookie.saveConsent(true);">J\'accepte</button>';
 				html += '		<a onclick="cmp_pv.ui.showStep(2);">Afficher toutes les utilisations prévues</a>';
