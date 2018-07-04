@@ -36,12 +36,17 @@ var cmp_pv = {
 	conf:{
 		gdprApplies: true,
 		hasGlobalScope: false,
-		domain: 'paruvendu-dev.fr'
+		cookieDomain: 'paruvendu-dev.fr',
+		urlVendorList: 'https://vendorlist.consensu.org/vendorlist.json'
 	},
 
 	/** Commandes **/
 	commands: {
-		init: function () {
+		init: function (options) {
+			// Options
+			cmp_pv.conf = Object.assign(cmp_pv.conf , options);
+			
+			// Already loaded
 			if(cmp_pv.ui.dom !== null) return cmp_pv.ui.show(true);
 
 			// Load consent
@@ -143,15 +148,11 @@ var cmp_pv = {
 	/** UI **/
 	ui: {
 		dom: null,
-		create: function(){
+		create: function(it){
 			if(typeof cmp_pv.globalVendorList === 'undefined'){ 
-				Promise.all([
-					cmp_pv._fetchGlobalVendorList()
-				]).then(function() {
-					cmp_pv.ui.create();
-				}).catch(function(){
-					console.error('Can\'t fetch vendorlist');
-				})
+				cmp_pv._fetchGlobalVendorList(function() {
+					if(it < 2) cmp_pv.ui.create(++it);
+				});
 			}else{
 				if(cmp_pv.consentString.data.created === null) cmp_pv.consentString.data = cmp_pv.consentString.generateVendorConsentData();
 				if(cmp_pv.consentString.dataPub.created === null) cmp_pv.consentString.dataPub = cmp_pv.consentString.generatePublisherConsentData();
@@ -209,9 +210,15 @@ var cmp_pv = {
 				css += '#CMP_PV #step2 .container .vendors.pid4 li:not(.pid4){display: none;}';
 				css += '#CMP_PV #step2 .container .vendors.pid5 li:not(.pid5){display: none;}';
 				css += '#CMP_PV #step2 .container .vendors_list{position: absolute;top: 0;left: 0;right: 0;bottom: 0;overflow: auto;}';
-				css += '#CMP_PV #step2 .buttons>a{float: left;}';
+				css += '#CMP_PV #step2 .buttons>a{position: absolute;}';
 				css += '#CMP_PV #step2 .buttons .container{text-align: right;margin: 0px auto 10px auto;}';
-
+				css += '#CMP_PV #step2 .buttons button{font-size: 16px;padding: 5px 15px;}';
+				// Hack IE
+				if(this.detectIE()){
+					css += '#CMP_PV #step2 .container .vendors{overflow-y: auto;overflow-x: hidden;}';
+					css += '#CMP_PV #step2 .container .vendors_list{overflow: visible; width: 460px; height:280px; position: relative;margin:0;}';
+				}
+				
 				var sheet = document.createElement('style');
 				sheet.innerHTML = css;
 				document.head.appendChild(sheet);
@@ -260,14 +267,14 @@ var cmp_pv = {
 		},
 		show: function(bool){
 			if(cmp_pv.ui.dom === null) {
-				cmp_pv.ui.create();
+				cmp_pv.ui.create(0);
 			}else{
 				cmp_pv.ui.dom.style.display = (!bool)?'none':'block';	
 			}
 			return true;
 		},
 		showStep: function(step){
-			for(var i = 1; i<4; i++){
+			for(var i = 1; i<3; i++){
 				document.getElementById('step'+i).style.display = (i === step)?'block':'none';
 			}
 		},
@@ -288,6 +295,12 @@ var cmp_pv = {
 		},
 		switchVendor: function(vendor, checked){
 			cmp_pv.consentString.data.bitField[vendor] = checked;
+		},
+		detectIE: function(){
+			var ua = window.navigator.userAgent;
+			var msie = ua.indexOf('MSIE ');
+			var trident = ua.indexOf('Trident/');
+			return trident > 0 || msie > 0;
 		},
 		// https://vendorlist.consensu.org/purposes-fr.json
 		language: {
@@ -351,7 +364,7 @@ var cmp_pv = {
 		},
 		writeVendorCookie: function(){
 			var data = cmp_pv.consentString.generateVendorConsentString();
-			this.writeCookie(this.vendorCookieName, data, 33696000, '/', cmp_pv.conf.domain);
+			this.writeCookie(this.vendorCookieName, data, 33696000, '/', cmp_pv.conf.cookieDomain);
 		},
 		writePublisherCookie: function(){
 			var data = cmp_pv.consentString.generatePublisherConsentString();
@@ -686,37 +699,37 @@ var cmp_pv = {
 	},
 
 	/** **/
-	_fetchGlobalVendorList: function(){
-		return cmp_pv._fetch("https://vendorlist.consensu.org/vendorlist.json").then(function(res){
+	_fetchGlobalVendorList: function(callback){
+		cmp_pv._fetch(cmp_pv.conf.urlVendorList, function(res){
 			if (res.status === 200) {
 				cmp_pv.globalVendorList = JSON.parse(res.responseText);
 			} else {
 				console.error("Can't fetch vendorlist: %d (%s)", res.status, res.statusText);
 			}
+			callback();
 		});
 	},
 
-	_fetchPubVendorList: function(){
-		return cmp_pv._fetch("/.well-known/pubvendors.json").then(function(res){
+	_fetchPubVendorList: function(callback){
+		cmp_pv._fetch("/.well-known/pubvendors.json", function(res){
 			if (res.status === 200) {
 				cmp_pv.pubvendor = JSON.parse(res.responseText);
 			} else {
 				console.error("Can't fetch pubvendors: %d (%s)", res.status, res.statusText);
 			}
+			callback();
 		});
 	},
 
-	_fetch: function(url){
-		return new Promise(function (resolve) {
-			var xhr = new XMLHttpRequest();
-			xhr.onreadystatechange = function(){
-				if (this.readyState === XMLHttpRequest.DONE) {
-					resolve(this);
-				}
-			};
-			xhr.open("GET", url, true);
-			xhr.send();
-		});
+	_fetch: function(url, callback){
+		var xhr = new XMLHttpRequest();
+		xhr.onreadystatechange = function(){
+			if (this.readyState === XMLHttpRequest.DONE) {
+				callback(this);
+			}
+		};
+		xhr.open("GET", url, true);
+		xhr.send();
 	}
 };
 

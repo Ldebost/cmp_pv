@@ -5,7 +5,7 @@
   "main": "cmp.js",
   "scripts": {
     "dev": "ws",
-    "deploy": "uglifyjs polyfills/promise.polyfill.js cmp.js --compress --mangle -o cmp.min.js | uglifyjs stub.js --compress --mangle -o stub.min.js",
+    "deploy": "uglifyjs polyfills/base64.polyfill.js polyfills/assign.polyfill.js cmp.js --compress --mangle -o cmp.min.js | uglifyjs stub.js --compress --mangle -o stub.min.js",
     "test": "uglifyjs cmp.js --compress sequences,dead_code,conditionals,booleans,unused,if_return,join_vars --mangle toplevel --mangle-props reserved=[__cmp,init,getVendorConsents,getConsentData,ping,getPublisherConsents,getVendorList,showConsentUi,data,dataPub,version,created,lastUpdated,cmpId,cmpVersion,consentScreen,consentLanguage,vendorListVersion,purposesAllowed,maxVendorId,encodingType,bitField,defaultConsent,numEntries,vendor_1,metadata_1,publisher_1] -o cmp.min.js"
   },
   "author": "",

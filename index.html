@@ -52,7 +52,9 @@
 </head>
 <body>
     <script>
-		window.__cmp('init');
+		window.__cmp('init', {
+			urlVendorList: 'test/vendorlist.json'
+		});
 		function showResult(data){
 			console.log(data);
 			document.getElementById('res').innerHTML = JSON.stringify(data, null, 4);
@@ -89,7 +91,8 @@
 	<div id="res" style="white-space: pre; font-family: monospace;"></div>
 	
 	<!-- Chargement du CMP -->
-	<script src="polyfills/promise.polyfill.js" type="application/javascript" async></script>
+	<script src="polyfills/assign.polyfill.js" type="application/javascript" async></script>
+	<script src="polyfills/base64.polyfill.js" type="application/javascript" async></script>
     <script src="cmp.js" type="application/javascript" async></script>
 	<!--<script src="cmp.min.js" type="application/javascript" async></script>-->
 </body>
