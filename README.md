@@ -9,7 +9,7 @@ TODO :
 - [ ] Prise en compte Legitimate Interest "legIntPurposeIds"
 - [ ] Ajouter Callback après validation
 - [ ] Responsive
-- [ ] Encodage bitfield type 2
+- [x] Encodage vendorIds type range
 - [x] Lien vers la politique cookies
 - [ ] Purposes Paruvendu.fr
 - [ ] Global cookie (cmp.paruvendu.consensu.org)

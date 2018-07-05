@@ -434,10 +434,17 @@ var cmp_pv = {
 						return maxVendorId;
 					}
 				},
-				{ name: 'encodingType', type: 'bool', numBits: 1, default: false },
-				{ name: 'bitField', type: 'bits', numBits: function(obj){ return obj.maxVendorId; }, validator: function(obj){ return !obj.encodingType; }, default: function(obj) { return cmp_pv.consentString.defaultBits(0, obj.maxVendorId);} },
-				{ name: 'defaultConsent', type: 'bool', numBits: 1, validator: function(obj){ return obj.encodingType; }, default: false },
-				{ name: 'numEntries', type: 'int', numBits: 12, validator: function(obj){ return obj.encodingType; }, default: 0 },
+				{ name: 'encodingType', type: 'int', numBits: 1, default: 0 },
+				{ name: 'bitField', type: 'bits', numBits: function(obj){ return obj.maxVendorId; }, validator: function(obj){ return obj.encodingType === 0; }, default: function(obj) { return cmp_pv.consentString.defaultBits(0, obj.maxVendorId);} },
+				{ name: 'defaultConsent', type: 'bool', numBits: 1, validator: function(obj){ return obj.encodingType === 1; }, default: false },
+				{ name: 'numEntries', type: 'int', numBits: 12, validator: function(obj){ return obj.encodingType === 1; }, default: 0 },
+				{ name: 'rangeEntries', type: 'list', validator: function(obj){ return obj.encodingType === 1; }, listCount: function(obj){ return obj.numEntries; },
+					fields: [
+						{name: 'isRange', type: 'bool', numBits: 1 },
+						{name: 'startVendorId', type: 'int', numBits: 16 },
+						{name: 'endVendorId', type: 'int', numBits: 16, validator: function(obj){ return obj.isRange } }
+					]
+				}
 			],
 			metadata_1: [
 				{ name: 'version', type: 'int', numBits: 6 },
@@ -447,7 +454,7 @@ var cmp_pv = {
 				{ name: 'cmpVersion', type: 'int', numBits: 12 },
 				{ name: 'consentScreen', type: 'int', numBits: 6 },
 				{ name: 'vendorListVersion', type: 'int', numBits: 12 },
-				{ name: 'purposesAllowed', type: 'bits', numBits: 24 },
+				{ name: 'purposesAllowed', type: 'bits', numBits: 24 }
 			],
 			publisher_1: [
 				{ name: 'version', type: 'int', numBits: 6, default: 1 },
@@ -461,7 +468,7 @@ var cmp_pv = {
 				{ name: 'publisherPurposesVersion', type: 'int', numBits: 12, default: 1 },
 				{ name: 'standardPurposesAllowed', type: 'bits', numBits: 24, default: function() { return cmp_pv.consentString.defaultBits(0, this.numBits) } },
 				{ name: 'numberCustomPurposes', type: 'int', numBits: 6, default: 0 },
-				{ name: 'customPurposesBitField', type: 'bits', numBits: function(obj){ return obj.numberCustomPurposes; }, default: function(obj) { return cmp_pv.consentString.defaultBits(0, obj.numberCustomPurposes) } },
+				{ name: 'customPurposesBitField', type: 'bits', numBits: function(obj){ return obj.numberCustomPurposes; }, default: function(obj) { return cmp_pv.consentString.defaultBits(0, obj.numberCustomPurposes) } }
 			],
 
 			// Autres
@@ -482,7 +489,9 @@ var cmp_pv = {
 			maxVendorId: null,
 			encodingType: null,
 			bitField: [],
-			defaultConsent: null
+			defaultConsent: null,
+			numEntries: null,
+			rangeEntries: []
 		},
 		
 		dataPub:{
@@ -502,7 +511,23 @@ var cmp_pv = {
 		},
 
 		decodeVendorConsentData: function(cookieValue){
-			return this.decodeCookieData('vendor_', 'data', cookieValue);
+			if(this.decodeCookieData('vendor_', 'data', cookieValue) && this.data.encodingType === 1){
+				var range,i,y;
+				var consent = !this.data.defaultConsent;
+				// Initialize bitField
+				this.data.bitField = cmp_pv.consentString.defaultBits(this.data.defaultConsent, this.data.maxVendorId);
+				// Assign range value
+				for(i=0; i<this.data.rangeEntries.length; i++){
+					range = this.data.rangeEntries[i];
+					if(range.isRange){
+						for(y=range.startVendorId; y<=range.endVendorId; y++){
+							this.data.bitField[y] = consent;
+						}
+					}else{
+						this.data.bitField[range.startVendorId] = consent;	
+					}
+				}
+			}
 		},
 		decodePublisherConsentData: function(cookieValue){
 			return this.decodeCookieData('publisher_', 'dataPub', cookieValue);
@@ -515,7 +540,7 @@ var cmp_pv = {
 				return false;
 			}
 
-			this[varname] = this.decodeConsentData(this.const[type+cookieVersion], this[varname]);
+			this[varname] = this.decodeConsentData(this.const[type+cookieVersion], this[varname], 0).obj;
 			return true;
 		},
 		generateVendorConsentMetadata: function(){
@@ -523,8 +548,10 @@ var cmp_pv = {
 			return this.encodeBase64UrlSafe(inputBits);
 		},
 		generateVendorConsentString: function(){
-			var inputBits = this.encodeConsentData(this.const['vendor_'+this.data.version], this.data);
-			return this.encodeBase64UrlSafe(inputBits);
+			this.data = Object.assign(this.data, this.convertVendorsToRanges());
+			var inputBitsRange = this.encodeConsentData(this.const['vendor_'+this.data.version], Object.assign(this.data, {encodingType: 1}));
+			var inputBits = this.encodeConsentData(this.const['vendor_'+this.data.version], Object.assign(this.data, {encodingType: 0}));
+			return this.encodeBase64UrlSafe((inputBits.length>inputBitsRange.length)?inputBitsRange:inputBits);
 		},
 		generatePublisherConsentString: function(){
 			var inputBits = this.encodeConsentData(this.const['publisher_'+this.dataPub.version], this.dataPub);
@@ -576,11 +603,13 @@ var cmp_pv = {
 
 			return bitString;
 		},
-		decodeConsentData: function(fields, datas){
+		decodeConsentData: function(fields, datas, start){
 			var obj = {};
-			var start = 0;
-			for(var i=0; i<fields.length; i++){
-				var field = fields[i];
+			var i,z,y,field;
+			var totalLength = 0;
+			for(i=0; i<fields.length; i++){
+				field = fields[i];
+				if('function' === typeof field.validator && !field.validator(obj)) continue;
 				var length = ('function' === typeof field.numBits) ? field.numBits(obj) : field.numBits;
 				switch (field.type) {
 					case 'int':			obj[field.name] = this.decodeBitsToInt(datas, start, length); break;
@@ -588,21 +617,31 @@ var cmp_pv = {
 					case '6bitchar':	obj[field.name] = this.decode6BitCharacters(datas, start, length); break;
 					case 'bool':		obj[field.name] = this.decodeBitsToBool(datas, start); break;
 					case 'bits':
-						var z = 1;
+						z = 1;
 						obj[field.name] = {};
-						for (var y = start; y < start+length; y++) {
+						for (y = start; y < start+length; y++) {
 							obj[field.name][z] = this.decodeBitsToBool(datas, y);
 							z++;
+						}
+						break;
+					case 'list':
+						var listCount = field.listCount(obj);
+						length = 0;
+						obj[field.name] = [];
+						for(z=0; z<listCount; z++){
+							var decodedObj = this.decodeConsentData(field.fields, datas, start+length);
+							length+=decodedObj.length;
+							obj[field.name].push(decodedObj.obj);
 						}
 						break;
 					default:
 						console.warn("Cookie definition field found without encoder or type: %s", field.name);
 				}
-
+				totalLength += length;
 				start += length;
 			}
 
-			return obj;
+			return {obj: obj, length: totalLength};
 		},
 		encodeIntToBits: function(number, numBits) {
 			var bitString = '';
@@ -670,6 +709,11 @@ var cmp_pv = {
 							inputBits += this.encodeBoolToBits(data[y]);
 						}
 						break;
+					case 'list':
+						for(var z=0; z<datas[field.name].length; z++){
+							inputBits += this.encodeConsentData(field.fields, datas[field.name][z]); 	
+						}
+						break;
 					default:
 						console.warn("Cookie definition field found without encoder or type: %s", field.name);
 				}
@@ -696,6 +740,32 @@ var cmp_pv = {
 		},
 		generatePublisherConsentData: function(){
 			return this.generateConsentData(this.const['publisher_'+this.dataPub.version]);
+		},
+		convertVendorsToRanges: function(){
+			var range = [];
+			var rangeType = this.data.bitField[1];
+			var ranges = {false: [], true: []};
+			for (let id = 1; id <= this.data.maxVendorId; id++) {
+				if (this.data.bitField[id] === rangeType) {
+					range.push(id);
+				}
+				// Range has ended or at the end of vendors list => add range entry
+				if(this.data.bitField[id] !== rangeType || id === this.data.maxVendorId){
+					if(range.length){
+						var startVendorId = range.shift();
+						var endVendorId = range.pop();
+						range = [];
+						ranges[rangeType].push({
+							isRange: typeof endVendorId === 'number',
+							startVendorId:startVendorId,
+							endVendorId:endVendorId
+						})
+					}
+				}
+			}
+			rangeType = (ranges[true].length < ranges[false].length);
+			if(ranges[rangeType].length === 0) rangeType = !rangeType;
+			return {defaultConsent: !rangeType, rangeEntries: ranges[rangeType], numEntries: ranges[rangeType].length};
 		}
 	},
 
