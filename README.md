@@ -14,3 +14,4 @@ TODO :
 - [ ] Purposes Paruvendu.fr
 - [ ] Global cookie (cmp.paruvendu.consensu.org)
 - [ ] Stats
+- [x] Specify cookie domain

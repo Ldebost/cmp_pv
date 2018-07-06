@@ -347,7 +347,7 @@ var cmp_pv = {
 		},
 		writeCookie: function(name, value, maxAgeSeconds, path, domain) {
 			var maxAge = maxAgeSeconds === null ? '' : ";max-age="+maxAgeSeconds;
-			var valDomain ="";// domain === null ? '' : ';domain='+domain;
+			var valDomain = domain === null ? '' : ';domain='+domain;
 			document.cookie = name+"="+value+";path="+path+maxAge+valDomain;
 		},
 		loadVendorCookie: function(){
@@ -370,7 +370,7 @@ var cmp_pv = {
 		},
 		writePublisherCookie: function(){
 			var data = cmp_pv.consentString.generatePublisherConsentString();
-			this.writeCookie(this.publisherCookieName, data, 33696000, '/', null);
+			this.writeCookie(this.publisherCookieName, data, 33696000, '/', cmp_pv.conf.cookieDomain);
 		},
 		saveConsent: function(all){
 			// Maj dates
@@ -531,6 +531,7 @@ var cmp_pv = {
 						this.data.bitField[range.startVendorId] = consent;	
 					}
 				}
+				return true;
 			}
 		},
 		decodePublisherConsentData: function(cookieValue){
