@@ -39,6 +39,7 @@ var cmp_pv = {
 		cookieDomain: 'paruvendu-dev.fr',
 		urlVendorList: 'https://vendorlist.consensu.org/vendorlist.json',
 		urlCookiesUsage: 'https://www.paruvendu.fr/communfo/defaultcommunfo/defaultcommunfo/infosLegales#pc',
+		consentCallback: null
 	},
 
 	/** Commandes **/
@@ -398,6 +399,9 @@ var cmp_pv = {
 			// Process commands
 			cmp_pv.cmpReady = true;
 			cmp_pv.processCommandQueue();
+			
+			// Callback
+			if(typeof cmp_pv.conf.consentCallback === 'function') cmp_pv.conf.consentCallback(); 
 		},
 		loadConsent: function(){
 			var resV = this.loadVendorCookie();

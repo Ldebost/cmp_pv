@@ -53,7 +53,8 @@
 <body>
     <script>
 		window.__cmp('init', {
-			urlVendorList: 'test/vendorlist.json'
+			urlVendorList: 'test/vendorlist.json',
+			consentCallback: function () {console.info('Callback');}
 		});
 		function showResult(data){
 			console.log(data);

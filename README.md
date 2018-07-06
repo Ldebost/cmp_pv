@@ -7,7 +7,7 @@ TODO :
 - [ ] Vérifié tous les X jours la vendorlist
 - [x] Bug IE9
 - [ ] Prise en compte Legitimate Interest "legIntPurposeIds"
-- [ ] Ajouter Callback après validation
+- [x] Ajouter Callback après validation
 - [ ] Responsive
 - [x] Encodage vendorIds type range
 - [x] Lien vers la politique cookies
