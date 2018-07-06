@@ -211,10 +211,18 @@ var cmp_pv = {
 				css += '#CMP_PV #step2 .container .vendors.pid3 li:not(.pid3){display: none;}';
 				css += '#CMP_PV #step2 .container .vendors.pid4 li:not(.pid4){display: none;}';
 				css += '#CMP_PV #step2 .container .vendors.pid5 li:not(.pid5){display: none;}';
-				css += '#CMP_PV #step2 .container .vendors_list{position: absolute;top: 0;left: 0;right: 0;bottom: 0;overflow: auto;}';
+				css += '#CMP_PV #step2 .container .vendors_list{position: absolute;top: 59px;left: 0;right: 0;bottom: 0;overflow: auto;margin: 0;}';
 				css += '#CMP_PV #step2 .buttons>a{position: absolute;}';
 				css += '#CMP_PV #step2 .buttons .container{text-align: right;margin: 0px auto 10px auto;}';
 				css += '#CMP_PV #step2 .buttons button{font-size: 16px;padding: 5px 15px;}';
+				css += '#CMP_PV #step2 .vendors_head{position: absolute;top:0;left:0;right:0;}';
+				css += '#CMP_PV #step2 .vendors_head>div>a{display:block;float:left;width:50%;padding:5px 0;text-align: center;border-bottom: 3px solid transparent;text-decoration:none;background:#515151;color:#ededed;}';
+				css += '#CMP_PV #step2 .vendors_head>div>a.active{border-bottom: 3px solid #F44336;}';
+				css += '#CMP_PV #step2 .vendors_head>div>div{display:block;float:left;width:50%;padding:5px 0;letter-spacing: 1px;font-variant: small-caps;}';
+				css += '#CMP_PV #step2 .vendors_head>div:after{content:\'\';display:block;clear:both;}';
+				css += '#CMP_PV #step2 .vendors_head>div:nth-child(2){box-shadow: 0px 1px 2px #bfbfbf;}';
+				css += '#CMP_PV #step2 .vendors_head>div>div:first-child{padding-left: 44px;width: 61%;}';
+				css += '#CMP_PV #step2 .vendors_head>div>div:nth-child(2){width: 22%;padding-left: 41px;}';
 				// Hack IE
 				if(this.detectIE()){
 					css += '#CMP_PV #step2 .container .vendors{overflow-y: auto;overflow-x: hidden;}';
@@ -251,6 +259,16 @@ var cmp_pv = {
 				}
 				html += '		</ul>';
 				html += '		<div id="vendors" class="vendors">';
+				html += '			<div class="vendors_head">';
+				html += '				<div>';
+				html += '					<a class="active" href="#">Publicité</a>';
+				html += '					<a href="#">ParuVendu.fr</a>';
+				html += '				</div>';
+				html += '				<div>';
+				html += '					<div>Partenaire</div>';
+				html += '					<div>Statut</div>';
+				html += '				</div>';
+				html += '			</div>';
 				html += '			<ul class="vendors_list">';
 				for(var y=0; y<cmp_pv.globalVendorList.vendors.length; y++){
 					var vendor = cmp_pv.globalVendorList.vendors[y];
