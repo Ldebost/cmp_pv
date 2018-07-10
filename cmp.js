@@ -130,7 +130,7 @@ var cmp_pv = {
 
 		getVendorList: function (vendorListVersion, callback) {
 			if(vendorListVersion !== null && cmp_pv.globalVendorList.version !== vendorListVersion && (typeof vendorListVersion === 'number' /*|| vendorListVersion === '?LATEST?'*/)){
-				return cmp_pv._fetch("https://vendorlist.consensu.org/v-"+vendorListVersion+"/vendorlist.json").then(function(res){
+				return cmp_pv._fetch("https://vendorlist.consensu.org/v-"+vendorListVersion+"/vendorlist.json", function(res){
 					if (res.status === 200) {
 						callback(JSON.parse(res.responseText), true);
 					} else {
@@ -261,19 +261,23 @@ var cmp_pv = {
 				html += '		<div id="vendors" class="vendors">';
 				html += '			<div class="vendors_head">';
 				html += '				<div>';
-				html += '					<a class="active" href="#">Publicité</a>';
-				html += '					<a href="#">ParuVendu.fr</a>';
+				html += '					<a id="vendors_0" class="active" href="#" onclick="cmp_pv.ui.showVendors(0);">Publicité</a>';
+				html += '					<a id="vendors_1" href="#"  onclick="cmp_pv.ui.showVendors(1);">ParuVendu.fr</a>';
 				html += '				</div>';
 				html += '				<div>';
 				html += '					<div>Partenaire</div>';
 				html += '					<div>Statut</div>';
 				html += '				</div>';
 				html += '			</div>';
-				html += '			<ul class="vendors_list">';
+				html += '			<ul class="vendors_list" id="vendors_list_0">';
 				for(var y=0; y<cmp_pv.globalVendorList.vendors.length; y++){
 					var vendor = cmp_pv.globalVendorList.vendors[y];
 					html += '			<li class="pid'+vendor.purposeIds.join(' pid')+'"><span>'+vendor.name+'</span><label class="switch"><input type="checkbox" value="'+vendor.id+'" '+((cmp_pv.consentString.data.bitField[vendor.id])?'checked':'')+' onchange="cmp_pv.ui.switchVendor('+vendor.id+', this.checked);"><span class="slider"></span></label></li>';
 				}
+				html += '			</ul>';
+				html += '			<ul class="vendors_list" id="vendors_list_1" style="display: none;">';
+				html += '				<li class="pid1"><span>Blabla</span><label>Requis</label></li>';
+				html += '				<li class="pid1 pid2"><span>Blabla 2</span><label>Requis</label></li>';
 				html += '			</ul>';
 				html += '		</div>';
 				html += '	</div>';
@@ -303,6 +307,13 @@ var cmp_pv = {
 				document.getElementById('purpose_'+i).className = (i === purpose)?'active':'';
 			}
 			document.getElementById('vendors').className = 'vendors pid'+purpose;
+		},
+		showVendors: function(i){
+			var not = (i===1)?0:1;
+			document.getElementById('vendors_'+i).className = 'active';
+			document.getElementById('vendors_list_'+i).style.display = 'block';
+			document.getElementById('vendors_list_'+not).style.display = 'none';
+			document.getElementById('vendors_'+not).className = '';
 		},
 		switchPurpose: function(purpose, checked){
 			cmp_pv.consentString.data.purposesAllowed[purpose] = checked;
