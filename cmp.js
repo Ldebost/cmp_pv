@@ -36,7 +36,8 @@ var cmp_pv = {
 	conf:{
 		gdprApplies: true,
 		hasGlobalScope: false,
-		cookieDomain: 'paruvendu-dev.fr',
+		// cookieDomain: 'paruvendu-dev.fr',
+		cookieDomain: null,
 		urlVendorList: 'https://vendorlist.consensu.org/vendorlist.json',
 		urlCookiesUsage: 'https://www.paruvendu.fr/communfo/defaultcommunfo/defaultcommunfo/infosLegales#pc',
 		consentCallback: null
@@ -218,15 +219,15 @@ var cmp_pv = {
 				css += '#CMP_PV #step2 .vendors_head{position: absolute;top:0;left:0;right:0;}';
 				css += '#CMP_PV #step2 .vendors_head>div>a{display:block;float:left;width:50%;padding:5px 0;text-align: center;border-bottom: 3px solid transparent;text-decoration:none;background:#515151;color:#ededed;}';
 				css += '#CMP_PV #step2 .vendors_head>div>a.active{border-bottom: 3px solid #F44336;}';
-				css += '#CMP_PV #step2 .vendors_head>div>div{display:block;float:left;width:50%;padding:5px 0;letter-spacing: 1px;font-variant: small-caps;}';
+				css += '#CMP_PV #step2 .vendors_head>div>div{display:block;float:left;width:50%;padding:5px 0;letter-spacing: 1px;font-variant: small-caps;box-sizing:border-box;}';
 				css += '#CMP_PV #step2 .vendors_head>div:after{content:\'\';display:block;clear:both;}';
 				css += '#CMP_PV #step2 .vendors_head>div:nth-child(2){box-shadow: 0px 1px 2px #bfbfbf;}';
-				css += '#CMP_PV #step2 .vendors_head>div>div:first-child{padding-left: 44px;width: 61%;}';
+				css += '#CMP_PV #step2 .vendors_head>div>div:first-child{padding-left: 44px;width: 70%;}';
 				css += '#CMP_PV #step2 .vendors_head>div>div:nth-child(2){width: 22%;padding-left: 41px;}';
 				// Hack IE
 				if(this.detectIE()){
 					css += '#CMP_PV #step2 .container .vendors{overflow-y: auto;overflow-x: hidden;}';
-					css += '#CMP_PV #step2 .container .vendors_list{overflow: visible; width: 460px; height:280px; position: relative;margin:0;}';
+					css += '#CMP_PV #step2 .container .vendors_list{overflow: visible; width: 460px; height:280px;}';
 				}
 				
 				var sheet = document.createElement('style');
@@ -779,7 +780,7 @@ var cmp_pv = {
 			var range = [];
 			var rangeType = this.data.bitField[1];
 			var ranges = {false: [], true: []};
-			for (let id = 1; id <= this.data.maxVendorId; id++) {
+			for (var id = 1; id <= this.data.maxVendorId; id++) {
 				if (this.data.bitField[id] === rangeType) {
 					range.push(id);
 				}
