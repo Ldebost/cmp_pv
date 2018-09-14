@@ -36,11 +36,11 @@ var cmp_pv = {
 	conf:{
 		gdprApplies: true,
 		hasGlobalScope: false,
-		// cookieDomain: 'paruvendu-dev.fr',
-		cookieDomain: null,
+		cookieDomain: 'paruvendu.fr',
 		urlVendorList: 'https://vendorlist.consensu.org/vendorlist.json',
 		urlCookiesUsage: 'https://www.paruvendu.fr/communfo/defaultcommunfo/defaultcommunfo/infosLegales#pc',
-		consentCallback: null
+		consentCallback: null,
+		dayCheckInterval: 30
 	},
 
 	/** Commandes **/
@@ -62,6 +62,17 @@ var cmp_pv = {
 				// Ready
 				cmp_pv.cmpReady = true;
 				cmp_pv.processCommandQueue();
+				// Ask consent every X days if globalVendorList.version has changed 
+				if(parseInt((new Date() - cmp_pv.cookie.lastVerification(cmp_pv.cookie.vendorCookieName))/(24*3600*1000)) >= cmp_pv.conf.dayCheckInterval){
+					cmp_pv._fetchGlobalVendorList(function(){
+						if(cmp_pv.globalVendorList.vendorListVersion !== cmp_pv.consentString.data.vendorListVersion){
+							cmp_pv.ui.show(true);
+						}
+					});
+					
+					// Update checked time
+					cmp_pv.cookie.saveVerification(cmp_pv.cookie.vendorCookieName);
+				}
 			}
 		},
 
@@ -152,6 +163,9 @@ var cmp_pv = {
 	ui: {
 		dom: null,
 		create: function(it){
+			// Security
+			if(cmp_pv.ui.dom !== null) return cmp_pv.ui.show(true);
+			
 			if(typeof cmp_pv.globalVendorList === 'undefined'){ 
 				cmp_pv._fetchGlobalVendorList(function() {
 					if(it < 2) cmp_pv.ui.create(++it);
@@ -379,6 +393,7 @@ var cmp_pv = {
 			var maxAge = maxAgeSeconds === null ? '' : ";max-age="+maxAgeSeconds;
 			var valDomain = domain === null ? '' : ';domain='+domain;
 			document.cookie = name+"="+value+";path="+path+maxAge+valDomain;
+			this.saveVerification(name);
 		},
 		loadVendorCookie: function(){
 			var data = this.readCookie(this.vendorCookieName);
@@ -437,6 +452,13 @@ var cmp_pv = {
 			var resV = this.loadVendorCookie();
 			var resP = this.loadPublisherCookie(); 
 			return resV && resP;
+		},
+		saveVerification: function(name){
+			localStorage.setItem(name, new Date().toString());
+		},
+		lastVerification: function(name){
+			var date = localStorage.getItem(name);
+			return (date)?Date.parse(date):new Date();
 		}
 	},
 

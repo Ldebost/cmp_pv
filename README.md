@@ -3,8 +3,22 @@
 
 Démo : https://ldebost.github.io/cmp_pv/
 
+## Configuration ##
+###### gdprApplies : boolean (true|false) ######
+If GDRP applies = if in EU
+
+###### hasGlobalScope: boolean (true|false) ######
+If GDRP applies globally = global cookie
+
+###### cookieDomain: 'paruvendu.fr',  ######
+###### urlVendorList: 'https://vendorlist.consensu.org/vendorlist.json', ######
+###### urlCookiesUsage: 'https://www.paruvendu.fr/communfo/defaultcommunfo/defaultcommunfo/infosLegales#pc', ######
+###### consentCallback: null, ######
+###### dayCheckInterval: 30 ######
+
+## TODO  List ##
 TODO V1 (CMP) :
-- [ ] Vérifié tous les X jours la vendorlist
+- [x] Vérifié tous les X jours la vendorlist
 - [x] Bug IE9
 - [ ] Prise en compte Legitimate Interest "legIntPurposeIds"
 - [x] Ajouter Callback après validation
