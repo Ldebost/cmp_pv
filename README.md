@@ -4,17 +4,25 @@
 Démo : https://ldebost.github.io/cmp_pv/
 
 ## Configuration ##
-###### gdprApplies : boolean (true|false) ######
-If GDRP applies = if in EU
+| Command | Type | Description |
+| --- | --- | --- |
+| gdprApplies | boolean | Does GDRP applies (Default:true) |
+| hasGlobalScope | boolean | Store cookie globaly |
+| cookieDomain | String | Cookie domain for publisher consent string (Default: paruvendu.fr) |
+| urlVendorList | String | (Default: https://vendorlist.consensu.org/vendorlist.json) |
+| urlCookiesUsage | String | URL for cookie usage description (Default: https://www.paruvendu.fr/communfo/defaultcommunfo/defaultcommunfo/infosLegales#pc) |
+| consentCallback | Function | Function callback after consentement |
+| dayCheckInterval | Int | Number of days (Default:30) |
+| globalConsentLocation | String | URL to portal.html |
 
-###### hasGlobalScope: boolean (true|false) ######
-If GDRP applies globally = global cookie
 
-###### cookieDomain: 'paruvendu.fr',  ######
-###### urlVendorList: 'https://vendorlist.consensu.org/vendorlist.json', ######
-###### urlCookiesUsage: 'https://www.paruvendu.fr/communfo/defaultcommunfo/defaultcommunfo/infosLegales#pc', ######
-###### consentCallback: null, ######
-###### dayCheckInterval: 30 ######
+##### Example : #####
+```
+window.__cmp('init', {
+	urlVendorList: 'test/vendorlist.json',
+	consentCallback: function () {console.info('Callback');}
+});
+```
 
 ## TODO  List ##
 TODO V1 (CMP) :
@@ -26,8 +34,8 @@ TODO V1 (CMP) :
 - [x] Encodage vendorIds type range
 - [x] Lien vers la politique cookies
 - [x] Purposes Paruvendu.fr
-- [ ] Global cookie (cmp.paruvendu.consensu.org)
+- [x] Global cookie (cmp.paruvendu.consensu.org)
 - [ ] Stats
 - [x] Specify cookie domain
 
-TODO V2 (Cookie Manager):
+TODO V2 (Cookie Manager) :

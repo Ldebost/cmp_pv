@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<style>
 		body{
 			padding: 0; 
@@ -53,8 +54,10 @@
 <body>
     <script>
 		window.__cmp('init', {
+			hasGlobalScope: true,
+			cookieDomain: 'paruvendu-dev.fr',
 			urlVendorList: 'test/vendorlist.json',
-			cookieDomain: null,
+			globalConsentLocation: 'http://cmp.paruvendu.consensu.org:8000/portal.html',
 			consentCallback: function () {console.info('Callback');}
 		});
 		function showResult(data){
