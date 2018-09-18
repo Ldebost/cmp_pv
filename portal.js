@@ -1,6 +1,6 @@
 var host = (window && window.location && window.location.hostname) || '';
 var parts = host.split('.');
-var COOKIE_DOMAIN = parts.length > 1 ? ";domain=."+parts.slice(-2).join('.') : '';
+var COOKIE_DOMAIN = parts.length > 1 ? ";domain=." + parts.slice(-2).join('.') : '';
 var COOKIE_MAX_AGE = 33696000;
 var COOKIE_NAME = 'euconsent';
 
@@ -13,7 +13,7 @@ function readCookie(name) {
 }
 
 function writeCookie(obj) {
-	document.cookie = obj.name+"="+obj.value+COOKIE_DOMAIN+";path="+obj.path+";max-age="+COOKIE_MAX_AGE;
+	document.cookie = obj.name + "=" + obj.value + COOKIE_DOMAIN + ";path=" + obj.path + ";max-age=" + COOKIE_MAX_AGE;
 	return true;
 }
 
@@ -39,4 +39,4 @@ window.addEventListener('message', function(event) {
 		}, event.origin);
 	}
 });
-window.parent.postMessage({ vendorConsent: { command: 'isLoaded' } }, '*');
+window.parent.postMessage({vendorConsent: {command: 'isLoaded'}}, '*');

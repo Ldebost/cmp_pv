@@ -5,6 +5,7 @@
  **/
 (function() {
 	var gdprAppliesGlobally = false;
+
 	function addFrame() {
 		if (!window.frames['__cmpLocator']) {
 			if (document.body) {
@@ -44,12 +45,14 @@
 		if (json.__cmpCall) {
 			var i = json.__cmpCall;
 			window.__cmp(i.command, i.parameter, function(retValue, success) {
-				var returnMsg = {"__cmpReturn": {
+				var returnMsg = {
+					"__cmpReturn": {
 						"returnValue": retValue,
 						"success": success,
 						"callId": i.callId
-					}};
-				event.source.postMessage(msgIsString ?	JSON.stringify(returnMsg) : returnMsg, '*');
+					}
+				};
+				event.source.postMessage(msgIsString ? JSON.stringify(returnMsg) : returnMsg, '*');
 			});
 		}
 	}

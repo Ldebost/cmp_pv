@@ -6,34 +6,34 @@ var cmp_pv = {
 	isLoaded: false,
 	cmpReady: false,
 	commandQueue: window.__cmp.a || {},
-	processCommand: function(command, parameter, callback){
+	processCommand: function(command, parameter, callback) {
 		if (typeof cmp_pv.commands[command] !== 'function') {
 			console.error("Invalid CMP command %s,", command);
 		}
-		if(!cmp_pv.cmpReady && command !== 'init' && command !== 'ping'){
+		if (!cmp_pv.cmpReady && command !== 'init' && command !== 'ping') {
 			cmp_pv.commandQueue.push({
 				command: command,
 				parameter: parameter,
 				callback: callback
 			});
-		}else{
-			console.info("Proccess command: %s, parameter: %s", command ,parameter);
+		} else {
+			console.info("Proccess command: %s, parameter: %s", command, parameter);
 			cmp_pv.commands[command](parameter, callback);
 		}
 	},
-	processCommandQueue: function(){
+	processCommandQueue: function() {
 		var queue = this.commandQueue;
 		if (queue.length) {
 			console.info("Process %d queued commands", queue.length);
 			cmp_pv.commandQueue = [];
-			for(var i=0; i<queue.length; i++){
+			for (var i = 0; i < queue.length; i++) {
 				cmp_pv.processCommand(queue[i].command, queue[i].parameter, queue[i].callback);
 			}
 		}
 	},
 
 	/** Configuration **/
-	conf:{
+	conf: {
 		gdprApplies: true,
 		hasGlobalScope: false,
 		cookieDomain: 'paruvendu.fr',
@@ -46,26 +46,26 @@ var cmp_pv = {
 
 	/** Commandes **/
 	commands: {
-		init: function (options) {
+		init: function(options) {
 			// Options
-			cmp_pv.conf = Object.assign(cmp_pv.conf , options);
-			
+			cmp_pv.conf = Object.assign(cmp_pv.conf, options);
+
 			// Already loaded
-			if(cmp_pv.ui.dom !== null) return cmp_pv.ui.show(true);
+			if (cmp_pv.ui.dom !== null) return cmp_pv.ui.show(true);
 
 			// Load consent
-			cmp_pv.cookie.loadConsent(function(res){
+			cmp_pv.cookie.loadConsent(function(res) {
 				// Not ready
-				if(!res){
+				if (!res) {
 					cmp_pv.ui.show();
-				}else{
+				} else {
 					// Ready
 					cmp_pv.cmpReady = true;
 					cmp_pv.processCommandQueue();
 					// Ask consent every X days if globalVendorList.version has changed 
-					if(parseInt((new Date() - cmp_pv.cookie.lastVerification(cmp_pv.cookie.vendorCookieName))/(24*3600*1000)) >= cmp_pv.conf.dayCheckInterval){
-						cmp_pv._fetchGlobalVendorList(function(){
-							if(cmp_pv.globalVendorList.vendorListVersion !== cmp_pv.consentString.data.vendorListVersion){
+					if (parseInt((new Date() - cmp_pv.cookie.lastVerification(cmp_pv.cookie.vendorCookieName)) / (24 * 3600 * 1000)) >= cmp_pv.conf.dayCheckInterval) {
+						cmp_pv._fetchGlobalVendorList(function() {
+							if (cmp_pv.globalVendorList.vendorListVersion !== cmp_pv.consentString.data.vendorListVersion) {
 								cmp_pv.ui.show(true);
 							}
 						});
@@ -77,13 +77,13 @@ var cmp_pv = {
 			});
 		},
 
-		getVendorConsents: function (vendorIds, callback) {
+		getVendorConsents: function(vendorIds, callback) {
 			var vendorList = {};
 			if (vendorIds && vendorIds.length) {
-				for(var i = 0; i<vendorIds.length; i++){
+				for (var i = 0; i < vendorIds.length; i++) {
 					vendorList[vendorIds[i]] = !!cmp_pv.consentString.data.bitField[vendorIds[i]];
 				}
-			}else{
+			} else {
 				vendorList = cmp_pv.consentString.data.bitField;
 			}
 			var consent = {
@@ -97,10 +97,10 @@ var cmp_pv = {
 			callback(consent, true);
 		},
 
-		getConsentData: function (consentStringVersion, callback) {
-			if(!consentStringVersion) consentStringVersion = 1;
+		getConsentData: function(consentStringVersion, callback) {
+			if (!consentStringVersion) consentStringVersion = 1;
 			var consent = null;
-			if(typeof cmp_pv.consentString.const['vendor_'+consentStringVersion] !== 'undefined'){
+			if (typeof cmp_pv.consentString.const['vendor_' + consentStringVersion] !== 'undefined') {
 				consent = {
 					consentData: cmp_pv.consentString.generateVendorConsentString(),
 					gdprApplies: cmp_pv.conf.gdprApplies,
@@ -110,7 +110,7 @@ var cmp_pv = {
 			callback(consent, true);
 		},
 
-		ping: function (_, callback) {
+		ping: function(_, callback) {
 			var result = {
 				gdprAppliesGlobally: cmp_pv.conf.hasGlobalScope,
 				cmpLoaded: true
@@ -118,16 +118,16 @@ var cmp_pv = {
 			callback(result, true);
 		},
 
-		getPublisherConsents: function (purposeIds, callback) {
+		getPublisherConsents: function(purposeIds, callback) {
 			var standard = {};
 			var custom = {};
 			if (purposeIds && purposeIds.length) {
 				var maxStandard = Object.keys(cmp_pv.consentString.dataPub.standardPurposesAllowed).length;
-				for(var i = 0; i<=purposeIds.length; i++){
-					if(purposeIds[i]<=maxStandard) standard[purposeIds[i]] = !!cmp_pv.consentString.dataPub.standardPurposesAllowed[purposeIds[i]];
+				for (var i = 0; i <= purposeIds.length; i++) {
+					if (purposeIds[i] <= maxStandard) standard[purposeIds[i]] = !!cmp_pv.consentString.dataPub.standardPurposesAllowed[purposeIds[i]];
 					else custom[purposeIds[i]] = !!cmp_pv.consentString.dataPub.customPurposesBitField[purposeIds[i]];
 				}
-			}else{
+			} else {
 				standard = cmp_pv.consentString.dataPub.standardPurposesAllowed;
 				custom = cmp_pv.consentString.dataPub.customPurposesBitField;
 			}
@@ -141,21 +141,21 @@ var cmp_pv = {
 			callback(consent, true);
 		},
 
-		getVendorList: function (vendorListVersion, callback) {
-			if(vendorListVersion !== null && cmp_pv.globalVendorList.version !== vendorListVersion && (typeof vendorListVersion === 'number' /*|| vendorListVersion === '?LATEST?'*/)){
-				return cmp_pv._fetch("https://vendorlist.consensu.org/v-"+vendorListVersion+"/vendorlist.json", function(res){
+		getVendorList: function(vendorListVersion, callback) {
+			if (vendorListVersion !== null && cmp_pv.globalVendorList.version !== vendorListVersion && (typeof vendorListVersion === 'number' /*|| vendorListVersion === '?LATEST?'*/)) {
+				return cmp_pv._fetch("https://vendorlist.consensu.org/v-" + vendorListVersion + "/vendorlist.json", function(res) {
 					if (res.status === 200) {
 						callback(JSON.parse(res.responseText), true);
 					} else {
 						callback(null, false);
 					}
 				});
-			}else{
-				callback(cmp_pv.globalVendorList, (cmp_pv.globalVendorList != null));	
+			} else {
+				callback(cmp_pv.globalVendorList, (cmp_pv.globalVendorList != null));
 			}
 		},
 
-		showConsentUi: function (_, callback) {
+		showConsentUi: function(_, callback) {
 			callback(cmp_pv.ui.show(true));
 		},
 	},
@@ -163,18 +163,18 @@ var cmp_pv = {
 	/** UI **/
 	ui: {
 		dom: null,
-		create: function(it){
+		create: function(it) {
 			// Security
-			if(cmp_pv.ui.dom !== null) return cmp_pv.ui.show(true);
-			
-			if(typeof cmp_pv.globalVendorList === 'undefined'){ 
+			if (cmp_pv.ui.dom !== null) return cmp_pv.ui.show(true);
+
+			if (typeof cmp_pv.globalVendorList === 'undefined') {
 				cmp_pv._fetchGlobalVendorList(function() {
-					if(it < 2) cmp_pv.ui.create(++it);
+					if (it < 2) cmp_pv.ui.create(++it);
 				});
-			}else{
-				if(cmp_pv.consentString.data.created === null) cmp_pv.consentString.data = cmp_pv.consentString.generateVendorConsentData();
-				if(cmp_pv.consentString.dataPub.created === null) cmp_pv.consentString.dataPub = cmp_pv.consentString.generatePublisherConsentData();
-				
+			} else {
+				if (cmp_pv.consentString.data.created === null) cmp_pv.consentString.data = cmp_pv.consentString.generateVendorConsentData();
+				if (cmp_pv.consentString.dataPub.created === null) cmp_pv.consentString.dataPub = cmp_pv.consentString.generatePublisherConsentData();
+
 				// Create UI
 				cmp_pv.ui.dom = document.createElement('div');
 				cmp_pv.ui.dom.id = "CMP_PV";
@@ -240,18 +240,18 @@ var cmp_pv = {
 				css += '#CMP_PV #step2 .vendors_head>div>div:first-child{padding-left: 44px;width: 70%;}';
 				css += '#CMP_PV #step2 .vendors_head>div>div:nth-child(2){width: 22%;padding-left: 41px;}';
 				// Hack IE
-				if(this.detectIE()){
+				if (this.detectIE()) {
 					css += '#CMP_PV #step2 .container .vendors{overflow-y: auto;overflow-x: hidden;}';
 					css += '#CMP_PV #step2 .container .vendors_list{overflow: visible; width: 460px; height:280px;}';
 				}
-				
+
 				var sheet = document.createElement('style');
 				sheet.innerHTML = css;
 				document.head.appendChild(sheet);
 
 				var html = '';
 				html += '<div id="step1">';
-				html += '	<p>Nos partenaires et nous-mêmes utilisons différentes technologies, telles que les cookies, pour personnaliser les contenus et les publicités, proposer des fonctionnalités sur les réseaux sociaux et analyser le trafic. Merci de cliquer sur le bouton ci-dessous pour donner votre accord. Vous pouvez changer d’avis et modifier vos choix à tout moment. <a target="_blank" href="'+cmp_pv.conf.urlCookiesUsage+'">En savoir plus.</a></p>';
+				html += '	<p>Nos partenaires et nous-mêmes utilisons différentes technologies, telles que les cookies, pour personnaliser les contenus et les publicités, proposer des fonctionnalités sur les réseaux sociaux et analyser le trafic. Merci de cliquer sur le bouton ci-dessous pour donner votre accord. Vous pouvez changer d’avis et modifier vos choix à tout moment. <a target="_blank" href="' + cmp_pv.conf.urlCookiesUsage + '">En savoir plus.</a></p>';
 				html += '	<div>';
 				html += '		<button onclick="cmp_pv.cookie.saveConsent(true);">J\'accepte</button>';
 				html += '		<a onclick="cmp_pv.ui.showStep(2);">Afficher toutes les utilisations prévues</a>';
@@ -266,11 +266,11 @@ var cmp_pv = {
 				html += '	</div>';
 				html += '	<div class="container">';
 				html += '		<ul class="purposes">';
-				for(var i = 0; i<cmp_pv.globalVendorList.purposes.length; i++){
+				for (var i = 0; i < cmp_pv.globalVendorList.purposes.length; i++) {
 					var purpose = cmp_pv.globalVendorList.purposes[i];
-					html += '		<li id="purpose_'+purpose.id+'">';
-					html += '			<h4><span class="title" onclick="cmp_pv.ui.showPurpose('+purpose.id+');">'+ cmp_pv.ui.language['fr'].purposes[purpose.id].name +'</span><label class="switch"><input type="checkbox" onchange="cmp_pv.ui.switchPurpose('+purpose.id+', this.checked);"' +((cmp_pv.consentString.data.purposesAllowed[purpose.id])?'checked':'')+'><span class="slider"></span></label><span class="arrow" onclick="cmp_pv.ui.showPurpose('+purpose.id+');"></span></h4>';
-					html += '			<div><span>'+ cmp_pv.ui.language['fr'].purposes[purpose.id].description +'</span></div>';
+					html += '		<li id="purpose_' + purpose.id + '">';
+					html += '			<h4><span class="title" onclick="cmp_pv.ui.showPurpose(' + purpose.id + ');">' + cmp_pv.ui.language['fr'].purposes[purpose.id].name + '</span><label class="switch"><input type="checkbox" onchange="cmp_pv.ui.switchPurpose(' + purpose.id + ', this.checked);"' + ((cmp_pv.consentString.data.purposesAllowed[purpose.id]) ? 'checked' : '') + '><span class="slider"></span></label><span class="arrow" onclick="cmp_pv.ui.showPurpose(' + purpose.id + ');"></span></h4>';
+					html += '			<div><span>' + cmp_pv.ui.language['fr'].purposes[purpose.id].description + '</span></div>';
 					html += '		</li>';
 				}
 				html += '		</ul>';
@@ -286,9 +286,9 @@ var cmp_pv = {
 				html += '				</div>';
 				html += '			</div>';
 				html += '			<ul class="vendors_list" id="vendors_list_0">';
-				for(var y=0; y<cmp_pv.globalVendorList.vendors.length; y++){
+				for (var y = 0; y < cmp_pv.globalVendorList.vendors.length; y++) {
 					var vendor = cmp_pv.globalVendorList.vendors[y];
-					html += '			<li class="pid'+vendor.purposeIds.join(' pid')+'"><span>'+vendor.name+'</span><label class="switch"><input type="checkbox" value="'+vendor.id+'" '+((cmp_pv.consentString.data.bitField[vendor.id])?'checked':'')+' onchange="cmp_pv.ui.switchVendor('+vendor.id+', this.checked);"><span class="slider"></span></label></li>';
+					html += '			<li class="pid' + vendor.purposeIds.join(' pid') + '"><span>' + vendor.name + '</span><label class="switch"><input type="checkbox" value="' + vendor.id + '" ' + ((cmp_pv.consentString.data.bitField[vendor.id]) ? 'checked' : '') + ' onchange="cmp_pv.ui.switchVendor(' + vendor.id + ', this.checked);"><span class="slider"></span></label></li>';
 				}
 				html += '			</ul>';
 				html += '			<ul class="vendors_list" id="vendors_list_1" style="display: none;">';
@@ -305,45 +305,45 @@ var cmp_pv = {
 				cmp_pv.ui.showPurpose(1);
 			}
 		},
-		show: function(bool){
-			if(cmp_pv.ui.dom === null) {
+		show: function(bool) {
+			if (cmp_pv.ui.dom === null) {
 				cmp_pv.ui.create(0);
-			}else{
-				cmp_pv.ui.dom.style.display = (!bool)?'none':'block';	
+			} else {
+				cmp_pv.ui.dom.style.display = (!bool) ? 'none' : 'block';
 			}
 			return true;
 		},
-		showStep: function(step){
-			for(var i = 1; i<3; i++){
-				document.getElementById('step'+i).style.display = (i === step)?'block':'none';
+		showStep: function(step) {
+			for (var i = 1; i < 3; i++) {
+				document.getElementById('step' + i).style.display = (i === step) ? 'block' : 'none';
 			}
 		},
-		showPurpose: function(purpose){
-			for(var i = 1; i<=5; i++){
-				document.getElementById('purpose_'+i).className = (i === purpose)?'active':'';
+		showPurpose: function(purpose) {
+			for (var i = 1; i <= 5; i++) {
+				document.getElementById('purpose_' + i).className = (i === purpose) ? 'active' : '';
 			}
-			document.getElementById('vendors').className = 'vendors pid'+purpose;
+			document.getElementById('vendors').className = 'vendors pid' + purpose;
 		},
-		showVendors: function(i){
-			var not = (i===1)?0:1;
-			document.getElementById('vendors_'+i).className = 'active';
-			document.getElementById('vendors_list_'+i).style.display = 'block';
-			document.getElementById('vendors_list_'+not).style.display = 'none';
-			document.getElementById('vendors_'+not).className = '';
+		showVendors: function(i) {
+			var not = (i === 1) ? 0 : 1;
+			document.getElementById('vendors_' + i).className = 'active';
+			document.getElementById('vendors_list_' + i).style.display = 'block';
+			document.getElementById('vendors_list_' + not).style.display = 'none';
+			document.getElementById('vendors_' + not).className = '';
 		},
-		switchPurpose: function(purpose, checked){
+		switchPurpose: function(purpose, checked) {
 			cmp_pv.consentString.data.purposesAllowed[purpose] = checked;
 			cmp_pv.consentString.dataPub.standardPurposesAllowed[purpose] = checked;
-			var matches = document.querySelectorAll("#vendors .pid"+purpose+" input");
+			var matches = document.querySelectorAll("#vendors .pid" + purpose + " input");
 			for (var i = 0; i < matches.length; i++) {
 				cmp_pv.consentString.data.bitField[matches[i].value] = checked;
 				matches[i].checked = checked;
 			}
 		},
-		switchVendor: function(vendor, checked){
+		switchVendor: function(vendor, checked) {
 			cmp_pv.consentString.data.bitField[vendor] = checked;
 		},
-		detectIE: function(){
+		detectIE: function() {
 			var ua = window.navigator.userAgent;
 			var msie = ua.indexOf('MSIE ');
 			var trident = ua.indexOf('Trident/');
@@ -351,24 +351,24 @@ var cmp_pv = {
 		},
 		// https://vendorlist.consensu.org/purposes-fr.json
 		language: {
-			'fr':{
+			'fr': {
 				"purposes": {
 					1: {
 						"name": "Conservation et acc\u00e8s aux informations ",
 						"description": "La conservation d\u2019informations ou l\u2019acc\u00e8s \u00e0 des informations d\u00e9j\u00e0 conserv\u00e9es sur votre appareil, par exemple des identifiants publicitaires, des identifiants de l\u2019appareil, des cookies et des technologies similaires."
-					}, 
+					},
 					2: {
 						"name": "Personnalisation",
 						"description": "Collecte et traitement d\u2019informations relatives \u00e0 votre utilisation de ce service afin de vous adresser ult\u00e9rieurement des publicit\u00e9s et/ou du contenu personnalis\u00e9s dans d\u2019autres contextes, par exemple sur d\u2019autres sites ou applications. En g\u00e9n\u00e9ral, le contenu du site ou de l\u2019application est utilis\u00e9 pour faire des d\u00e9ductions concernant vos int\u00e9r\u00eats, ce qui sera utile dans le cadre de s\u00e9lections ult\u00e9rieures de publicit\u00e9 et/ou de contenu."
-					}, 
+					},
 					3: {
 						"name": "S\u00e9lection, diffusion et signalement de publicit\u00e9s",
 						"description": "Collecte d\u2019informations qui sont en suite associ\u00e9es \u00e0 celles rassembl\u00e9es pr\u00e9c\u00e9demment, afin de s\u00e9lectionner et diffuser des publicit\u00e9s \u00e0 votre \u00e9gard, puis \u00e9valuer leur diffusion ainsi que leur efficacit\u00e9. Cela comprend : le fait d\u2019utiliser des informations collect\u00e9es pr\u00e9c\u00e9demment relativement \u00e0 vos int\u00e9r\u00eats afin de s\u00e9lectionner des publicit\u00e9s ; le traitement de donn\u00e9es indiquant quelles publicit\u00e9s ont \u00e9t\u00e9 affich\u00e9es et \u00e0 quelle fr\u00e9quence, \u00e0 quel moment et o\u00f9 elles ont \u00e9t\u00e9 affich\u00e9es ; et le fait de savoir si vous avez r\u00e9agi par rapport auxdites publicit\u00e9s, par exemple si vous avez cliqu\u00e9 dessus ou effectu\u00e9 un achat. Cela ne comprend pas la Personnalisation qui consiste en la collecte et le traitement d\u2019informations relatives \u00e0 votre utilisation de ce service afin de vous adresser ult\u00e9rieurement des publicit\u00e9s et/ou du contenu personnalis\u00e9s dans d\u2019autres contextes, par exemple sur des sites ou applications."
-					}, 
+					},
 					4: {
 						"name": "S\u00e9lection, diffusion et signalement de contenu",
 						"description": "La collecte d\u2019informations que l\u2019on associe \u00e0 celles rassembl\u00e9es pr\u00e9c\u00e9demment afin de s\u00e9lectionner et diffuser des contenus \u00e0 votre \u00e9gard, puis \u00e9valuer leur diffusion ainsi que leur efficacit\u00e9. Cela comprend : le fait d\u2019utiliser des informations collect\u00e9es pr\u00e9c\u00e9demment relativement \u00e0 vos int\u00e9r\u00eats afin de s\u00e9lectionner du contenu ; le traitement de donn\u00e9es indiquant quel contenu a \u00e9t\u00e9 affich\u00e9, \u00e0 quelle fr\u00e9quence, pendant combien de temps, \u00e0 quel moment et o\u00f9 il a \u00e9t\u00e9 affich\u00e9 ; et le fait de savoir si vous avez r\u00e9agi par rapport audit contenu, par exemple si vous cliqu\u00e9 dessus. Cela ne comprend pas la Personnalisation qui consiste en la collecte et le traitement d\u2019informations relatives \u00e0 votre utilisation de ce service afin de vous adresser, ult\u00e9rieurement du contenu et/ou des publicit\u00e9s personnalis\u00e9s dans d\u2019autres contextes, par exemple sur des sites ou applications."
-					}, 
+					},
 					5: {
 						"name": "\u00c9valuation",
 						"description": "La collecte d\u2019informations relatives \u00e0 votre utilisation du contenu et association desdites informations avec celles pr\u00e9c\u00e9demment collect\u00e9es afin d\u2019\u00e9valuer, de comprendre et de rendre compte de la fa\u00e7on dont vous utilisez le service. Cela ne comprend pas la Personnalisation, la collecte d\u2019informations relatives \u00e0 votre utilisation de ce service afin de vous adresser ult\u00e9rieurement du contenu et/ou des publicit\u00e9s personnalis\u00e9s dans d\u2019autres contextes, c\u2019est-\u00e0-dire sur d\u2019autres services, tels que des sites ou des applications."
@@ -382,109 +382,109 @@ var cmp_pv = {
 	cookie: {
 		vendorCookieName: 'euconsent',
 		publisherCookieName: 'eupubconsent',
-		readCookie: function(name, cb){
-			var value = "; "+document.cookie;
-			var parts = value.split("; "+name+"=");
+		readCookie: function(name, cb) {
+			var value = "; " + document.cookie;
+			var parts = value.split("; " + name + "=");
 
 			if (parts.length === 2) {
-				if(typeof cb === 'function') cb(parts.pop().split(';').shift());
+				if (typeof cb === 'function') cb(parts.pop().split(';').shift());
 				return parts.pop().split(';').shift();
-			}else{
-				if(typeof cb === 'function') cb('');
+			} else {
+				if (typeof cb === 'function') cb('');
 			}
 		},
 		writeCookie: function(name, value, maxAgeSeconds, path, domain) {
-			var maxAge = maxAgeSeconds === null ? '' : ";max-age="+maxAgeSeconds;
-			var valDomain = domain === null ? '' : ';domain='+domain;
-			document.cookie = name+"="+value+";path="+path+maxAge+valDomain;
+			var maxAge = maxAgeSeconds === null ? '' : ";max-age=" + maxAgeSeconds;
+			var valDomain = domain === null ? '' : ';domain=' + domain;
+			document.cookie = name + "=" + value + ";path=" + path + maxAge + valDomain;
 			this.saveVerification(name);
 		},
-		readGlobalCookie: function(name, cb){
+		readGlobalCookie: function(name, cb) {
 			cmp_pv.portal.sendPortalCommand({
 				command: 'readVendorConsent'
-			}, function(data){
-				cb((typeof data === 'object')?'':data);
+			}, function(data) {
+				cb((typeof data === 'object') ? '' : data);
 			});
 		},
-		writeGlobalCookie: function(name, value){
+		writeGlobalCookie: function(name, value) {
 			cmp_pv.portal.sendPortalCommand({
 				command: 'writeVendorConsent',
 				encodedValue: value
-			}, function(){
+			}, function() {
 				cmp_pv.cookie.saveVerification(name);
 			});
 		},
-		loadVendorCookie: function(cb){
-			var fnct = (cmp_pv.conf.hasGlobalScope)?'readGlobalCookie':'readCookie';
-			this[fnct](this.vendorCookieName, function(data){
-				cb(("undefined" !== typeof data)?cmp_pv.consentString.decodeVendorConsentData(data):false);
+		loadVendorCookie: function(cb) {
+			var fnct = (cmp_pv.conf.hasGlobalScope) ? 'readGlobalCookie' : 'readCookie';
+			this[fnct](this.vendorCookieName, function(data) {
+				cb(("undefined" !== typeof data) ? cmp_pv.consentString.decodeVendorConsentData(data) : false);
 			})
 		},
-		loadPublisherCookie: function(){
+		loadPublisherCookie: function() {
 			var data = this.readCookie(this.publisherCookieName);
-			if("undefined" !== typeof data){
+			if ("undefined" !== typeof data) {
 				return cmp_pv.consentString.decodePublisherConsentData(data);
 			}
 			return false;
 		},
-		writeVendorCookie: function(){
+		writeVendorCookie: function() {
 			var data = cmp_pv.consentString.generateVendorConsentString();
-			var fnct = (cmp_pv.conf.hasGlobalScope)?'writeGlobalCookie':'writeCookie';
+			var fnct = (cmp_pv.conf.hasGlobalScope) ? 'writeGlobalCookie' : 'writeCookie';
 			this[fnct](this.vendorCookieName, data, 33696000, '/', cmp_pv.conf.cookieDomain);
 		},
-		writePublisherCookie: function(){
+		writePublisherCookie: function() {
 			var data = cmp_pv.consentString.generatePublisherConsentString();
 			this.writeCookie(this.publisherCookieName, data, 33696000, '/', cmp_pv.conf.cookieDomain);
 		},
-		saveConsent: function(all){
+		saveConsent: function(all) {
 			// Maj dates
 			cmp_pv.consentString.data.lastUpdated = new Date();
 			cmp_pv.consentString.dataPub.lastUpdated = new Date();
-			
+
 			// Accepte tout
-			if(all){
+			if (all) {
 				var i;
-				for(i = 1; i<=cmp_pv.consentString.data.maxVendorId; i++){
+				for (i = 1; i <= cmp_pv.consentString.data.maxVendorId; i++) {
 					cmp_pv.consentString.data.bitField[i] = true;
 				}
 				var maxStandard = Object.keys(cmp_pv.consentString.dataPub.standardPurposesAllowed).length;
-				for(i = 1; i<=maxStandard; i++){
+				for (i = 1; i <= maxStandard; i++) {
 					cmp_pv.ui.switchPurpose(i, true);
 				}
 			}
-			
+
 			// Save cookies
 			this.writeVendorCookie();
 			this.writePublisherCookie();
-			
+
 			// Hide UI
 			cmp_pv.ui.show(false);
-			
+
 			// Process commands
 			cmp_pv.cmpReady = true;
 			cmp_pv.processCommandQueue();
-			
+
 			// Callback
-			if(typeof cmp_pv.conf.consentCallback === 'function') cmp_pv.conf.consentCallback(); 
+			if (typeof cmp_pv.conf.consentCallback === 'function') cmp_pv.conf.consentCallback();
 		},
-		loadConsent: function(cb){
+		loadConsent: function(cb) {
 			var resP = this.loadPublisherCookie();
-			this.loadVendorCookie(function(resV){
+			this.loadVendorCookie(function(resV) {
 				cb(resV && resP);
 			});
 		},
-		saveVerification: function(name){
+		saveVerification: function(name) {
 			localStorage.setItem(name, new Date().toString());
 		},
-		lastVerification: function(name){
+		lastVerification: function(name) {
 			var date = localStorage.getItem(name);
-			return (date)?Date.parse(date):new Date();
+			return (date) ? Date.parse(date) : new Date();
 		}
 	},
 
 	/** Consent String */
 	consentString: {
-		const:{
+		const: {
 			VERSION_BIT_OFFSET: 0,
 			VERSION_BIT_SIZE: 6,
 			CMP_ID: 1,
@@ -492,59 +492,123 @@ var cmp_pv = {
 
 			// Version 1
 			vendor_1: [
-				{ name: 'version', type: 'int', numBits: 6, default: 1 },
-				{ name: 'created', type: 'date', numBits: 36, default: new Date() },
-				{ name: 'lastUpdated', type: 'date', numBits: 36, default: new Date() },
-				{ name: 'cmpId', type: 'int', numBits: 12, default: function(){ return cmp_pv.consentString.const.CMP_ID } },
-				{ name: 'cmpVersion', type: 'int', numBits: 12, default: function(){ return cmp_pv.consentString.const.CMP_VERSION } },
-				{ name: 'consentScreen', type: 'int', numBits: 6, default: 1 },
-				{ name: 'consentLanguage', type: '6bitchar', numBits: 12, default: 'FR' },
-				{ name: 'vendorListVersion', type: 'int', numBits: 12, default: function() { return cmp_pv.globalVendorList.vendorListVersion } },
-				{ name: 'purposesAllowed', type: 'bits', numBits: 24, default: function(){ return cmp_pv.consentString.defaultBits(false, this.numBits)} },
-				{ name: 'maxVendorId', type: 'int', numBits: 16, 
+				{name: 'version', type: 'int', numBits: 6, default: 1},
+				{name: 'created', type: 'date', numBits: 36, default: new Date()},
+				{name: 'lastUpdated', type: 'date', numBits: 36, default: new Date()},
+				{
+					name: 'cmpId', type: 'int', numBits: 12, default: function() {
+						return cmp_pv.consentString.const.CMP_ID
+					}
+				},
+				{
+					name: 'cmpVersion', type: 'int', numBits: 12, default: function() {
+						return cmp_pv.consentString.const.CMP_VERSION
+					}
+				},
+				{name: 'consentScreen', type: 'int', numBits: 6, default: 1},
+				{name: 'consentLanguage', type: '6bitchar', numBits: 12, default: 'FR'},
+				{
+					name: 'vendorListVersion', type: 'int', numBits: 12, default: function() {
+						return cmp_pv.globalVendorList.vendorListVersion
+					}
+				},
+				{
+					name: 'purposesAllowed', type: 'bits', numBits: 24, default: function() {
+						return cmp_pv.consentString.defaultBits(false, this.numBits)
+					}
+				},
+				{
+					name: 'maxVendorId', type: 'int', numBits: 16,
 					default: function() {
 						var maxVendorId = 1;
-						for(var i=0; i<cmp_pv.globalVendorList.vendors.length; i++){
-							if(cmp_pv.globalVendorList.vendors[i].id > maxVendorId) maxVendorId = cmp_pv.globalVendorList.vendors[i].id;
+						for (var i = 0; i < cmp_pv.globalVendorList.vendors.length; i++) {
+							if (cmp_pv.globalVendorList.vendors[i].id > maxVendorId) maxVendorId = cmp_pv.globalVendorList.vendors[i].id;
 						}
 						return maxVendorId;
 					}
 				},
-				{ name: 'encodingType', type: 'int', numBits: 1, default: 0 },
-				{ name: 'bitField', type: 'bits', numBits: function(obj){ return obj.maxVendorId; }, validator: function(obj){ return obj.encodingType === 0; }, default: function(obj) { return cmp_pv.consentString.defaultBits(false, obj.maxVendorId);} },
-				{ name: 'defaultConsent', type: 'bool', numBits: 1, validator: function(obj){ return obj.encodingType === 1; }, default: false },
-				{ name: 'numEntries', type: 'int', numBits: 12, validator: function(obj){ return obj.encodingType === 1; }, default: 0 },
-				{ name: 'rangeEntries', type: 'list', validator: function(obj){ return obj.encodingType === 1; }, listCount: function(obj){ return obj.numEntries; },
+				{name: 'encodingType', type: 'int', numBits: 1, default: 0},
+				{
+					name: 'bitField', type: 'bits', numBits: function(obj) {
+						return obj.maxVendorId;
+					}, validator: function(obj) {
+						return obj.encodingType === 0;
+					}, default: function(obj) {
+						return cmp_pv.consentString.defaultBits(false, obj.maxVendorId);
+					}
+				},
+				{
+					name: 'defaultConsent', type: 'bool', numBits: 1, validator: function(obj) {
+						return obj.encodingType === 1;
+					}, default: false
+				},
+				{
+					name: 'numEntries', type: 'int', numBits: 12, validator: function(obj) {
+						return obj.encodingType === 1;
+					}, default: 0
+				},
+				{
+					name: 'rangeEntries', type: 'list', validator: function(obj) {
+						return obj.encodingType === 1;
+					}, listCount: function(obj) {
+						return obj.numEntries;
+					},
 					fields: [
-						{name: 'isRange', type: 'bool', numBits: 1 },
-						{name: 'startVendorId', type: 'int', numBits: 16 },
-						{name: 'endVendorId', type: 'int', numBits: 16, validator: function(obj){ return obj.isRange } }
+						{name: 'isRange', type: 'bool', numBits: 1},
+						{name: 'startVendorId', type: 'int', numBits: 16},
+						{
+							name: 'endVendorId', type: 'int', numBits: 16, validator: function(obj) {
+								return obj.isRange
+							}
+						}
 					]
 				}
 			],
 			metadata_1: [
-				{ name: 'version', type: 'int', numBits: 6 },
-				{ name: 'created', type: 'date', numBits: 36 },
-				{ name: 'lastUpdated', type: 'date', numBits: 36 },
-				{ name: 'cmpId', type: 'int', numBits: 12 },
-				{ name: 'cmpVersion', type: 'int', numBits: 12 },
-				{ name: 'consentScreen', type: 'int', numBits: 6 },
-				{ name: 'vendorListVersion', type: 'int', numBits: 12 },
-				{ name: 'purposesAllowed', type: 'bits', numBits: 24 }
+				{name: 'version', type: 'int', numBits: 6},
+				{name: 'created', type: 'date', numBits: 36},
+				{name: 'lastUpdated', type: 'date', numBits: 36},
+				{name: 'cmpId', type: 'int', numBits: 12},
+				{name: 'cmpVersion', type: 'int', numBits: 12},
+				{name: 'consentScreen', type: 'int', numBits: 6},
+				{name: 'vendorListVersion', type: 'int', numBits: 12},
+				{name: 'purposesAllowed', type: 'bits', numBits: 24}
 			],
 			publisher_1: [
-				{ name: 'version', type: 'int', numBits: 6, default: 1 },
-				{ name: 'created', type: 'date', numBits: 36, default: new Date() },
-				{ name: 'lastUpdated', type: 'date', numBits: 36, default: new Date() },
-				{ name: 'cmpId', type: 'int', numBits: 12, default: function(){ return cmp_pv.consentString.const.CMP_ID } },
-				{ name: 'cmpVersion', type: 'int', numBits: 12, default: function(){ return cmp_pv.consentString.const.CMP_VERSION } },
-				{ name: 'consentScreen', type: 'int', numBits: 6, default: 1 },
-				{ name: 'consentLanguage', type: '6bitchar', numBits: 12, default: 'FR' },
-				{ name: 'vendorListVersion', type: 'int', numBits: 12, default: function() { return cmp_pv.globalVendorList.vendorListVersion } },
-				{ name: 'publisherPurposesVersion', type: 'int', numBits: 12, default: 1 },
-				{ name: 'standardPurposesAllowed', type: 'bits', numBits: 24, default: function() { return cmp_pv.consentString.defaultBits(false, this.numBits) } },
-				{ name: 'numberCustomPurposes', type: 'int', numBits: 6, default: 0 },
-				{ name: 'customPurposesBitField', type: 'bits', numBits: function(obj){ return obj.numberCustomPurposes; }, default: function(obj) { return cmp_pv.consentString.defaultBits(false, obj.numberCustomPurposes) } }
+				{name: 'version', type: 'int', numBits: 6, default: 1},
+				{name: 'created', type: 'date', numBits: 36, default: new Date()},
+				{name: 'lastUpdated', type: 'date', numBits: 36, default: new Date()},
+				{
+					name: 'cmpId', type: 'int', numBits: 12, default: function() {
+						return cmp_pv.consentString.const.CMP_ID
+					}
+				},
+				{
+					name: 'cmpVersion', type: 'int', numBits: 12, default: function() {
+						return cmp_pv.consentString.const.CMP_VERSION
+					}
+				},
+				{name: 'consentScreen', type: 'int', numBits: 6, default: 1},
+				{name: 'consentLanguage', type: '6bitchar', numBits: 12, default: 'FR'},
+				{
+					name: 'vendorListVersion', type: 'int', numBits: 12, default: function() {
+						return cmp_pv.globalVendorList.vendorListVersion
+					}
+				},
+				{name: 'publisherPurposesVersion', type: 'int', numBits: 12, default: 1},
+				{
+					name: 'standardPurposesAllowed', type: 'bits', numBits: 24, default: function() {
+						return cmp_pv.consentString.defaultBits(false, this.numBits)
+					}
+				},
+				{name: 'numberCustomPurposes', type: 'int', numBits: 6, default: 0},
+				{
+					name: 'customPurposesBitField', type: 'bits', numBits: function(obj) {
+						return obj.numberCustomPurposes;
+					}, default: function(obj) {
+						return cmp_pv.consentString.defaultBits(false, obj.numberCustomPurposes)
+					}
+				}
 			],
 
 			// Autres
@@ -569,8 +633,8 @@ var cmp_pv = {
 			numEntries: null,
 			rangeEntries: []
 		},
-		
-		dataPub:{
+
+		dataPub: {
 			bitString: "",
 			version: 1,
 			created: null,
@@ -586,57 +650,57 @@ var cmp_pv = {
 			customPurposesBitField: []
 		},
 
-		decodeVendorConsentData: function(cookieValue){
-			if(this.decodeCookieData('vendor_', 'data', cookieValue) && this.data.encodingType === 1){
-				var range,i,y;
+		decodeVendorConsentData: function(cookieValue) {
+			if (this.decodeCookieData('vendor_', 'data', cookieValue) && this.data.encodingType === 1) {
+				var range, i, y;
 				var consent = !this.data.defaultConsent;
 				// Initialize bitField
 				this.data.bitField = cmp_pv.consentString.defaultBits(this.data.defaultConsent, this.data.maxVendorId);
 				// Assign range value
-				for(i=0; i<this.data.rangeEntries.length; i++){
+				for (i = 0; i < this.data.rangeEntries.length; i++) {
 					range = this.data.rangeEntries[i];
-					if(range.isRange){
-						for(y=range.startVendorId; y<=range.endVendorId; y++){
+					if (range.isRange) {
+						for (y = range.startVendorId; y <= range.endVendorId; y++) {
 							this.data.bitField[y] = consent;
 						}
-					}else{
-						this.data.bitField[range.startVendorId] = consent;	
+					} else {
+						this.data.bitField[range.startVendorId] = consent;
 					}
 				}
 				return true;
 			}
 			return false;
 		},
-		decodePublisherConsentData: function(cookieValue){
+		decodePublisherConsentData: function(cookieValue) {
 			return this.decodeCookieData('publisher_', 'dataPub', cookieValue);
 		},
-		decodeCookieData: function(type, varname, cookieValue){
+		decodeCookieData: function(type, varname, cookieValue) {
 			this[varname].bitString = this.decodeBase64UrlSafe(cookieValue);
 			var cookieVersion = this.decodeBitsToInt(this[varname], this.const.VERSION_BIT_OFFSET, this.const.VERSION_BIT_SIZE);
 			if (typeof cookieVersion !== 'number') {
 				console.error('Could not find cookieVersion to decode');
 				return false;
 			}
-			if (typeof this.const[type+cookieVersion] === 'undefined') {
-				console.error('Could not find definition for cookieVersion '+cookieVersion);
+			if (typeof this.const[type + cookieVersion] === 'undefined') {
+				console.error('Could not find definition for cookieVersion ' + cookieVersion);
 				return false;
 			}
 
-			this[varname] = this.decodeConsentData(this.const[type+cookieVersion], this[varname], 0).obj;
+			this[varname] = this.decodeConsentData(this.const[type + cookieVersion], this[varname], 0).obj;
 			return true;
 		},
-		generateVendorConsentMetadata: function(){
-			var inputBits = this.encodeConsentData(this.const['metadata_'+this.data.version], this.data);
+		generateVendorConsentMetadata: function() {
+			var inputBits = this.encodeConsentData(this.const['metadata_' + this.data.version], this.data);
 			return this.encodeBase64UrlSafe(inputBits);
 		},
-		generateVendorConsentString: function(){
+		generateVendorConsentString: function() {
 			this.data = Object.assign(this.data, this.convertVendorsToRanges());
-			var inputBitsRange = this.encodeConsentData(this.const['vendor_'+this.data.version], Object.assign(this.data, {encodingType: 1}));
-			var inputBits = this.encodeConsentData(this.const['vendor_'+this.data.version], Object.assign(this.data, {encodingType: 0}));
-			return this.encodeBase64UrlSafe((inputBits.length>inputBitsRange.length)?inputBitsRange:inputBits);
+			var inputBitsRange = this.encodeConsentData(this.const['vendor_' + this.data.version], Object.assign(this.data, {encodingType: 1}));
+			var inputBits = this.encodeConsentData(this.const['vendor_' + this.data.version], Object.assign(this.data, {encodingType: 0}));
+			return this.encodeBase64UrlSafe((inputBits.length > inputBitsRange.length) ? inputBitsRange : inputBits);
 		},
-		generatePublisherConsentString: function(){
-			var inputBits = this.encodeConsentData(this.const['publisher_'+this.dataPub.version], this.dataPub);
+		generatePublisherConsentString: function() {
+			var inputBits = this.encodeConsentData(this.const['publisher_' + this.dataPub.version], this.dataPub);
 			return this.encodeBase64UrlSafe(inputBits);
 		},
 		padLeft: function(string, padding) {
@@ -670,42 +734,50 @@ var cmp_pv = {
 			}
 			return decoded;
 		},
-		decodeBase64UrlSafe: function(value){
+		decodeBase64UrlSafe: function(value) {
 			// Replace safe characters
 			var unsafe = value
 				.replace(/-/g, '+')
 				.replace(/_/g, '/') + '=='.substring(0, (3 * value.length) % 4);
 			var bitString = "";
-			
-			try{
+
+			try {
 				var bytes = atob(unsafe);
 				for (var i = 0; i < bytes.length; i++) {
 					var bitS = bytes.charCodeAt(i).toString(2);
 					bitString += this.padLeft(bitS, 8 - bitS.length);
 				}
-			}catch(error){
+			} catch (error) {
 				console.error(error);
 			}
 
 			return bitString;
 		},
-		decodeConsentData: function(fields, datas, start){
+		decodeConsentData: function(fields, datas, start) {
 			var obj = {};
-			var i,z,y,field;
+			var i, z, y, field;
 			var totalLength = 0;
-			for(i=0; i<fields.length; i++){
+			for (i = 0; i < fields.length; i++) {
 				field = fields[i];
-				if('function' === typeof field.validator && !field.validator(obj)) continue;
+				if ('function' === typeof field.validator && !field.validator(obj)) continue;
 				var length = ('function' === typeof field.numBits) ? field.numBits(obj) : field.numBits;
 				switch (field.type) {
-					case 'int':			obj[field.name] = this.decodeBitsToInt(datas, start, length); break;
-					case 'date':		obj[field.name] = this.decodeBitsToDate(datas, start, length); break;
-					case '6bitchar':	obj[field.name] = this.decode6BitCharacters(datas, start, length); break;
-					case 'bool':		obj[field.name] = this.decodeBitsToBool(datas, start); break;
+					case 'int':
+						obj[field.name] = this.decodeBitsToInt(datas, start, length);
+						break;
+					case 'date':
+						obj[field.name] = this.decodeBitsToDate(datas, start, length);
+						break;
+					case '6bitchar':
+						obj[field.name] = this.decode6BitCharacters(datas, start, length);
+						break;
+					case 'bool':
+						obj[field.name] = this.decodeBitsToBool(datas, start);
+						break;
 					case 'bits':
 						z = 1;
 						obj[field.name] = {};
-						for (y = start; y < start+length; y++) {
+						for (y = start; y < start + length; y++) {
 							obj[field.name][z] = this.decodeBitsToBool(datas, y);
 							z++;
 						}
@@ -714,9 +786,9 @@ var cmp_pv = {
 						var listCount = field.listCount(obj);
 						length = 0;
 						obj[field.name] = [];
-						for(z=0; z<listCount; z++){
-							var decodedObj = this.decodeConsentData(field.fields, datas, start+length);
-							length+=decodedObj.length;
+						for (z = 0; z < listCount; z++) {
+							var decodedObj = this.decodeConsentData(field.fields, datas, start + length);
+							length += decodedObj.length;
 							obj[field.name].push(decodedObj.obj);
 						}
 						break;
@@ -756,13 +828,13 @@ var cmp_pv = {
 			return this.encodeIntToBits(date, numBits);
 		},
 		encode6BitCharacters: function(string, numBits) {
-			var encoded = typeof string !== 'string' ? '' : string.split('').map(function(char){
+			var encoded = typeof string !== 'string' ? '' : string.split('').map(function(char) {
 				var int = Math.max(0, char.toUpperCase().charCodeAt(0) - cmp_pv.consentString.const.SIX_BIT_ASCII_OFFSET);
 				return cmp_pv.consentString.encodeIntToBits(int > 25 ? 0 : int, 6);
 			}).join('');
 			return this.padRight(encoded, numBits).substr(0, numBits);
 		},
-		encodeBase64UrlSafe: function(binaryValue){
+		encodeBase64UrlSafe: function(binaryValue) {
 			// Pad length to multiple of 8
 			var paddedBinaryValue = this.padRight(binaryValue, 7 - (binaryValue.length + 7) % 8);
 
@@ -778,17 +850,25 @@ var cmp_pv = {
 				.replace(/\//g, '_')
 				.replace(/=+$/, '');
 		},
-		encodeConsentData: function(fields, datas){
+		encodeConsentData: function(fields, datas) {
 			var inputBits = "";
-			for(var i=0; i<fields.length; i++){
+			for (var i = 0; i < fields.length; i++) {
 				var field = fields[i];
-				if('function' === typeof field.validator && !field.validator(datas)) continue;
+				if ('function' === typeof field.validator && !field.validator(datas)) continue;
 				var length = ('function' === typeof field.numBits) ? field.numBits(datas) : field.numBits;
 				switch (field.type) {
-					case 'int':			inputBits += this.encodeIntToBits(datas[field.name], length); break;
-					case 'date':		inputBits += this.encodeDateToBits(datas[field.name], length); break;
-					case '6bitchar':	inputBits += this.encode6BitCharacters(datas[field.name], length); break;
-					case 'bool':		inputBits += this.encodeBoolToBits(datas[field.name]); break;
+					case 'int':
+						inputBits += this.encodeIntToBits(datas[field.name], length);
+						break;
+					case 'date':
+						inputBits += this.encodeDateToBits(datas[field.name], length);
+						break;
+					case '6bitchar':
+						inputBits += this.encode6BitCharacters(datas[field.name], length);
+						break;
+					case 'bool':
+						inputBits += this.encodeBoolToBits(datas[field.name]);
+						break;
 					case 'bits':
 						var data = datas[field.name];
 						for (var y = 1; y <= length; y++) {
@@ -796,8 +876,8 @@ var cmp_pv = {
 						}
 						break;
 					case 'list':
-						for(var z=0; z<datas[field.name].length; z++){
-							inputBits += this.encodeConsentData(field.fields, datas[field.name][z]); 	
+						for (var z = 0; z < datas[field.name].length; z++) {
+							inputBits += this.encodeConsentData(field.fields, datas[field.name][z]);
 						}
 						break;
 					default:
@@ -806,28 +886,28 @@ var cmp_pv = {
 			}
 			return inputBits;
 		},
-		defaultBits: function(val, numBits){
+		defaultBits: function(val, numBits) {
 			var obj = {};
-			for(var i=1; i<=numBits; i++){
+			for (var i = 1; i <= numBits; i++) {
 				obj[i] = val;
 			}
 			return obj;
 		},
-		generateConsentData: function(fields){
+		generateConsentData: function(fields) {
 			var obj = {};
-			for(var i=0; i<fields.length; i++){
+			for (var i = 0; i < fields.length; i++) {
 				var field = fields[i];
-				obj[field.name] = ('function' === typeof field.default)?field.default(obj):field.default;
+				obj[field.name] = ('function' === typeof field.default) ? field.default(obj) : field.default;
 			}
 			return obj;
 		},
-		generateVendorConsentData: function(){
-			return this.generateConsentData(this.const['vendor_'+this.data.version]);
+		generateVendorConsentData: function() {
+			return this.generateConsentData(this.const['vendor_' + this.data.version]);
 		},
-		generatePublisherConsentData: function(){
-			return this.generateConsentData(this.const['publisher_'+this.dataPub.version]);
+		generatePublisherConsentData: function() {
+			return this.generateConsentData(this.const['publisher_' + this.dataPub.version]);
 		},
-		convertVendorsToRanges: function(){
+		convertVendorsToRanges: function() {
 			var range = [];
 			var rangeType = (this.data.bitField[1] === 1);
 			var ranges = {false: [], true: []};
@@ -836,21 +916,21 @@ var cmp_pv = {
 					range.push(id);
 				}
 				// Range has ended or at the end of vendors list => add range entry
-				if(this.data.bitField[id] !== rangeType || id === this.data.maxVendorId){
-					if(range.length){
+				if (this.data.bitField[id] !== rangeType || id === this.data.maxVendorId) {
+					if (range.length) {
 						var startVendorId = range.shift();
 						var endVendorId = range.pop();
 						range = [];
 						ranges[rangeType].push({
 							isRange: typeof endVendorId === 'number',
-							startVendorId:startVendorId,
-							endVendorId:endVendorId
+							startVendorId: startVendorId,
+							endVendorId: endVendorId
 						})
 					}
 				}
 			}
 			rangeType = (ranges[true].length < ranges[false].length);
-			if(ranges[rangeType].length === 0) rangeType = !rangeType;
+			if (ranges[rangeType].length === 0) rangeType = !rangeType;
 			return {defaultConsent: !rangeType, rangeEntries: ranges[rangeType], numEntries: ranges[rangeType].length};
 		}
 	},
@@ -868,11 +948,11 @@ var cmp_pv = {
 				iframe.setAttribute('style', 'width:1px;height:1px;position:absolute;left:-99px;top:-99px;');
 				iframe.setAttribute('src', url);
 				document.body.appendChild(iframe);
-	
+
 				var portalTimeout = setTimeout(function() {
 					cb(new Error("Communication could not be established with the vendor domain within 5000 milliseconds"));
 				}, 5000);
-	
+
 				// Add listener for messages from iframe
 				window.addEventListener('message', function(event) {
 					// Only look at messages with the vendorConsent property
@@ -896,39 +976,39 @@ var cmp_pv = {
 						}
 					}
 				});
-			}else{
-				return cb(this.globalVendorPortal);	
+			} else {
+				return cb(this.globalVendorPortal);
 			}
 		},
 		sendPortalCommand: function(message, cb) {
 			// Increment counter to use as unique callId
-			var callId = "vp:"+(++this.portalCallCount);
-		
+			var callId = "vp:" + (++this.portalCallCount);
+
 			// Make sure iframe is loaded
 			this.openGlobalVendorPortal(function(iframe) {
-	
-				var timeout = setTimeout(function(){
+
+				var timeout = setTimeout(function() {
 					delete cmp_pv.portal.portalQueue[callId];
-					cb(new Error(message.command+" response not received from vendor domain within 5000 milliseconds"));
+					cb(new Error(message.command + " response not received from vendor domain within 5000 milliseconds"));
 				}, 5000);
-	
+
 				// Store the resolve function and timeout in the map
-				cmp_pv.portal.portalQueue[callId] = {cb:cb, timeout:timeout};
-	
+				cmp_pv.portal.portalQueue[callId] = {cb: cb, timeout: timeout};
+
 				// Send the message to the portal
 				iframe.contentWindow.postMessage({
 					vendorConsent: Object.assign(
-						{callId:callId},
+						{callId: callId},
 						message
 					)
 				}, '*');
 			});
 		}
 	},
-	
+
 	/** **/
-	_fetchGlobalVendorList: function(callback){
-		cmp_pv._fetch(cmp_pv.conf.urlVendorList, function(res){
+	_fetchGlobalVendorList: function(callback) {
+		cmp_pv._fetch(cmp_pv.conf.urlVendorList, function(res) {
 			if (res.status === 200) {
 				cmp_pv.globalVendorList = JSON.parse(res.responseText);
 			} else {
@@ -938,8 +1018,8 @@ var cmp_pv = {
 		});
 	},
 
-	_fetchPubVendorList: function(callback){
-		cmp_pv._fetch("/.well-known/pubvendors.json", function(res){
+	_fetchPubVendorList: function(callback) {
+		cmp_pv._fetch("/.well-known/pubvendors.json", function(res) {
 			if (res.status === 200) {
 				cmp_pv.pubvendor = JSON.parse(res.responseText);
 			} else {
@@ -949,9 +1029,9 @@ var cmp_pv = {
 		});
 	},
 
-	_fetch: function(url, callback){
+	_fetch: function(url, callback) {
 		var xhr = new XMLHttpRequest();
-		xhr.onreadystatechange = function(){
+		xhr.onreadystatechange = function() {
 			if (this.readyState === XMLHttpRequest.DONE) {
 				callback(this);
 			}
