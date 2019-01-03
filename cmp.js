@@ -190,38 +190,42 @@ var cmp_pv = {
 				css += '#CMP_PV .switch{position: relative;display: inline-block;width: 60px;height: 16px;cursor: pointer;}';
 				css += '#CMP_PV .switch input {display:none;}';
 				css += '#CMP_PV .slider{position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; -webkit-transition: .4s; transition: .4s;border-radius: 34px;height: 18px;}';
-				css += '#CMP_PV .slider:before{position: absolute;content: "";height: 26px;width: 26px;left: 0;bottom: -4px;background-color: #9E9E9E;-webkit-transition: .4s;transition: .4s;border-radius: 50%;}';
+				css += '#CMP_PV .slider:before{position: absolute;content: "";height: 24px;width: 24px;left: 0;bottom: -4px;background-color: white;-webkit-transition: .4s;transition: .4s;border-radius: 50%;border:1px solid #aaa}';
 				css += '#CMP_PV input:checked + .slider{background-color: #8BC34A;}';
 				css += '#CMP_PV input:focus + .slider{box-shadow: 0 0 1px #8BC34A;}';
-				css += '#CMP_PV input:checked + .slider:before {transform: translateX(34px);}';
+				css += '#CMP_PV input:checked + .slider:before {transform: translateX(34px);border-color:#7BAA44;}';
 				css += '#CMP_PV #step1{display: table-row;}';
 				css += '#CMP_PV #step1>*{display: table-cell;vertical-align: middle;}';
 				css += '#CMP_PV #step1>div{min-width: 280px; text-align: center;padding-left: 20px;}';
 				css += '#CMP_PV #step1>div>*{display: block;}';
 				css += '#CMP_PV #step1>div>button{width: 100%; margin: 5px 0;}';
-				css += '#CMP_PV #step2 .container{width: 1000px; margin:10px auto;display: table;}';
+				css += '#CMP_PV #step1>p{text-align:justify;padding: 5px;}';
+				css += '#CMP_PV #step2 .container{max-width: 1000px; margin:10px auto;display: table;}';
 				css += '#CMP_PV #step2 .container:after{content:\'\';display:block;clear:both;}';
-				css += '#CMP_PV #step2 .container .purposes, #CMP_PV #step2 .container .vendors {list-style:none; box-shadow: 0 3px 1px -2px rgba(0,0,0,.2), 0 2px 2px 0 rgba(0,0,0,.14), 0 1px 5px 0 rgba(0,0,0,.12);padding: 0;width: 500px;margin:0;display: table-cell;}';
-				css += '#CMP_PV #step2 .container .purposes li{border-bottom: 1px solid rgba(0, 0, 0, 0.11);background: #3c3c3c; width: 500px;color: white;}';
+				css += '#CMP_PV #step2 .container .purposes, #CMP_PV #step2 .container .vendors {list-style:none; box-shadow: 0 3px 1px -2px rgba(0,0,0,.2), 0 2px 2px 0 rgba(0,0,0,.14), 0 1px 5px 0 rgba(0,0,0,.12);padding: 0;width: 50%;margin:0;display: table-cell;}';
+				css += '#CMP_PV #step2 .container .purposes li{border-bottom: 1px solid rgba(0, 0, 0, 0.11);background: #3c3c3c; color: white;}';
 				css += '#CMP_PV #step2 .container .purposes li:last-child{border-bottom: none;}';
-				css += '#CMP_PV #step2 .container .purposes li>h4 .title{border-left: 3px solid transparent;}';
+				css += '#CMP_PV #step2 .container .purposes li>h4:first-child{border-left: 3px solid transparent;}';
 				css += '#CMP_PV #step2 .container .purposes li>h4 .arrow{padding: 0 16px 0 0;width: 28px;text-align: right;}';
+				css += '#CMP_PV #step2 .container .purposes li>h4 .title{padding: 14px 8px;}';
+				css += '#CMP_PV #step2 .container .purposes li>h4 .help{width: 15px;padding: 5px;line-height: 0px;}';
+				css += '#CMP_PV #step2 .container .purposes li>h4 .help:before{content:\'?\';border: 2px solid white;border-radius: 50%;display: inline-block;width: 17px;height: 17px;text-indent: 5px;line-height: 15px;}';
 				css += '#CMP_PV #step2 .container .purposes li>h4 .arrow:after{content:\'\\276c\'; font-size: 25px;transition: all 0.5s;display: inline-block;height: 40px;}';
 				css += '#CMP_PV #step2 .container .purposes li>h4{display:table;margin:0;font-weight:normal;cursor:pointer;height: 46px;width: 100%;}';
 				css += '#CMP_PV #step2 .container .purposes li>h4:hover{background: #5f5f5f;}';
-				css += '#CMP_PV #step2 .container .purposes li>h4>span{display: table-cell;padding: 14px 18px;vertical-align: middle;}';
+				css += '#CMP_PV #step2 .container .purposes li>h4>span{display: table-cell;vertical-align: middle;}';
 				css += '#CMP_PV #step2 .container .purposes li>h4>label{display: table-cell;border-top: 14px solid transparent;border-bottom: 14px solid transparent;}';
-				css += '#CMP_PV #step2 .container .purposes li.active>h4 .title{border-left: 3px solid #F44336;}';
+				css += '#CMP_PV #step2 .container .purposes li.active>h4:first-child{border-left: 3px solid #F44336;}';
 				css += '#CMP_PV #step2 .container .purposes li.active>h4 .arrow::after{transform: rotate(0.5turn);}';
-				css += '#CMP_PV #step2 .container .purposes li>div{display:none;background: grey;font-size: small;padding: 5px;}';
-				css += '#CMP_PV #step2 .container .purposes li.active>div{display:block;}';
+				css += '#CMP_PV #step2 .container .purposes li>div{display:none;background: grey;font-size: small;padding: 5px;position: absolute;z-index: 3;margin: 0 20px;border: 2px solid white;border-radius: 10px;max-width: 500px;cursor:pointer;}';
+				css += '#CMP_PV #step2 .container .purposes li>h4 .help:hover:before, #CMP_PV #step2 .container .purposes li>h4 .help:focus:before, #CMP_PV #step2 .container .purposes li>h4 .help:active:before{color:black;background-color:white;}';
 				css += '#CMP_PV #step2 .container .vendors{background: white;position: relative;}';
 				css += '#CMP_PV #step2 .container .vendors ul{list-style:none;}';
 				css += '#CMP_PV #step2 .container .vendors li{padding: 2px 5px;}';
 				css += '#CMP_PV #step2 .container .vendors li>span{display:inline-block; width: 80%;}';
 				css += '#CMP_PV #step2 .container .vendors li .switch{height: 10px;width: 52px;}';
 				css += '#CMP_PV #step2 .container .vendors li .slider{height: 10px;}';
-				css += '#CMP_PV #step2 .container .vendors li .slider:before{height: 18px; width: 18px;}';
+				css += '#CMP_PV #step2 .container .vendors li .slider:before{height: 18px; width: 18px;bottom: -5px;}';
 				css += '#CMP_PV #step2 .container .vendors.pid1 li:not(.pid1){display: none;}';
 				css += '#CMP_PV #step2 .container .vendors.pid2 li:not(.pid2){display: none;}';
 				css += '#CMP_PV #step2 .container .vendors.pid3 li:not(.pid3){display: none;}';
@@ -239,10 +243,28 @@ var cmp_pv = {
 				css += '#CMP_PV #step2 .vendors_head>div:nth-child(2){box-shadow: 0px 1px 2px #bfbfbf;}';
 				css += '#CMP_PV #step2 .vendors_head>div>div:first-child{padding-left: 44px;width: 70%;}';
 				css += '#CMP_PV #step2 .vendors_head>div>div:nth-child(2){width: 22%;padding-left: 41px;}';
+				//Responsive
+				css += '@media screen and (max-width: 640px) {';
+				css += '	#CMP_PV{padding:0;width:100%;}';
+				css += '	#CMP_PV #step1 > div{display:block;padding: 0 10px 10px 10px;}';
+				css += '	#CMP_PV #step1 > p{display:block;font-size: 12px;}';
+				css += '	#CMP_PV #step2 .container{width:auto;}';
+				css += '	#CMP_PV #step2 > .container{width:200%;max-width:initial;transition: transform .2s ease-in-out;}';
+				css += '	#CMP_PV #step2 .container .purposes, #CMP_PV #step2 .container .vendors{width:46%;}';
+				css += '	#CMP_PV #step2 .container .purposes li{width:auto;}';
+				css += '	#CMP_PV #step2 .container .purposes li.active > h4 .arrow::after{transform: none;}';
+				css += '	#CMP_PV #step2 > .container.showPurposes .purposes li > h4 .arrow::after{visibility: hidden;}';
+				css += '	#CMP_PV #step2 > .container.showPurposes .purposes li.active > h4 .arrow::after{visibility: visible;transform: rotate(0.5turn);}';
+				css += '	#CMP_PV #step2 > .container.showPurposes {transform: translate3d(-42%, 0, 0);}';
+				css += '	#CMP_PV #step2 .container .vendors_list {padding: 0 5px;}';
+				css += '}';
 				// Hack IE
 				if (this.detectIE()) {
 					css += '#CMP_PV #step2 .container .vendors{overflow-y: auto;overflow-x: hidden;}';
 					css += '#CMP_PV #step2 .container .vendors_list{overflow: visible; width: 460px; height:280px;}';
+					css += '@media screen and (max-width: 640px) {';
+					css += '	#CMP_PV #step2 .container .vendors_list{width: 100%;}';
+					css += '}';
 				}
 
 				var sheet = document.createElement('style');
@@ -258,18 +280,12 @@ var cmp_pv = {
 				html += '	</div>';
 				html += '</div>';
 				html += '<div id="step2" style="display: none;">';
-				html += '	<div class="buttons">';
-				html += '		<a href="javascript:cmp_pv.ui.showStep(1);">&lsaquo; Retour</a>';
-				html += '		<div class="container">';
-				html += '			<button onclick="cmp_pv.cookie.saveConsent(false);">Enregistrer</button>';
-				html += '		</div>';
-				html += '	</div>';
-				html += '	<div class="container">';
+				html += '	<div class="container" id="purpose_container">';
 				html += '		<ul class="purposes">';
 				for (var i = 0; i < cmp_pv.globalVendorList.purposes.length; i++) {
 					var purpose = cmp_pv.globalVendorList.purposes[i];
 					html += '		<li id="purpose_' + purpose.id + '">';
-					html += '			<h4><span class="title" onclick="cmp_pv.ui.showPurpose(' + purpose.id + ');">' + cmp_pv.ui.language['fr'].purposes[purpose.id].name + '</span><label class="switch"><input type="checkbox" onchange="cmp_pv.ui.switchPurpose(' + purpose.id + ', this.checked);"' + ((cmp_pv.consentString.data.purposesAllowed[purpose.id]) ? 'checked' : '') + '><span class="slider"></span></label><span class="arrow" onclick="cmp_pv.ui.showPurpose(' + purpose.id + ');"></span></h4>';
+					html += '			<h4><span class="help" id="em-' + purpose.id + '" onclick="cmp_pv.ui.showPurposeDescription(' + purpose.id + ');">&nbsp;</span><span class="title" onclick="cmp_pv.ui.showPurpose(' + purpose.id + ');">' + cmp_pv.ui.language['fr'].purposes[purpose.id].name + '</span><label class="switch"><input type="checkbox" onchange="cmp_pv.ui.switchPurpose(' + purpose.id + ', this.checked);"' + ((cmp_pv.consentString.data.purposesAllowed[purpose.id]) ? 'checked' : '') + '><span class="slider"></span></label><span class="arrow" onclick="cmp_pv.ui.showPurpose(' + purpose.id + ', true);"></span></h4>';
 					html += '			<div><span>' + cmp_pv.ui.language['fr'].purposes[purpose.id].description + '</span></div>';
 					html += '		</li>';
 				}
@@ -297,6 +313,12 @@ var cmp_pv = {
 				html += '			</ul>';
 				html += '		</div>';
 				html += '	</div>';
+				html += '	<div class="buttons">';
+				html += '		<a href="javascript:cmp_pv.ui.showStep(1);">&lsaquo; Retour</a>';
+				html += '		<div class="container">';
+				html += '			<button onclick="cmp_pv.cookie.saveConsent(false);">Enregistrer</button>';
+				html += '		</div>';
+				html += '	</div>';
 				html += '</div>';
 				cmp_pv.ui.dom.innerHTML = html;
 				document.body.appendChild(cmp_pv.ui.dom);
@@ -318,11 +340,25 @@ var cmp_pv = {
 				document.getElementById('step' + i).style.display = (i === step) ? 'block' : 'none';
 			}
 		},
-		showPurpose: function(purpose) {
+		showPurpose: function (purpose, arrow) {
 			for (var i = 1; i <= 5; i++) {
 				document.getElementById('purpose_' + i).className = (i === purpose) ? 'active' : '';
 			}
 			document.getElementById('vendors').className = 'vendors pid' + purpose;
+			if (arrow === true) {
+				var container = document.getElementById('purpose_container');
+				if (container.className.indexOf('showPurposes') === -1) {
+					container.className = 'container showPurposes';
+				} else {
+					container.className = 'container';
+				}
+			}
+		},
+		showPurposeDescription: function (purpose) {
+			cmp_pv.ui.dom.addEventListener('click', function () {
+				document.getElementById('purpose_' + purpose).children[1].style.display = 'none';
+			}, true);
+			document.getElementById('purpose_' + purpose).children[1].style.display = 'block';
 		},
 		showVendors: function(i) {
 			var not = (i === 1) ? 0 : 1;
@@ -675,6 +711,7 @@ var cmp_pv = {
 			return this.decodeCookieData('publisher_', 'dataPub', cookieValue);
 		},
 		decodeCookieData: function(type, varname, cookieValue) {
+			if (cookieValue === '') return false;
 			this[varname].bitString = this.decodeBase64UrlSafe(cookieValue);
 			var cookieVersion = this.decodeBitsToInt(this[varname], this.const.VERSION_BIT_OFFSET, this.const.VERSION_BIT_SIZE);
 			if (typeof cookieVersion !== 'number') {

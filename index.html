@@ -1,8 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+	<title>CMP PV Test</title>
     <meta charset="UTF-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<style>
 		body{
 			padding: 0; 
@@ -54,10 +56,10 @@
 <body>
     <script>
 		window.__cmp('init', {
-			hasGlobalScope: true,
-			cookieDomain: 'paruvendu-dev.fr',
-			urlVendorList: 'test/vendorlist.json',
-			globalConsentLocation: 'http://cmp.paruvendu.consensu.org:8000/portal.html',
+			// hasGlobalScope: true,
+			cookieDomain: null,
+			// urlVendorList: 'test/vendorlist.json',
+			// globalConsentLocation: 'http://cmp.paruvendu.consensu.org:8000/portal.html',
 			consentCallback: function () {console.info('Callback');}
 		});
 		function showResult(data){
