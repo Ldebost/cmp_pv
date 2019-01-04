@@ -426,7 +426,7 @@ var cmp_pv = {
 			var value = "; " + document.cookie;
 			var parts = value.split("; " + name + "=");
 
-			if (parts.length === 2) {
+			if (parts.length >= 2) {
 				if (typeof cb === 'function') cb(parts.pop().split(';').shift());
 				return parts.pop().split(';').shift();
 			} else {
