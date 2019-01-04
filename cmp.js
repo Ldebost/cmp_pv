@@ -37,6 +37,7 @@ var cmp_pv = {
 		gdprApplies: true,
 		hasGlobalScope: false,
 		cookieDomain: 'paruvendu.fr',
+		publisherName: 'ParuVendu.fr',
 		urlVendorList: 'https://vendorlist.consensu.org/vendorlist.json',
 		urlCookiesUsage: 'https://www.paruvendu.fr/communfo/defaultcommunfo/defaultcommunfo/infosLegales#pc',
 		consentCallback: null,
@@ -181,7 +182,7 @@ var cmp_pv = {
 				cmp_pv.ui.dom.style.display = 'block';
 
 				var css = '';
-				css += '#CMP_PV {position: fixed; bottom: 0; background: #fafafa; color: #010101; padding: 5px 10px;font-family:Tahoma, Geneva, sans-serif; font-size: 14px;box-shadow: 0px 0px 5px #949494;width: calc(100% - 20px);}';
+				css += '#CMP_PV {position: fixed; bottom: 0; background: #fafafa; color: #010101; padding: 5px 10px;font-family:Tahoma, Geneva, sans-serif; font-size: 14px;box-shadow: 0px 0px 5px #949494;width: calc(100% - 20px);z-index: 1;}';
 				css += '#CMP_PV p{margin:0;}';
 				css += '#CMP_PV a{color:#F44336; text-decoration: underline; cursor: pointer;}';
 				css += '#CMP_PV a:hover{color:#ff3b3f; text-decoration: none;}';
@@ -276,7 +277,7 @@ var cmp_pv = {
 
 				var html = '';
 				html += '<div id="step1">';
-				html += '	<p>Nos partenaires et nous-mêmes utilisons différentes technologies, telles que les cookies, pour personnaliser les contenus et les publicités, proposer des fonctionnalités sur les réseaux sociaux et analyser le trafic. Merci de cliquer sur le bouton ci-dessous pour donner votre accord. Vous pouvez changer d’avis et modifier vos choix à tout moment. <a target="_blank" href="' + cmp_pv.conf.urlCookiesUsage + '">En savoir plus.</a></p>';
+				html += '	<p>Nos partenaires et nous-mêmes utilisons différentes technologies, telles que les cookies, pour personnaliser les contenus et les publicités, proposer des fonctionnalités sur les réseaux sociaux et analyser le trafic. Merci de cliquer sur le bouton ci-dessous pour donner votre accord. Vous pouvez changer d\'avis et modifier vos choix à tout moment. <a target="_blank" href="' + cmp_pv.conf.urlCookiesUsage + '">En savoir plus.</a></p>';
 				html += '	<div>';
 				html += '		<button onclick="cmp_pv.cookie.saveConsent(true);">J\'accepte</button>';
 				html += '		<a onclick="cmp_pv.ui.showStep(2);">Afficher toutes les utilisations prévues</a>';
@@ -297,7 +298,7 @@ var cmp_pv = {
 				html += '			<div class="vendors_head">';
 				html += '				<div>';
 				html += '					<a id="vendors_0" class="active" href="#" onclick="cmp_pv.ui.showVendors(0);">Publicité</a>';
-				html += '					<a id="vendors_1" href="#"  onclick="cmp_pv.ui.showVendors(1);">ParuVendu.fr</a>';
+				html += '					<a id="vendors_1" href="#"  onclick="cmp_pv.ui.showVendors(1);">' + cmp_pv.conf.publisherName + '</a>';
 				html += '				</div>';
 				html += '				<div>';
 				html += '					<div>Partenaire</div>';

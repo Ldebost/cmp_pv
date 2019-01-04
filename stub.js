@@ -41,7 +41,12 @@
 
 	function cmpMsgHandler(event) {
 		var msgIsString = typeof event.data === "string";
-		var json = msgIsString ? JSON.parse(event.data) : event.data;
+		var json;
+		if (msgIsString) {
+			json = event.data.indexOf("__cmpCall") !== -1 ? JSON.parse(event.data) : {};
+		} else {
+			json = event.data;
+		}
 		if (json.__cmpCall) {
 			var i = json.__cmpCall;
 			window.__cmp(i.command, i.parameter, function(retValue, success) {
