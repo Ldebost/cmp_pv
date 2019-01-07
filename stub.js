@@ -62,11 +62,11 @@
 		}
 	}
 
-	if (typeof (__cmp) !== 'function') {
+	// if (typeof (__cmp) !== 'function') {
 		window.__cmp = stubCMP;
 		__cmp.msgHandler = cmpMsgHandler;
 		if (window.addEventListener)
 			window.addEventListener('message', cmpMsgHandler, false);
 		else window.attachEvent('onmessage', cmpMsgHandler);
-	}
+	// }
 })();

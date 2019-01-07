@@ -5,7 +5,7 @@ var cmp_pv = {
 	/** Interface **/
 	isLoaded: false,
 	cmpReady: false,
-	commandQueue: window.__cmp.a || {},
+	commandQueue: window.__cmp.a || [],
 	processCommand: function(command, parameter, callback) {
 		if (typeof cmp_pv.commands[command] !== 'function') {
 			console.error("Invalid CMP command %s,", command);
@@ -299,8 +299,8 @@ var cmp_pv = {
 				html += '		<div id="vendors" class="vendors">';
 				html += '			<div class="vendors_head">';
 				html += '				<div>';
-				html += '					<a id="vendors_0" class="active" href="#" onclick="cmp_pv.ui.showVendors(0);">Publicité</a>';
-				html += '					<a id="vendors_1" href="#"  onclick="cmp_pv.ui.showVendors(1);">' + cmp_pv.conf.publisherName + '</a>';
+				html += '					<a id="vendors_0" class="active" href="javascript:cmp_pv.ui.showVendors(0);">Publicité</a>';
+				html += '					<a id="vendors_1" href="javascript:cmp_pv.ui.showVendors(1);">' + cmp_pv.conf.publisherName + '</a>';
 				html += '				</div>';
 				html += '				<div>';
 				html += '					<div>Partenaire</div>';
