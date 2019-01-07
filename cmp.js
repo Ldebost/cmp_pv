@@ -182,7 +182,7 @@ var cmp_pv = {
 				cmp_pv.ui.dom.style.display = 'block';
 
 				var css = '';
-				css += '#CMP_PV {position: fixed; bottom: 0; background: #fafafa; color: #010101; padding: 5px 10px;font-family:Tahoma, Geneva, sans-serif; font-size: 14px;box-shadow: 0px 0px 5px #949494;width: calc(100% - 20px);z-index: 1;}';
+				css += '#CMP_PV {position: fixed; bottom: 0; background: #fafafa; color: #010101; padding: 5px 10px;font-family:Tahoma, Geneva, sans-serif; font-size: 14px;box-shadow: 0px 0px 5px #949494;width: calc(100% - 20px);z-index: 100;}';
 				css += '#CMP_PV p{margin:0;}';
 				css += '#CMP_PV a{color:#F44336; text-decoration: underline; cursor: pointer;}';
 				css += '#CMP_PV a:hover{color:#ff3b3f; text-decoration: none;}';
@@ -201,9 +201,9 @@ var cmp_pv = {
 				css += '#CMP_PV #step1>div>*{display: block;}';
 				css += '#CMP_PV #step1>div>button{width: 100%; margin: 5px 0;}';
 				css += '#CMP_PV #step1>p{text-align:justify;padding: 5px;}';
-				css += '#CMP_PV #step2 .container{max-width: 1000px; margin:10px auto;display: table;}';
+				css += '#CMP_PV #step2 .container{max-width: 1000px; margin:10px auto;display: flex;}';
 				css += '#CMP_PV #step2 .container:after{content:\'\';display:block;clear:both;}';
-				css += '#CMP_PV #step2 .container .purposes, #CMP_PV #step2 .container .vendors {list-style:none; box-shadow: 0 3px 1px -2px rgba(0,0,0,.2), 0 2px 2px 0 rgba(0,0,0,.14), 0 1px 5px 0 rgba(0,0,0,.12);padding: 0;width: 50%;margin:0;display: table-cell;}';
+				css += '#CMP_PV #step2 .container .purposes, #CMP_PV #step2 .container .vendors {list-style:none; box-shadow: 0 3px 1px -2px rgba(0,0,0,.2), 0 2px 2px 0 rgba(0,0,0,.14), 0 1px 5px 0 rgba(0,0,0,.12);padding: 0;width: 50%;margin:0;}';
 				css += '#CMP_PV #step2 .container .purposes li{border-bottom: 1px solid rgba(0, 0, 0, 0.11);background: #3c3c3c; color: white;}';
 				css += '#CMP_PV #step2 .container .purposes li:last-child{border-bottom: none;}';
 				css += '#CMP_PV #step2 .container .purposes li>h4:first-child{border-left: 3px solid transparent;}';
@@ -262,9 +262,11 @@ var cmp_pv = {
 				css += '	#CMP_PV #step2 > .container.showPurposes {transform: translate3d(-42%, 0, 0);}';
 				css += '	#CMP_PV #step2 .container .vendors_list {padding: 0 5px;}';
 				css += '}';
-				// Hack IE
-				if (this.detectIE()) {
-					css += '#CMP_PV #step2 .container .vendors{overflow-y: auto;overflow-x: hidden;}';
+				// Hack IE 9
+				if (this.detectIE9()) {
+					css += '#CMP_PV #step2 .container{display:table;}';
+					css += '#CMP_PV #step2 .container .vendors{overflow-y: auto;overflow-x: hidden;display:table-cell;}';
+					css += '#CMP_PV #step2 .container .purposes{display:table-cell;}';
 					css += '#CMP_PV #step2 .container .vendors_list{overflow: visible; width: 460px; height:280px;}';
 					css += '@media screen and (max-width: 640px) {';
 					css += '	#CMP_PV #step2 .container .vendors_list{width: 100%;}';
@@ -383,11 +385,10 @@ var cmp_pv = {
 		switchVendor: function(vendor, checked) {
 			cmp_pv.consentString.data.bitField[vendor] = checked;
 		},
-		detectIE: function() {
+		detectIE9: function () {
 			var ua = window.navigator.userAgent;
-			var msie = ua.indexOf('MSIE ');
-			var trident = ua.indexOf('Trident/');
-			return trident > 0 || msie > 0;
+			var msie = ua.indexOf('MSIE 9');
+			return msie > 0;
 		},
 		sortVendors: function () {
 			cmp_pv.globalVendorList.vendors = cmp_pv.globalVendorList.vendors.sort(function (a, b) {
