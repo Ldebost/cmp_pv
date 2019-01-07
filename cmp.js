@@ -389,6 +389,11 @@ var cmp_pv = {
 			var trident = ua.indexOf('Trident/');
 			return trident > 0 || msie > 0;
 		},
+		sortVendors: function () {
+			cmp_pv.globalVendorList.vendors.sort(function (a, b) {
+				return a.name.toLowerCase() > b.name.toLowerCase();
+			});
+		},
 		// https://vendorlist.consensu.org/purposes-fr.json
 		language: {
 			'fr': {
@@ -971,7 +976,7 @@ var cmp_pv = {
 				}
 			}
 			rangeType = (ranges[true].length < ranges[false].length);
-			if (ranges[rangeType].length === 0) rangeType = !rangeType;
+			if (ranges[rangeType].length === 0) rangeType = (this.data.bitField[1] === 1);
 			return {defaultConsent: !rangeType, rangeEntries: ranges[rangeType], numEntries: ranges[rangeType].length};
 		}
 	},
@@ -1052,6 +1057,7 @@ var cmp_pv = {
 		cmp_pv._fetch(cmp_pv.conf.urlVendorList, function(res) {
 			if (res.status === 200) {
 				cmp_pv.globalVendorList = JSON.parse(res.responseText);
+				cmp_pv.ui.sortVendors();
 			} else {
 				console.error("Can't fetch vendorlist: %d (%s)", res.status, res.statusText);
 			}

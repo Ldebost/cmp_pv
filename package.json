@@ -6,7 +6,7 @@
   "main": "cmp.js",
   "scripts": {
     "dev": "ws",
-    "build-cmp": "uglifyjs polyfills/base64.polyfill.js polyfills/assign.polyfill.js cmp.js --compress --mangle --source-map --output cmp.min.js",
+    "build-cmp": "uglifyjs polyfills/base64.polyfill.js polyfills/assign.polyfill.js cmp.js --compress --mangle --source-map url=cmp.min.js.map --output cmp.min.js",
     "build-stub": "uglifyjs stub.js --compress --mangle -o stub.min.js",
     "build-portal": "uglifyjs polyfills/assign.polyfill.js portal.js --compress --mangle -o portal.min.js",
     "convert": "charset-convert cmp.min.js cmp.iso-8859-1.min.js -i utf8 -o ISO-8859-1",
