@@ -390,8 +390,12 @@ var cmp_pv = {
 			return trident > 0 || msie > 0;
 		},
 		sortVendors: function () {
-			cmp_pv.globalVendorList.vendors.sort(function (a, b) {
-				return a.name.toLowerCase() > b.name.toLowerCase();
+			cmp_pv.globalVendorList.vendors = cmp_pv.globalVendorList.vendors.sort(function (a, b) {
+				if (a.name.toLowerCase() < b.name.toLowerCase()) {
+					return -1;
+				} else {
+					return 1;
+				}
 			});
 		},
 		// https://vendorlist.consensu.org/purposes-fr.json
