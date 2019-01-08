@@ -537,7 +537,7 @@ var cmp_pv = {
 		const: {
 			VERSION_BIT_OFFSET: 0,
 			VERSION_BIT_SIZE: 6,
-			CMP_ID: 1,
+			CMP_ID: 0,
 			CMP_VERSION: 1,
 
 			// Version 1
@@ -701,7 +701,8 @@ var cmp_pv = {
 		},
 
 		decodeVendorConsentData: function(cookieValue) {
-			if (this.decodeCookieData('vendor_', 'data', cookieValue) && this.data.encodingType === 1) {
+			var res = this.decodeCookieData('vendor_', 'data', cookieValue);
+			if (res && this.data.encodingType === 1) {
 				var range, i, y;
 				var consent = !this.data.defaultConsent;
 				// Initialize bitField
@@ -719,7 +720,7 @@ var cmp_pv = {
 				}
 				return true;
 			}
-			return false;
+			return res;
 		},
 		decodePublisherConsentData: function(cookieValue) {
 			return this.decodeCookieData('publisher_', 'dataPub', cookieValue);
