@@ -39,7 +39,7 @@ var cmp_pv = {
 		cookieDomain: 'paruvendu.fr',
 		publisherName: 'ParuVendu.fr',
 		urlVendorList: 'https://vendorlist.consensu.org/vendorlist.json',
-		urlCookiesUsage: 'https://www.paruvendu.fr/communfo/defaultcommunfo/defaultcommunfo/infosLegales#pc',
+		urlCookiesUsage: 'https://www.paruvendu.fr/communfo/defaultcommunfo/defaultcommunfo/infosLegales#cookies',
 		consentCallback: null,
 		dayCheckInterval: 30,
 		globalConsentLocation: 'http://cmp.paruvendu.consensu.org/portal.html'
