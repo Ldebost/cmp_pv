@@ -368,7 +368,7 @@ var cmp_pv = {
 				cmp_pv.ui.showPurpose(1);
 
 				// Accept on scroll
-				window.addEventListener('scroll', cmp_pv.ui.acceptOnEvent, {passive: true, once: true});
+				//window.addEventListener('scroll', cmp_pv.ui.acceptOnEvent, {passive: true, once: true});
 			}
 		},
 		show: function(bool) {
@@ -457,10 +457,10 @@ var cmp_pv = {
 				}
 			});
 		},
-		acceptOnEvent: function () {
+		/*acceptOnEvent: function () {
 			window.removeEventListener('scroll', cmp_pv.ui.acceptOnEvent, {passive: true, once: true});
 			cmp_pv.cookie.saveConsent(true);
-		},
+		},*/
 		// https://vendorlist.consensu.org/purposes-fr.json
 		language: {
 			'fr': {
