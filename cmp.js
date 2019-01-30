@@ -586,11 +586,18 @@ var cmp_pv = {
 			});
 		},
 		saveVerification: function(name) {
-			localStorage.setItem(name, new Date().toString());
+			try {
+				localStorage.setItem(name, new Date().toString());
+			} catch (e) {
+			}
 		},
 		lastVerification: function(name) {
-			var date = localStorage.getItem(name);
-			return (date) ? Date.parse(date) : new Date();
+			try {
+				var date = localStorage.getItem(name);
+				return (date) ? Date.parse(date) : new Date();
+			} catch (e) {
+				return new Date();
+			}
 		}
 	},
 
