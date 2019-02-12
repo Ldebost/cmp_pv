@@ -11,7 +11,7 @@
     "build-portal": "uglifyjs polyfills/assign.polyfill.js portal.js --compress --mangle -o portal.min.js",
     "convert": "del cmp.iso-8859-1.min.js && charset-convert cmp.min.js cmp.iso-8859-1.min.js -i utf8 -o ISO-8859-1",
     "build": "npm run build-cmp && npm run build-stub && npm run build-portal && npm run convert",
-    "deploy": "xcopy cmp*.js* C:\\paruvendu\\sources\\root\\communfo\\web\\www\\js\\ /Y /U && xcopy cmp.iso-8859-1.min.js C:\\paruvendu\\sources\\root\\communfo\\web\\www\\js\\cmp.min.js /Y",
+    "deploy": "xcopy cmp*.js* C:\\paruvendu\\sources\\root\\communfo\\web\\www\\js\\cmp\\ /Y /U && xcopy cmp.iso-8859-1.min.js C:\\paruvendu\\sources\\root\\communfo\\web\\www\\js\\cmp\\cmp.min.js /Y && xcopy portal.* C:\\paruvendu\\sources\\root\\communfo\\web\\www\\js\\cmp\\ /Y && xcopy stub.* C:\\paruvendu\\sources\\root\\communfo\\web\\www\\js\\cmp\\ /Y",
     "test": "uglifyjs  polyfills/base64.polyfill.js polyfills/assign.polyfill.js cmp.js --compress sequences,dead_code,conditionals,booleans,unused,if_return,join_vars --mangle toplevel --mangle-props reserved=[__cmp,init,getVendorConsents,getConsentData,ping,getPublisherConsents,getVendorList,showConsentUi,vendor_1,publisher_1,metadata_1,vendorListVersion,version,purposes,vendors] -o cmp.test.min.js"
   },
   "author": "",

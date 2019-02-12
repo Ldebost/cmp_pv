@@ -42,7 +42,7 @@ var cmp_pv = {
 		urlCookiesUsage: 'https://www.paruvendu.fr/communfo/defaultcommunfo/defaultcommunfo/infosLegales#cookies',
 		consentCallback: null,
 		dayCheckInterval: 30,
-		globalConsentLocation: 'http://cmp.paruvendu.consensu.org/portal.html'
+		globalConsentLocation: 'https://paruvendu.mgr.consensu.org/portal.html'
 	},
 
 	/** Commandes **/
@@ -606,7 +606,7 @@ var cmp_pv = {
 		const: {
 			VERSION_BIT_OFFSET: 0,
 			VERSION_BIT_SIZE: 6,
-			CMP_ID: 0,
+			CMP_ID: 222,
 			CMP_VERSION: 1,
 
 			// Version 1
