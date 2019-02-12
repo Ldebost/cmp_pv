@@ -143,7 +143,7 @@ var cmp_pv = {
 		},
 
 		getVendorList: function(vendorListVersion, callback) {
-			if (vendorListVersion !== null && cmp_pv.globalVendorList.version !== vendorListVersion && (typeof vendorListVersion === 'number' /*|| vendorListVersion === '?LATEST?'*/)) {
+			if (vendorListVersion !== null && cmp_pv.globalVendorList.vendorListVersion !== vendorListVersion && (typeof vendorListVersion === 'number' /*|| vendorListVersion === '?LATEST?'*/)) {
 				return cmp_pv._fetch("https://vendorlist.consensu.org/v-" + vendorListVersion + "/vendorlist.json", function(res) {
 					if (res.status === 200) {
 						callback(JSON.parse(res.responseText), true);
