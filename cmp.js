@@ -552,6 +552,7 @@ var cmp_pv = {
 			// Maj dates
 			cmp_pv.consentString.data.lastUpdated = new Date();
 			cmp_pv.consentString.dataPub.lastUpdated = new Date();
+			cmp_pv.consentString.data.cmpId = cmp_pv.consentString.const.CMP_ID;
 
 			// Accepte tout
 			if (all) {
@@ -582,6 +583,7 @@ var cmp_pv = {
 		loadConsent: function(cb) {
 			var resP = this.loadPublisherCookie();
 			this.loadVendorCookie(function(resV) {
+				if (cmp_pv.consentString.data.cmpId === 0) resV = false;
 				cb(resV && resP);
 			});
 		},
