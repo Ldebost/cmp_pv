@@ -42,7 +42,8 @@ var cmp_pv = {
 		urlCookiesUsage: 'https://www.paruvendu.fr/communfo/defaultcommunfo/defaultcommunfo/infosLegales#cookies',
 		consentCallback: null,
 		dayCheckInterval: 30,
-		globalConsentLocation: 'https://paruvendu.mgr.consensu.org/portal.html'
+		globalConsentLocation: 'https://paruvendu.mgr.consensu.org/portal.html',
+		uiColor: '#EE1C24'
 	},
 
 	/** Commandes **/
@@ -184,12 +185,12 @@ var cmp_pv = {
 				var css = '';
 				css += '#CMP_PV {position: fixed; bottom: 0; background: #fafafa; color: #010101; padding: 5px 10px;font-family:Tahoma, Geneva, sans-serif; font-size: 14px;box-shadow: 0 0 5px #949494;width: calc(100% - 20px);z-index: 100;}';
 				css += '#CMP_PV p{margin:0;}';
-				css += '#CMP_PV a{color:#EE1C24; text-decoration: underline; cursor: pointer;}';
+				css += '#CMP_PV a{color:' + cmp_pv.conf.uiColor + '; text-decoration: underline; cursor: pointer;}';
 				css += '#CMP_PV a:hover{color:#D41920; text-decoration: none;}';
-				css += '#CMP_PV button{background-color: #EE1C24;border: 2px solid #ee1c24;font-size: 20px;font-weight: bold;color: #fff;cursor: pointer;padding:5px; transition: background 300ms;}';
-				css += '#CMP_PV button:hover{background-color: #FFF;color:#EE1C24;}';
-				css += '#CMP_PV button.inverse{background-color: #FFF;color:#EE1C24;}';
-				css += '#CMP_PV button.inverse:hover{background-color: #EE1C24;color:#FFF;}';
+				css += '#CMP_PV button{background-color: ' + cmp_pv.conf.uiColor + ';border: 2px solid ' + cmp_pv.conf.uiColor + ';font-size: 20px;font-weight: bold;color: #fff;cursor: pointer;padding:5px; transition: background 300ms;}';
+				css += '#CMP_PV button:hover{background-color: #FFF;color:' + cmp_pv.conf.uiColor + ';}';
+				css += '#CMP_PV button.inverse{background-color: #FFF;color:' + cmp_pv.conf.uiColor + ';}';
+				css += '#CMP_PV button.inverse:hover{background-color: ' + cmp_pv.conf.uiColor + ';color:#FFF;}';
 				css += '#CMP_PV .switch{position: relative;display: inline-block;width: 60px;height: 16px;cursor: pointer;}';
 				css += '#CMP_PV .switch input {display:none;}';
 				css += '#CMP_PV .slider{position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; -webkit-transition: .4s; transition: .4s;border-radius: 34px;height: 18px;}';
@@ -220,7 +221,7 @@ var cmp_pv = {
 				css += '#CMP_PV #step2 .container .purposes li>h4:hover{background: #5f5f5f;}';
 				css += '#CMP_PV #step2 .container .purposes li>h4>span{display: table-cell;vertical-align: middle;}';
 				css += '#CMP_PV #step2 .container .purposes li>h4>label{display: table-cell;border-top: 14px solid transparent;border-bottom: 14px solid transparent;}';
-				css += '#CMP_PV #step2 .container .purposes li.active>h4:first-child{border-left: 3px solid #F44336;}';
+				css += '#CMP_PV #step2 .container .purposes li.active>h4:first-child{border-left: 3px solid ' + cmp_pv.conf.uiColor + ';}';
 				css += '#CMP_PV #step2 .container .purposes li.active>h4 .arrow::after{transform: rotate(0.5turn);}';
 				css += '#CMP_PV #step2 .container .purposes li>div{display:none;background: grey;font-size: small;padding: 5px;position: absolute;z-index: 3;margin: 0 20px;border: 2px solid white;border-radius: 10px;max-width: 500px;cursor:pointer;}';
 				css += '#CMP_PV #step2 .container .purposes li>h4 .help:hover:before, #CMP_PV #step2 .container .purposes li>h4 .help:focus:before, #CMP_PV #step2 .container .purposes li>h4 .help:active:before{color:black;background-color:white;}';
@@ -242,7 +243,7 @@ var cmp_pv = {
 				css += '#CMP_PV #step2 .buttons button{font-size: 16px;padding: 5px 15px;}';
 				css += '#CMP_PV #step2 .vendors_head{position: absolute;top:0;left:0;right:0;}';
 				css += '#CMP_PV #step2 .vendors_head>div>a{display:block;float:left;width:50%;padding:5px 0;text-align: center;border-bottom: 3px solid transparent;text-decoration:none;background:#515151;color:#ededed;}';
-				css += '#CMP_PV #step2 .vendors_head>div>a.active{border-bottom: 3px solid #F44336;}';
+				css += '#CMP_PV #step2 .vendors_head>div>a.active{border-bottom: 3px solid ' + cmp_pv.conf.uiColor + ';}';
 				css += '#CMP_PV #step2 .vendors_head>div>div{display:block;float:left;width:50%;padding:5px 0;letter-spacing: 1px;font-variant: small-caps;box-sizing:border-box;}';
 				css += '#CMP_PV #step2 .vendors_head>div:after{content:\'\';display:block;clear:both;}';
 				css += '#CMP_PV #step2 .vendors_head>div:nth-child(2){box-shadow: 0 1px 2px #bfbfbf;}';
