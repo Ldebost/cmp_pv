@@ -93,7 +93,7 @@ var cmp_pv = {
                 gdprApplies: cmp_pv.conf.gdprApplies,
                 hasGlobalScope: cmp_pv.conf.hasGlobalScope,
                 purposeConsents: cmp_pv.consentString.data.purposesAllowed,
-                vendorConsents: vendorList,
+                vendorConsents: vendorList
             };
 
             callback(consent, true);
@@ -106,7 +106,7 @@ var cmp_pv = {
                 consent = {
                     consentData: cmp_pv.consentString.generateVendorConsentString(),
                     gdprApplies: cmp_pv.conf.gdprApplies,
-                    hasGlobalScope: cmp_pv.conf.hasGlobalScope,
+                    hasGlobalScope: cmp_pv.conf.hasGlobalScope
                 };
             }
             callback(consent, true);
@@ -138,7 +138,7 @@ var cmp_pv = {
                 gdprApplies: cmp_pv.conf.gdprApplies,
                 hasGlobalScope: cmp_pv.conf.hasGlobalScope,
                 standardPurposeConsents: standard,
-                customPurposeConsents: custom,
+                customPurposeConsents: custom
             };
             callback(consent, true);
         },
@@ -159,7 +159,7 @@ var cmp_pv = {
 
         showConsentUi: function (_, callback) {
             callback(cmp_pv.ui.show(true));
-        },
+        }
     },
 
     /** UI **/
@@ -183,7 +183,7 @@ var cmp_pv = {
                 cmp_pv.ui.dom.style.display = 'block';
 
                 var css = '';
-                css += '#CMP_PV {position: fixed; bottom: 0; background: #fafafa; color: #010101; padding: 5px 10px;font-family:Tahoma, Geneva, sans-serif; font-size: 14px;box-shadow: 0 0 5px #949494;width: calc(100% - 20px);z-index: 100;}';
+                css += '#CMP_PV {position: fixed; bottom: 0; background: #fafafa; color: #010101; padding: 5px 10px;font-family:Tahoma, Geneva, sans-serif; font-size: 14px;box-shadow: 0 0 5px #949494;width: calc(100% - 20px);z-index: 300;}';
                 css += '#CMP_PV p{margin:0;}';
                 css += '#CMP_PV a{color:' + cmp_pv.conf.uiColor + '; text-decoration: underline; cursor: pointer;}';
                 css += '#CMP_PV a:hover{color:#D41920; text-decoration: none;}';
@@ -205,8 +205,11 @@ var cmp_pv = {
                 css += '#CMP_PV .container{max-width: 1000px; margin-left:auto;margin-right:auto;display: flex;}';
                 css += '#CMP_PV .container:after{content:\'\';display:block;clear:both;}';
                 css += '#CMP_PV #step2 .desc{background: white;box-shadow: 0 3px 1px -2px rgba(0,0,0,.2), 0 2px 2px 0 rgba(0,0,0,.14), 0 1px 5px 0 rgba(0,0,0,.12);padding: 10px;box-sizing: border-box;margin-top:10px;align-items: center;font-size:13px;}';
-                css += '#CMP_PV #step2 .desc>div{display: flex;}';
+                css += '#CMP_PV #step2 .desc div{display: flex;}';
                 css += '#CMP_PV #step2 .desc button{font-size: 16px;margin-left: 9px;white-space:nowrap;}';
+                css += '#CMP_PV #step2 .desc.liste>div:first-child{display:none;}';
+                css += '#CMP_PV #step2 .desc:not(.liste)>div:last-child{display:none;}';
+                css += '#CMP_PV #step2 .desc.liste p{margin-left: 10px;font-weight: bold;font-size: 15px;}';
                 css += '#CMP_PV #step2 .container .purposes, #CMP_PV #step2 .container .purposes_desc {list-style:none; box-shadow: 0 3px 1px -2px rgba(0,0,0,.2), 0 2px 2px 0 rgba(0,0,0,.14), 0 1px 5px 0 rgba(0,0,0,.12);padding: 0;width: 50%;margin:0;}';
                 css += '#CMP_PV #step2 .container .purposes li{border-bottom: 1px solid rgba(0, 0, 0, 0.11);background: #3c3c3c; color: white;position:relative;}';
                 css += '#CMP_PV #step2 .container .purposes li:last-child{border-bottom: none;}';
@@ -229,6 +232,11 @@ var cmp_pv = {
                 css += '#CMP_PV #step2 .container .vendors li > h4{height: 20px;}';
                 css += '#CMP_PV #step2 .container .vendors li > h4 .arrow::after{height: 20px;font-size:16px;}';
                 css += '#CMP_PV #step2 .container .purposes_desc>div{position: absolute;top: 30px;left: 0;right: 0;bottom: 0;overflow: auto;margin: 0;}';
+                css += '#CMP_PV #step2 .container .vendors.pid1 li:not(.pid1){display: none;}';
+                css += '#CMP_PV #step2 .container .vendors.pid2 li:not(.pid2){display: none;}';
+                css += '#CMP_PV #step2 .container .vendors.pid3 li:not(.pid3){display: none;}';
+                css += '#CMP_PV #step2 .container .vendors.pid4 li:not(.pid4){display: none;}';
+                css += '#CMP_PV #step2 .container .vendors.pid5 li:not(.pid5){display: none;}';
                 css += '#CMP_PV .buttons{display:flex;margin-top:10px;}';
                 css += '#CMP_PV .buttons>*{flex:1;}';
                 css += '#CMP_PV .buttons>a{line-height: 27px;}';
@@ -309,11 +317,14 @@ var cmp_pv = {
                 html += '</div>';
                 html += '<div id="step2" style="display: none;">';
                 html += '	<div class="container desc">';
-                html += '		<p>La collecte des données personnelles se fait en fonction des objectifs listés ci dessous. Vous pouvez configurer et choisir comment vous souhaitez que vos données personnelles soient utilisées de manière globale ou indépendemment pour chaque finalité et même pour chaque partenaire publicitaire. <a href="' + cmp_pv.conf.urlCookiesUsage + '" target="_blank">En savoir plus sur la gestion des cookies.</a></p>';
-                html += '		<div>';
-                html += '			<button onclick="cmp_pv.ui.switchAllPurpose(false);" class="inverse">Tout refuser</button>';
-                html += '			<button onclick="cmp_pv.ui.switchAllPurpose(true);">Tout accepter</button>';
+                html += '	    <div>';
+                html += '		    <p>La collecte des données personnelles se fait en fonction des objectifs listés ci dessous. Vous pouvez configurer et choisir comment vous souhaitez que vos données personnelles soient utilisées de manière globale ou indépendemment pour chaque finalité et même pour chaque partenaire publicitaire. <a href="' + cmp_pv.conf.urlCookiesUsage + '" target="_blank">En savoir plus sur la gestion des cookies.</a></p>';
+                html += '		    <div>';
+                html += '			    <button onclick="cmp_pv.ui.switchAllPurpose(false);" class="inverse">Tout refuser</button>';
+                html += '			    <button onclick="cmp_pv.ui.switchAllPurpose(true);">Tout accepter</button>';
+                html += '		    </div>';
                 html += '		</div>';
+                html += '		<div><a href="javascript:cmp_pv.ui.toggleVendors();">&lsaquo; Retour</a><p></p></div>';
                 html += '	</div>';
                 html += '	<div class="container" id="purposes">';
                 html += '		<ul class="purposes">';
@@ -366,7 +377,7 @@ var cmp_pv = {
             }
             return true;
         },
-        showPurposes: function(){
+        showPurposes: function () {
             this.showStep(2);
             document.getElementById('vendors').style.display = 'none';
             document.getElementById('link_vendors').innerText = 'Voir nos partenaires';
@@ -377,10 +388,23 @@ var cmp_pv = {
                 document.getElementById('step' + i).style.display = (i === step) ? 'block' : 'none';
             }
         },
-        toggleVendors: function () {
+        toggleVendors: function (purpose) {
             this.showStep(2);
             var el = document.getElementById('purposes');
-            document.getElementById('vendors').style.display = (el.style.display === 'none') ? 'none' : 'flex';
+            var el2 = document.getElementById('vendors');
+            var step = document.getElementById('step2');
+            el2.style.display = (el.style.display === 'none') ? 'none' : 'flex';
+            if(typeof purpose != 'undefined'){
+                el2.children[0].className = 'purposes vendors pid' + purpose;
+                step.children[0].className += ' liste';
+                step.children[0].children[1].children[1].innerText = cmp_pv.ui.language['fr'].purposes[purpose].name;
+                step.children[3].style.visibility = 'hidden';
+                document.querySelector('#vendors ul li.pid'+purpose+' span').onclick();
+            }else{
+                el2.children[0].className = 'purposes vendors';
+                step.children[0].className = step.children[0].className.replace(' liste', '');
+                step.children[3].style.visibility = 'visible';
+            }
             document.getElementById('link_vendors').innerText = (el.style.display === 'none') ? 'Voir nos partenaires' : 'Voir les utilisations';
             el.style.display = (el.style.display === 'none') ? 'flex' : 'none';
         },
@@ -388,35 +412,36 @@ var cmp_pv = {
             for (var i = 1; i <= 5; i++) {
                 document.getElementById('purpose_' + i).className = (i === purpose) ? 'active' : '';
             }
-            document.getElementById('purpose_desc').innerText = cmp_pv.ui.language['fr'].purposes[purpose].description;
+            document.getElementById('purpose_desc').innerHTML = "<p>"+cmp_pv.ui.language['fr'].purposes[purpose].description+"</p><a onclick='cmp_pv.ui.toggleVendors("+purpose+")'>Voir la liste</a>";
             if (arrow === true) {
                 this.arrow('purposes');
             }
         },
         showVendorDescription: function (i, arrow) {
             var active = document.querySelector('.vendors li.active');
-            if (active != null) active.className = '';
-            document.querySelector('.vendors li:nth-of-type(' + (i + 1) + ')').className = 'active';
+            if (active != null) active.className = active.className.replace(' active', '');
+            document.querySelector('.vendors li:nth-of-type(' + (i + 1) + ')').className += ' active';
             var vendor = cmp_pv.globalVendorList.vendors[i];
             var html = '<h2>' + vendor.name + '</h2><a href="' + vendor.policyUrl + '" target="_blank">Politique de confidentialité</a><br/>';
+            var y = 0;
             if (vendor.purposeIds.length > 0) {
                 html += '<h3>Traitements de données basés sur le consentement :</h3><ul>';
-                for (var i = 0; i < vendor.purposeIds.length; i++) {
-                    html += '<li>' + cmp_pv.ui.language['fr'].purposes[vendor.purposeIds[i]].name + '</li>';
+                for (y = 0; y < vendor.purposeIds.length; y++) {
+                    html += '<li>' + cmp_pv.ui.language['fr'].purposes[vendor.purposeIds[y]].name + '</li>';
                 }
                 html += '</ul>';
             }
             if (vendor.legIntPurposeIds.length > 0) {
                 html += '<h3>Traitement de données basés sur l\'intérêt légitime :</h3><ul>';
-                for (var i = 0; i < vendor.legIntPurposeIds.length; i++) {
-                    html += '<li>' + cmp_pv.ui.language['fr'].purposes[vendor.legIntPurposeIds[i]].name + '</li>';
+                for (y = 0; y < vendor.legIntPurposeIds.length; y++) {
+                    html += '<li>' + cmp_pv.ui.language['fr'].purposes[vendor.legIntPurposeIds[y]].name + '</li>';
                 }
                 html += '</ul>';
             }
             if (vendor.featureIds.length > 0) {
                 html += '<h3>Traitements de données supplémentaires: :</h3><ul>';
-                for (var i = 0; i < vendor.featureIds.length; i++) {
-                    html += '<li>' + cmp_pv.ui.language['fr'].features[vendor.featureIds[i]].name + '</li>';
+                for (y = 0; y < vendor.featureIds.length; y++) {
+                    html += '<li>' + cmp_pv.ui.language['fr'].features[vendor.featureIds[y]].name + '</li>';
                 }
                 html += '</ul>';
             }
@@ -471,7 +496,7 @@ var cmp_pv = {
                 }
             });
         },
-        arrow: function(id){
+        arrow: function (id) {
             var container = document.getElementById(id);
             if (container.className.indexOf('showPurposes') === -1) {
                 container.className = 'container showPurposes';
