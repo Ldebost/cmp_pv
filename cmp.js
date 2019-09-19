@@ -183,7 +183,7 @@ var cmp_pv = {
                 cmp_pv.ui.dom.style.display = 'block';
 
                 var css = '';
-                css += '#CMP_PV {position: fixed; bottom: 0; background: #fafafa; color: #010101; padding: 5px 10px;font-family:Tahoma, Geneva, sans-serif; font-size: 14px;box-shadow: 0 0 5px #949494;width: calc(100% - 20px);z-index: 300;}';
+                css += '#CMP_PV {position: fixed; bottom: 0; background: #fafafa; color: #010101; padding: 15px;font-family:Tahoma, Geneva, sans-serif; font-size: 14px;box-shadow: 0 0 5px #949494;z-index: 300;}';
                 css += '#CMP_PV p{margin:0;}';
                 css += '#CMP_PV a{color:' + cmp_pv.conf.uiColor + '; text-decoration: underline; cursor: pointer;}';
                 css += '#CMP_PV a:hover{color:#D41920; text-decoration: none;}';
@@ -198,8 +198,8 @@ var cmp_pv = {
                 css += '#CMP_PV input:checked + .slider{background-color: #8BC34A;}';
                 css += '#CMP_PV input:focus + .slider{box-shadow: 0 0 1px #8BC34A;}';
                 css += '#CMP_PV input:checked + .slider:before {transform: translateX(34px);border-color:#7BAA44;}';
-                css += '#CMP_PV #step1 .title{letter-spacing: -0.03em;color: #111;font-weight: bold;font-family: sans-serif;text-shadow: 1px 1px 1px #98989899;padding: 5px 0;}';
-                // css += '#CMP_PV #step1 .button{text-align: center;margin: 10px 0;}';
+                css += '#CMP_PV #step1 .title{color: #111;font-weight: bold;font-family: sans-serif;text-shadow: 1px 1px 1px #98989899;padding-bottom: 10px;}';
+                css += '#CMP_PV #step1 .buttons{margin-top: 15px;}';
                 css += '#CMP_PV #step1 button{min-width: 210px; font-size: 16px;margin: 0 15px;}';
                 css += '#CMP_PV #step1 .desc>p{text-align:justify;font-size: 15px;}';
                 css += '#CMP_PV .container{max-width: 1000px; margin-left:auto;margin-right:auto;display: flex;}';
@@ -307,7 +307,7 @@ var cmp_pv = {
                 html += '<div id="step1">';
                 html += '	<div class="title">Vos choix en matière de cookies</div>';
                 html += '	<div class="desc">';
-                html += '		<p>Nos partenaires et nous-mêmes utilisons différentes technologies, telles que les cookies, pour personnaliser les contenus et les publicités, proposer des fonctionnalités sur les réseaux sociaux et analyser le trafic. Merci de cliquer sur le bouton ci-dessous pour donner votre accord. Vous pouvez changer d\'avis et modifier vos choix à tout moment. Le fait de ne pas consentir ne vous empechera pas d\'accèder à notre service. <a onclick="cmp_pv.ui.showStep(2);">Afficher les utilisations prévues et les accepter ou les refuser</a>.</p>';
+                html += '		<p>Nos partenaires et nous-mêmes utilisons différentes technologies, telles que les cookies, pour personnaliser les contenus et les publicités, proposer des fonctionnalités sur les réseaux sociaux et analyser le trafic. Merci de cliquer sur le bouton ci-dessous pour donner votre accord. Vous pouvez changer d\'avis et modifier vos choix à tout moment. Le fait de ne pas consentir ne vous empechera pas d\'accèder à notre service.</p>';
                 html += '	</div>';
                 html += '	<div class="container buttons">';
                 html += '	    <a onclick="cmp_pv.ui.toggleVendors()">Voir nos partenaires</a>';
