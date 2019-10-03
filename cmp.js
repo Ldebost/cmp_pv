@@ -165,6 +165,7 @@ var cmp_pv = {
     /** UI **/
     ui: {
         dom: null,
+        displayStyle: 'flex',
         create: function (it) {
             // Security
             if (cmp_pv.ui.dom !== null) return cmp_pv.ui.show(true);
@@ -179,11 +180,11 @@ var cmp_pv = {
 
                 // Create UI
                 cmp_pv.ui.dom = document.createElement('div');
-                cmp_pv.ui.dom.id = "CMP_PV";
-                cmp_pv.ui.dom.style.display = 'block';
+                cmp_pv.ui.dom.className = "cmpcontainer";
 
                 var css = '';
-                css += '#CMP_PV {position: fixed; bottom: 0; background: #fafafa; color: #010101; padding: 15px;font-family:Tahoma, Geneva, sans-serif; font-size: 14px;box-shadow: 0 0 5px #949494;z-index: 300;width:100%;box-sizing: border-box;}';
+                css += '.cmpcontainer {position: fixed; top:0; bottom: 0; left: 0; right: 0; z-index: 100000; background: rgba(33,41,52,.66);}';
+                css += '#CMP_PV {background: #fff; padding: 15px;font-family:Tahoma, Geneva, sans-serif; font-size: 14px;box-shadow: 0 0 5px #000000a1;width:100%;box-sizing: border-box;max-width: 770px;margin: auto;min-width: 320px;border-radius: 2px;}';
                 css += '#CMP_PV p{margin:0;}';
                 css += '#CMP_PV a{color:' + cmp_pv.conf.uiColor + '; text-decoration: underline; cursor: pointer;}';
                 css += '#CMP_PV a:hover{color:#D41920; text-decoration: none;}';
@@ -198,10 +199,11 @@ var cmp_pv = {
                 css += '#CMP_PV input:checked + .slider{background-color: #8BC34A;}';
                 css += '#CMP_PV input:focus + .slider{box-shadow: 0 0 1px #8BC34A;}';
                 css += '#CMP_PV input:checked + .slider:before {transform: translateX(34px);border-color:#7BAA44;}';
-                css += '#CMP_PV #step1 .title{color: #111;font-weight: bold;font-family: sans-serif;text-shadow: 1px 1px 1px #98989899;padding-bottom: 10px;}';
-                css += '#CMP_PV #step1 .buttons{margin-top: 15px;}';
-                css += '#CMP_PV #step1 button{min-width: 210px; font-size: 16px;margin: 0 15px;}';
-                css += '#CMP_PV #step1 .desc>p{text-align:justify;font-size: 15px;}';
+                css += '#CMP_PV #step1 .title{color: #111;font-weight: bold;text-align: center;font-size:32px;padding: 30px 10px 40px 10px;text-transform: uppercase;text-shadow: 0 1px 2px rgba(0, 0, 0, 0.39);}';
+                css += '#CMP_PV #step1 .buttons{margin:38px 0 10px 0;}';
+                css += '#CMP_PV #step1 .buttons > *{min-width: 210px; font-size: 16px;margin: 0 15px;text-align:center;}';
+                css += '#CMP_PV #step1 .buttons > a{line-height: 43px;}';
+                css += '#CMP_PV #step1 .desc>p{text-align:justify;font-size: 15px;padding: 0 15px;}';
                 css += '#CMP_PV .container{max-width: 1000px; margin-left:auto;margin-right:auto;display: flex;}';
                 css += '#CMP_PV .container:after{content:\'\';display:block;clear:both;}';
                 css += '#CMP_PV #step2 .desc{background: white;box-shadow: 0 3px 1px -2px rgba(0,0,0,.2), 0 2px 2px 0 rgba(0,0,0,.14), 0 1px 5px 0 rgba(0,0,0,.12);padding: 10px;box-sizing: border-box;margin-top:10px;align-items: center;font-size:13px;}';
@@ -249,13 +251,15 @@ var cmp_pv = {
                 css += '	#CMP_PV #step2 .container{width:1000px;}';
                 css += '}';
                 css += '@media screen and (max-width: 640px) {';
-                css += '	#CMP_PV{padding:10px 0 0 0;width:100%;}';
+                css += '	#CMP_PV{padding:0;width:100%;}';
+                css += '	#CMP_PV button{min-height: 46px;}';
                 css += '	#CMP_PV #step1{text-align: center;}';
                 css += '	#CMP_PV #step1 .desc{display:block;padding: 0 10px 10px 10px;}';
-                css += '	#CMP_PV #step1 .desc>p{display:block;font-size: 12px;}';
                 css += '    #CMP_PV .buttons{flex-direction: column;margin-bottom: 10px;}';
+                css += '    #CMP_PV #step1 .buttons{margin:20px 0 10px 0;}';
+                css += '    #CMP_PV #step1 .title{padding: 15px 10px 20px 10px;}';
                 css += '	#CMP_PV #step2 .desc>div{flex-flow: column;justify-content: space-evenly;}';
-                css += '	#CMP_PV #step2 .desc{align-items: initial;}';
+                css += '	#CMP_PV #step2 .desc{align-items: initial;margin-top: 0;}';
                 css += '	#CMP_PV #step2 .buttons{margin: 10px;flex-wrap: wrap;flex-direction: row;}';
                 css += '	#CMP_PV #step2 #purposes, #CMP_PV #step2 #vendors{width:200%;max-width:initial;transition: transform .2s ease-in-out;}';
                 css += '	#CMP_PV #step2 .container .purposes, #CMP_PV #step2 .container .purposes_desc{width:46%;}';
@@ -265,7 +269,8 @@ var cmp_pv = {
                 css += '	#CMP_PV #step2 > .container.showPurposes .purposes li.active > h4 .arrow::after{visibility: visible;transform: rotate(0.5turn);}';
                 css += '	#CMP_PV #step2 > .container.showPurposes {transform: translate3d(-42%, 0, 0);}';
                 css += '	#CMP_PV #step2 .desc>div>div{margin-top: 5px;}';
-                css += '    #CMP_PV .buttons > a{flex:1 50%;}';
+                css += '	#CMP_PV #step2 .container .purposes li > h4 .title{padding: 8px;}';
+                css += '    #CMP_PV .buttons > a{flex:1 50%;line-height: 42px;}';
                 css += '	@keyframes bounce{';
                 css += '		0% {transform:translate3d(0,0,0);}';
                 css += '		30% {transform:translate3d(5px,0,0);}';
@@ -273,6 +278,9 @@ var cmp_pv = {
                 css += '		80% {transform:translate3d(2px,0,0);}';
                 css += '		100% {transform:translate3d(0,0,0);}';
                 css += '	}';
+                css += '}';
+                css += '@media screen and (max-height: 600px) {';
+                css += '    #CMP_PV #step2 .container .vendors{height: 260px;}';
                 css += '}';
                 // Hack IE 9
                 var ie = this.detectIE();
@@ -292,13 +300,15 @@ var cmp_pv = {
                         css += '	#CMP_PV #step2 .container .vendors_list{width: 100%;}';
                         css += '}';
                     }
+                    this.displayStyle = 'block';
+                    css += '#CMP_PV {position: relative; top: calc(50% - 100px);}';
                 }
 
                 var sheet = document.createElement('style');
                 sheet.innerHTML = css;
                 document.head.appendChild(sheet);
 
-                var html = '';
+                var html = '<div id="CMP_PV">';
                 html += '<div id="step1">';
                 html += '	<div class="title">Vos choix en matière de cookies</div>';
                 html += '	<div class="desc">';
@@ -353,6 +363,9 @@ var cmp_pv = {
                 html += '		<button onclick="cmp_pv.cookie.saveConsent(false);">Enregistrer</button>';
                 html += '	</div>';
                 html += '</div>';
+                html += '</div>';
+
+                cmp_pv.ui.dom.style.display = this.displayStyle;
                 cmp_pv.ui.dom.innerHTML = html;
                 document.body.appendChild(cmp_pv.ui.dom);
 
@@ -368,7 +381,7 @@ var cmp_pv = {
             if (cmp_pv.ui.dom === null) {
                 cmp_pv.ui.create(0);
             } else {
-                cmp_pv.ui.dom.style.display = (!bool) ? 'none' : 'block';
+                cmp_pv.ui.dom.style.display = (!bool) ? 'none' : this.displayStyle;
             }
             return true;
         },
