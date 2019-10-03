@@ -59,7 +59,7 @@ var cmp_pv = {
             cmp_pv.cookie.loadConsent(function (res) {
                 // Not ready
                 if (!res) {
-                    cmp_pv.ui.show();
+                    cmp_pv.ui.show(true);
                 } else {
                     // Ready
                     cmp_pv.cmpReady = true;
@@ -184,7 +184,7 @@ var cmp_pv = {
 
                 var css = '';
                 css += '.cmpcontainer {position: fixed; top:0; bottom: 0; left: 0; right: 0; z-index: 100000; background: rgba(33,41,52,.66);}';
-                css += '#CMP_PV {background: #fff; padding: 15px;font-family:Tahoma, Geneva, sans-serif; font-size: 14px;box-shadow: 0 0 5px #000000a1;width:100%;box-sizing: border-box;max-width: 770px;margin: auto;min-width: 320px;border-radius: 2px;}';
+                css += '#CMP_PV {background: #fff; padding: 15px;font-family:Tahoma, Geneva, sans-serif; font-size: 14px;box-shadow: 0 0 5px #000000a1;box-sizing: border-box;max-width: 1030px;margin: auto;min-width: 320px;border-radius: 2px;}';
                 css += '#CMP_PV p{margin:0;}';
                 css += '#CMP_PV a{color:' + cmp_pv.conf.uiColor + '; text-decoration: underline; cursor: pointer;}';
                 css += '#CMP_PV a:hover{color:#D41920; text-decoration: none;}';
@@ -199,6 +199,7 @@ var cmp_pv = {
                 css += '#CMP_PV input:checked + .slider{background-color: #8BC34A;}';
                 css += '#CMP_PV input:focus + .slider{box-shadow: 0 0 1px #8BC34A;}';
                 css += '#CMP_PV input:checked + .slider:before {transform: translateX(34px);border-color:#7BAA44;}';
+                css += '#CMP_PV #step1{max-width:770px;}';
                 css += '#CMP_PV #step1 .title{color: #111;font-weight: bold;text-align: center;font-size:32px;padding: 30px 10px 40px 10px;text-transform: uppercase;text-shadow: 0 1px 2px rgba(0, 0, 0, 0.39);}';
                 css += '#CMP_PV #step1 .buttons{margin:38px 0 10px 0;}';
                 css += '#CMP_PV #step1 .buttons > *{min-width: 210px; font-size: 16px;margin: 0 15px;text-align:center;}';
@@ -383,6 +384,7 @@ var cmp_pv = {
             } else {
                 cmp_pv.ui.dom.style.display = (!bool) ? 'none' : this.displayStyle;
             }
+            document.body.style.overflow = (!bool) ? '' : 'hidden';
             return true;
         },
         showPurposes: function () {
