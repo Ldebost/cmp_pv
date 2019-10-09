@@ -361,7 +361,7 @@ var cmp_pv = {
                 html += '	<div class="container buttons">';
                 html += '		<a href="javascript:cmp_pv.ui.showStep(1);">&lsaquo; Retour</a>';
                 html += '	    <a onclick="cmp_pv.ui.toggleVendors()" id="link_vendors">Voir nos partenaires</a>';
-                html += '		<button onclick="cmp_pv.cookie.saveConsent(false);">Enregistrer</button>';
+                html += '		<button onclick="cmp_pv.cookie.saveConsent();">Enregistrer</button>';
                 html += '	</div>';
                 html += '</div>';
                 html += '</div>';
@@ -470,17 +470,7 @@ var cmp_pv = {
             }
         },
         switchAllPurpose: function (checked) {
-            for (var i = 0; i < cmp_pv.consentString.data.purposesAllowed.length; i++) {
-                cmp_pv.consentString.data.purposesAllowed[i] = checked;
-            }
-            for (i = 0; i < cmp_pv.consentString.dataPub.standardPurposesAllowed.length; i++) {
-                cmp_pv.consentString.dataPub.standardPurposesAllowed[i] = checked;
-            }
-            var matches = document.querySelectorAll("#step2 input");
-            for (i = 0; i < matches.length; i++) {
-                cmp_pv.consentString.data.bitField[matches[i].value] = checked;
-                matches[i].checked = checked;
-            }
+            cmp_pv.cookie.saveConsent(checked);
         },
         switchVendor: function (vendor, checked) {
             cmp_pv.consentString.data.bitField[vendor] = checked;
@@ -626,14 +616,19 @@ var cmp_pv = {
             cmp_pv.consentString.data.cmpId = cmp_pv.consentString.const.CMP_ID;
 
             // Accepte tout
-            if (all) {
+            if (typeof all != 'undefined') {
                 var i;
                 for (i = 1; i <= cmp_pv.consentString.data.maxVendorId; i++) {
-                    cmp_pv.consentString.data.bitField[i] = true;
+                    cmp_pv.consentString.data.bitField[i] = all;
                 }
                 var maxStandard = Object.keys(cmp_pv.consentString.dataPub.standardPurposesAllowed).length;
                 for (i = 1; i <= maxStandard; i++) {
-                    cmp_pv.ui.switchPurpose(i, true);
+                    cmp_pv.consentString.data.purposesAllowed[i] = all;
+                    cmp_pv.consentString.dataPub.standardPurposesAllowed[i] = all;
+                }
+                var matches = document.querySelectorAll("#step2 input");
+                for (i = 0; i < matches.length; i++) {
+                    matches[i].checked = all;
                 }
             }
 
