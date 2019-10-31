@@ -173,214 +173,219 @@ var cmp_pv = {
             if (typeof cmp_pv.globalVendorList === 'undefined') {
                 cmp_pv._fetchGlobalVendorList(function () {
                     if (it < 2) cmp_pv.ui.create(++it);
+                    else cmp_pv.ui.show(false);
                 });
             } else {
-                if (cmp_pv.consentString.data.created === null) cmp_pv.consentString.data = cmp_pv.consentString.generateVendorConsentData();
-                if (cmp_pv.consentString.dataPub.created === null) cmp_pv.consentString.dataPub = cmp_pv.consentString.generatePublisherConsentData();
+                try {
+                    if (cmp_pv.consentString.data.created === null) cmp_pv.consentString.data = cmp_pv.consentString.generateVendorConsentData();
+                    if (cmp_pv.consentString.dataPub.created === null) cmp_pv.consentString.dataPub = cmp_pv.consentString.generatePublisherConsentData();
 
-                // Create UI
-                cmp_pv.ui.dom = document.createElement('div');
-                cmp_pv.ui.dom.className = "cmpcontainer";
+                    // Create UI
+                    cmp_pv.ui.dom = document.createElement('div');
+                    cmp_pv.ui.dom.className = "cmpcontainer";
 
-                var css = '';
-                css += '.cmpcontainer {position: fixed; top:0; bottom: 0; left: 0; right: 0; z-index: 100000; background: rgba(33,41,52,.66);}';
-                css += '#CMP_PV {background: #fff; padding: 15px;font-family:Tahoma, Geneva, sans-serif; font-size: 14px;box-shadow: 0 0 5px #000000a1;box-sizing: border-box;max-width: 1030px;margin: auto;min-width: 320px;border-radius: 2px;}';
-                css += '#CMP_PV p{margin:0;}';
-                css += '#CMP_PV a{color:' + cmp_pv.conf.uiColor + '; text-decoration: underline; cursor: pointer;}';
-                css += '#CMP_PV a:hover{color:#D41920; text-decoration: none;}';
-                css += '#CMP_PV button{background-color: ' + cmp_pv.conf.uiColor + ';border: 2px solid ' + cmp_pv.conf.uiColor + ';font-size: 20px;font-weight: bold;color: #fff;cursor: pointer;padding:5px; transition: background 300ms;}';
-                css += '#CMP_PV button:hover{background-color: #FFF;color:' + cmp_pv.conf.uiColor + ';}';
-                css += '#CMP_PV button.inverse{background-color: #FFF;color:' + cmp_pv.conf.uiColor + ';}';
-                css += '#CMP_PV button.inverse:hover{background-color: ' + cmp_pv.conf.uiColor + ';color:#FFF;}';
-                css += '#CMP_PV .switch{position: relative;display: inline-block;width: 60px;height: 16px;cursor: pointer;}';
-                css += '#CMP_PV .switch input {display:none;}';
-                css += '#CMP_PV .slider{position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; -webkit-transition: .2s; transition: .2s;border-radius: 34px;height: 18px;}';
-                css += '#CMP_PV .slider:before{position: absolute;content: "";height: 24px;width: 24px;left: 0;bottom: -4px;background-color: white;-webkit-transition: .2s;transition: .2s;border-radius: 50%;border:1px solid #aaa}';
-                css += '#CMP_PV input:checked + .slider{background-color: #8BC34A;}';
-                css += '#CMP_PV input:focus + .slider{box-shadow: 0 0 1px #8BC34A;}';
-                css += '#CMP_PV input:checked + .slider:before {transform: translateX(34px);border-color:#7BAA44;}';
-                css += '#CMP_PV #step1{max-width:770px;}';
-                css += '#CMP_PV #step1 .title{color: #111;font-weight: bold;text-align: center;font-size:32px;padding: 30px 10px 40px 10px;text-transform: uppercase;text-shadow: 0 1px 2px rgba(0, 0, 0, 0.39);}';
-                css += '#CMP_PV #step1 .buttons{margin:38px 0 10px 0;}';
-                css += '#CMP_PV #step1 .buttons > *{min-width: 210px; font-size: 16px;margin: 0 15px;text-align:center;}';
-                css += '#CMP_PV #step1 .buttons > a{line-height: 43px;}';
-                css += '#CMP_PV #step1 .desc>p{text-align:justify;font-size: 15px;padding: 0 15px;}';
-                css += '#CMP_PV .container{max-width: 1000px; margin-left:auto;margin-right:auto;display: flex;}';
-                css += '#CMP_PV .container:after{content:\'\';display:block;clear:both;}';
-                css += '#CMP_PV #step2 .desc{background: white;box-shadow: 0 3px 1px -2px rgba(0,0,0,.2), 0 2px 2px 0 rgba(0,0,0,.14), 0 1px 5px 0 rgba(0,0,0,.12);padding: 10px;box-sizing: border-box;margin-top:10px;align-items: center;font-size:13px;}';
-                css += '#CMP_PV #step2 .desc div{display: flex;}';
-                css += '#CMP_PV #step2 .desc button{font-size: 16px;margin-left: 9px;white-space:nowrap;flex: 1;}';
-                css += '#CMP_PV #step2 .desc.liste>div:first-child{display:none;}';
-                css += '#CMP_PV #step2 .desc:not(.liste)>div:last-child{display:none;}';
-                css += '#CMP_PV #step2 .desc.liste p{margin-left: 10px;font-weight: bold;font-size: 15px;}';
-                css += '#CMP_PV #step2 .container .purposes, #CMP_PV #step2 .container .purposes_desc {list-style:none; box-shadow: 0 3px 1px -2px rgba(0,0,0,.2), 0 2px 2px 0 rgba(0,0,0,.14), 0 1px 5px 0 rgba(0,0,0,.12);padding: 0;width: 50%;margin:0;}';
-                css += '#CMP_PV #step2 .container .purposes li{border-bottom: 1px solid rgba(0, 0, 0, 0.11);background: #3c3c3c; color: white;position:relative;}';
-                css += '#CMP_PV #step2 .container .purposes li:last-child{border-bottom: none;}';
-                css += '#CMP_PV #step2 .container .purposes li>h4:first-child{border-left: 3px solid transparent;}';
-                css += '#CMP_PV #step2 .container .purposes li>h4 .arrow{padding: 0 16px 0 0;width: 28px;text-align: right;}';
-                css += '#CMP_PV #step2 .container .purposes li>h4 .title{padding: 14px 8px;}';
-                css += '#CMP_PV #step2 .container .purposes li>h4 .arrow:after{content:\'\\276c\'; font-size: 25px;transition: all 0.5s;display: inline-block;height: 40px;}';
-                css += '#CMP_PV #step2 .container .purposes li>h4{display:table;margin:0;font-weight:normal;cursor:pointer;height: 46px;width: 100%;box-sizing: border-box;}';
-                css += '#CMP_PV #step2 .container .purposes li>h4:hover{background: #5f5f5f;}';
-                css += '#CMP_PV #step2 .container .purposes li>h4>span{display: table-cell;vertical-align: middle;}';
-                css += '#CMP_PV #step2 .container .purposes li>h4>label{display: table-cell;border-top: 14px solid transparent;border-bottom: 14px solid transparent;}';
-                css += '#CMP_PV #step2 .container .purposes li.active>h4:first-child{border-left: 3px solid ' + cmp_pv.conf.uiColor + ';}';
-                css += '#CMP_PV #step2 .container .purposes li.active>h4 .arrow::after{transform: rotate(0.5turn);}';
-                css += '#CMP_PV #step2 .container .purposes_desc{background: white;position: relative;}';
-                css += '#CMP_PV #step2 .container .vendors{overflow: auto;height: 340px;}';
-                css += '#CMP_PV #step2 .container .vendors li>h4>span{padding: 2px 5px;}';
-                css += '#CMP_PV #step2 .container .vendors li .switch{height: 0;width: 52px;}';
-                css += '#CMP_PV #step2 .container .vendors li .slider{height: 8px;}';
-                css += '#CMP_PV #step2 .container .vendors li .slider:before{height: 13px; width: 13px;bottom: -4px;}';
-                css += '#CMP_PV #step2 .container .vendors li > h4{height: 20px;}';
-                css += '#CMP_PV #step2 .container .vendors li > h4 .arrow::after{height: 20px;font-size:16px;}';
-                css += '#CMP_PV #step2 .container .purposes_desc>div{position: absolute;top: 30px;left: 0;right: 0;bottom: 0;overflow: auto;margin: 0;}';
-                css += '#CMP_PV #step2 .container .vendors.pid1 li:not(.pid1){display: none;}';
-                css += '#CMP_PV #step2 .container .vendors.pid2 li:not(.pid2){display: none;}';
-                css += '#CMP_PV #step2 .container .vendors.pid3 li:not(.pid3){display: none;}';
-                css += '#CMP_PV #step2 .container .vendors.pid4 li:not(.pid4){display: none;}';
-                css += '#CMP_PV #step2 .container .vendors.pid5 li:not(.pid5){display: none;}';
-                css += '#CMP_PV .buttons{display:flex;margin-top:10px;}';
-                css += '#CMP_PV .buttons>*{flex:1;}';
-                css += '#CMP_PV .buttons>a{line-height: 27px;}';
-                css += '#CMP_PV .buttons>a:nth-child(2){text-align:center;}';
-                css += '#CMP_PV #step2 .buttons button{font-size: 16px;padding: 5px 15px;}';
-                css += '#CMP_PV #step2 .purposes_desc>h4{display:block;margin:0;padding:5px 0;text-align: center;text-decoration:none;background:#515151;color:#ededed;border-bottom: 3px solid ' + cmp_pv.conf.uiColor + ';}';
-                css += '#CMP_PV #step2 .purposes_desc p{padding:10px;}';
-                //Responsive
-                css += '@media screen and (min-width: 1024px) {';
-                css += '	#CMP_PV #step2 .container{width:1000px;}';
-                css += '}';
-                css += '@media screen and (max-width: 640px) {';
-                css += '	#CMP_PV{padding:0;width:100%;}';
-                css += '	#CMP_PV button{min-height: 46px;}';
-                css += '	#CMP_PV #step1{text-align: center;}';
-                css += '	#CMP_PV #step1 .desc{display:block;padding: 0 10px 10px 10px;}';
-                css += '    #CMP_PV .buttons{flex-direction: column;margin-bottom: 10px;}';
-                css += '    #CMP_PV #step1 .buttons{margin:20px 0 10px 0;}';
-                css += '    #CMP_PV #step1 .title{padding: 15px 10px 20px 10px;}';
-                css += '	#CMP_PV #step2 .desc>div{flex-flow: column;justify-content: space-evenly;}';
-                css += '	#CMP_PV #step2 .desc{align-items: initial;margin-top: 0;}';
-                css += '	#CMP_PV #step2 .buttons{margin: 10px;flex-wrap: wrap;flex-direction: row;}';
-                css += '	#CMP_PV #step2 #purposes, #CMP_PV #step2 #vendors{width:200%;max-width:initial;transition: transform .2s ease-in-out;}';
-                css += '	#CMP_PV #step2 .container .purposes, #CMP_PV #step2 .container .purposes_desc{width:46%;}';
-                css += '	#CMP_PV #step2 .container .purposes li{width:auto;}';
-                css += '	#CMP_PV #step2 .container .purposes li.active > h4 .arrow::after{transform: none;animation: bounce 0.6s ease-out;}';
-                css += '	#CMP_PV #step2 > .container.showPurposes .purposes li > h4 .arrow::after{visibility: hidden;}';
-                css += '	#CMP_PV #step2 > .container.showPurposes .purposes li.active > h4 .arrow::after{visibility: visible;transform: rotate(0.5turn);}';
-                css += '	#CMP_PV #step2 > .container.showPurposes {transform: translate3d(-42%, 0, 0);}';
-                css += '	#CMP_PV #step2 .desc>div>div{margin-top: 5px;}';
-                css += '	#CMP_PV #step2 .container .purposes li > h4 .title{padding: 8px;}';
-                css += '    #CMP_PV .buttons > a{flex:1 50%;line-height: 42px;}';
-                css += '	@keyframes bounce{';
-                css += '		0% {transform:translate3d(0,0,0);}';
-                css += '		30% {transform:translate3d(5px,0,0);}';
-                css += '		60% {transform:translate3d(0px,0,0);}';
-                css += '		80% {transform:translate3d(2px,0,0);}';
-                css += '		100% {transform:translate3d(0,0,0);}';
-                css += '	}';
-                css += '}';
-                css += '@media screen and (max-height: 600px) {';
-                css += '    #CMP_PV #step2 .container .vendors{height: 260px;}';
-                css += '}';
-                // Hack IE 9
-                var ie = this.detectIE();
-                if (ie > 0) {
-                    if (ie > 9) {
-                        css += '#CMP_PV #step2 .desc>p{width: calc(100% - 260px);}';
-                        css += '@media screen and (max-width: 640px) {';
-                        css += '	#CMP_PV #step2 .desc>p{width: calc(100% - 130px);}';
-                        css += '}';
-                    } else {
-                        css += '#CMP_PV #step2 .container{display:table;width:100%;}';
-                        css += '#CMP_PV #step2 .container:not(.buttons)>*{display:table-cell;}';
-                        css += '#CMP_PV #step2 .desc > div{display:table-cell;vertical-align:middle;width:260px;}';
-                        css += '#CMP_PV #step2 .container .vendors{overflow-y: auto;overflow-x: hidden;}';
-                        css += '#CMP_PV #step2 .container .vendors_list{overflow: visible; width: 460px; height:280px;}';
-                        css += '@media screen and (max-width: 640px) {';
-                        css += '	#CMP_PV #step2 .container .vendors_list{width: 100%;}';
-                        css += '}';
+                    var css = '';
+                    css += '.cmpcontainer {position: fixed; top:0; bottom: 0; left: 0; right: 0; z-index: 100000; background: rgba(33,41,52,.66);}';
+                    css += '#CMP_PV {background: #fff; padding: 15px;font-family:Tahoma, Geneva, sans-serif; font-size: 14px;box-shadow: 0 0 5px #000000a1;box-sizing: border-box;max-width: 1030px;margin: auto;min-width: 320px;border-radius: 2px;}';
+                    css += '#CMP_PV p{margin:0;}';
+                    css += '#CMP_PV a{color:' + cmp_pv.conf.uiColor + '; text-decoration: underline; cursor: pointer;}';
+                    css += '#CMP_PV a:hover{color:#D41920; text-decoration: none;}';
+                    css += '#CMP_PV button{background-color: ' + cmp_pv.conf.uiColor + ';border: 2px solid ' + cmp_pv.conf.uiColor + ';font-size: 20px;font-weight: bold;color: #fff;cursor: pointer;padding:5px; transition: background 300ms;}';
+                    css += '#CMP_PV button:hover{background-color: #FFF;color:' + cmp_pv.conf.uiColor + ';}';
+                    css += '#CMP_PV button.inverse{background-color: #FFF;color:' + cmp_pv.conf.uiColor + ';}';
+                    css += '#CMP_PV button.inverse:hover{background-color: ' + cmp_pv.conf.uiColor + ';color:#FFF;}';
+                    css += '#CMP_PV .switch{position: relative;display: inline-block;width: 60px;height: 16px;cursor: pointer;}';
+                    css += '#CMP_PV .switch input {display:none;}';
+                    css += '#CMP_PV .slider{position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; -webkit-transition: .2s; transition: .2s;border-radius: 34px;height: 18px;}';
+                    css += '#CMP_PV .slider:before{position: absolute;content: "";height: 24px;width: 24px;left: 0;bottom: -4px;background-color: white;-webkit-transition: .2s;transition: .2s;border-radius: 50%;border:1px solid #aaa}';
+                    css += '#CMP_PV input:checked + .slider{background-color: #8BC34A;}';
+                    css += '#CMP_PV input:focus + .slider{box-shadow: 0 0 1px #8BC34A;}';
+                    css += '#CMP_PV input:checked + .slider:before {transform: translateX(34px);border-color:#7BAA44;}';
+                    css += '#CMP_PV #step1{max-width:770px;}';
+                    css += '#CMP_PV #step1 .title{color: #111;font-weight: bold;text-align: center;font-size:32px;padding: 30px 10px 40px 10px;text-transform: uppercase;text-shadow: 0 1px 2px rgba(0, 0, 0, 0.39);}';
+                    css += '#CMP_PV #step1 .buttons{margin:38px 0 10px 0;}';
+                    css += '#CMP_PV #step1 .buttons > *{min-width: 210px; font-size: 16px;margin: 0 15px;text-align:center;}';
+                    css += '#CMP_PV #step1 .buttons > a{line-height: 43px;}';
+                    css += '#CMP_PV #step1 .desc>p{text-align:justify;font-size: 15px;padding: 0 15px;}';
+                    css += '#CMP_PV .container{max-width: 1000px; margin-left:auto;margin-right:auto;display: flex;}';
+                    css += '#CMP_PV .container:after{content:\'\';display:block;clear:both;}';
+                    css += '#CMP_PV #step2 .desc{background: white;box-shadow: 0 3px 1px -2px rgba(0,0,0,.2), 0 2px 2px 0 rgba(0,0,0,.14), 0 1px 5px 0 rgba(0,0,0,.12);padding: 10px;box-sizing: border-box;margin-top:10px;align-items: center;font-size:13px;}';
+                    css += '#CMP_PV #step2 .desc div{display: flex;}';
+                    css += '#CMP_PV #step2 .desc button{font-size: 16px;margin-left: 9px;white-space:nowrap;flex: 1;}';
+                    css += '#CMP_PV #step2 .desc.liste>div:first-child{display:none;}';
+                    css += '#CMP_PV #step2 .desc:not(.liste)>div:last-child{display:none;}';
+                    css += '#CMP_PV #step2 .desc.liste p{margin-left: 10px;font-weight: bold;font-size: 15px;}';
+                    css += '#CMP_PV #step2 .container .purposes, #CMP_PV #step2 .container .purposes_desc {list-style:none; box-shadow: 0 3px 1px -2px rgba(0,0,0,.2), 0 2px 2px 0 rgba(0,0,0,.14), 0 1px 5px 0 rgba(0,0,0,.12);padding: 0;width: 50%;margin:0;}';
+                    css += '#CMP_PV #step2 .container .purposes li{border-bottom: 1px solid rgba(0, 0, 0, 0.11);background: #3c3c3c; color: white;position:relative;}';
+                    css += '#CMP_PV #step2 .container .purposes li:last-child{border-bottom: none;}';
+                    css += '#CMP_PV #step2 .container .purposes li>h4:first-child{border-left: 3px solid transparent;}';
+                    css += '#CMP_PV #step2 .container .purposes li>h4 .arrow{padding: 0 16px 0 0;width: 28px;text-align: right;}';
+                    css += '#CMP_PV #step2 .container .purposes li>h4 .title{padding: 14px 8px;}';
+                    css += '#CMP_PV #step2 .container .purposes li>h4 .arrow:after{content:\'\\276c\'; font-size: 25px;transition: all 0.5s;display: inline-block;height: 40px;}';
+                    css += '#CMP_PV #step2 .container .purposes li>h4{display:table;margin:0;font-weight:normal;cursor:pointer;height: 46px;width: 100%;box-sizing: border-box;}';
+                    css += '#CMP_PV #step2 .container .purposes li>h4:hover{background: #5f5f5f;}';
+                    css += '#CMP_PV #step2 .container .purposes li>h4>span{display: table-cell;vertical-align: middle;}';
+                    css += '#CMP_PV #step2 .container .purposes li>h4>label{display: table-cell;border-top: 14px solid transparent;border-bottom: 14px solid transparent;}';
+                    css += '#CMP_PV #step2 .container .purposes li.active>h4:first-child{border-left: 3px solid ' + cmp_pv.conf.uiColor + ';}';
+                    css += '#CMP_PV #step2 .container .purposes li.active>h4 .arrow::after{transform: rotate(0.5turn);}';
+                    css += '#CMP_PV #step2 .container .purposes_desc{background: white;position: relative;}';
+                    css += '#CMP_PV #step2 .container .vendors{overflow: auto;height: 340px;}';
+                    css += '#CMP_PV #step2 .container .vendors li>h4>span{padding: 2px 5px;}';
+                    css += '#CMP_PV #step2 .container .vendors li .switch{height: 0;width: 52px;}';
+                    css += '#CMP_PV #step2 .container .vendors li .slider{height: 8px;}';
+                    css += '#CMP_PV #step2 .container .vendors li .slider:before{height: 13px; width: 13px;bottom: -4px;}';
+                    css += '#CMP_PV #step2 .container .vendors li > h4{height: 20px;}';
+                    css += '#CMP_PV #step2 .container .vendors li > h4 .arrow::after{height: 20px;font-size:16px;}';
+                    css += '#CMP_PV #step2 .container .purposes_desc>div{position: absolute;top: 30px;left: 0;right: 0;bottom: 0;overflow: auto;margin: 0;}';
+                    css += '#CMP_PV #step2 .container .vendors.pid1 li:not(.pid1){display: none;}';
+                    css += '#CMP_PV #step2 .container .vendors.pid2 li:not(.pid2){display: none;}';
+                    css += '#CMP_PV #step2 .container .vendors.pid3 li:not(.pid3){display: none;}';
+                    css += '#CMP_PV #step2 .container .vendors.pid4 li:not(.pid4){display: none;}';
+                    css += '#CMP_PV #step2 .container .vendors.pid5 li:not(.pid5){display: none;}';
+                    css += '#CMP_PV .buttons{display:flex;margin-top:10px;}';
+                    css += '#CMP_PV .buttons>*{flex:1;}';
+                    css += '#CMP_PV .buttons>a{line-height: 27px;}';
+                    css += '#CMP_PV .buttons>a:nth-child(2){text-align:center;}';
+                    css += '#CMP_PV #step2 .buttons button{font-size: 16px;padding: 5px 15px;}';
+                    css += '#CMP_PV #step2 .purposes_desc>h4{display:block;margin:0;padding:5px 0;text-align: center;text-decoration:none;background:#515151;color:#ededed;border-bottom: 3px solid ' + cmp_pv.conf.uiColor + ';}';
+                    css += '#CMP_PV #step2 .purposes_desc p{padding:10px;}';
+                    //Responsive
+                    css += '@media screen and (min-width: 1024px) {';
+                    css += '	#CMP_PV #step2 .container{width:1000px;}';
+                    css += '}';
+                    css += '@media screen and (max-width: 640px) {';
+                    css += '	#CMP_PV{padding:0;width:100%;}';
+                    css += '	#CMP_PV button{min-height: 46px;}';
+                    css += '	#CMP_PV #step1{text-align: center;}';
+                    css += '	#CMP_PV #step1 .desc{display:block;padding: 0 10px 10px 10px;}';
+                    css += '    #CMP_PV .buttons{flex-direction: column;margin-bottom: 10px;}';
+                    css += '    #CMP_PV #step1 .buttons{margin:20px 0 10px 0;}';
+                    css += '    #CMP_PV #step1 .title{padding: 15px 10px 20px 10px;}';
+                    css += '	#CMP_PV #step2 .desc>div{flex-flow: column;justify-content: space-evenly;}';
+                    css += '	#CMP_PV #step2 .desc{align-items: initial;margin-top: 0;}';
+                    css += '	#CMP_PV #step2 .buttons{margin: 10px;flex-wrap: wrap;flex-direction: row;}';
+                    css += '	#CMP_PV #step2 #purposes, #CMP_PV #step2 #vendors{width:200%;max-width:initial;transition: transform .2s ease-in-out;}';
+                    css += '	#CMP_PV #step2 .container .purposes, #CMP_PV #step2 .container .purposes_desc{width:46%;}';
+                    css += '	#CMP_PV #step2 .container .purposes li{width:auto;}';
+                    css += '	#CMP_PV #step2 .container .purposes li.active > h4 .arrow::after{transform: none;animation: bounce 0.6s ease-out;}';
+                    css += '	#CMP_PV #step2 > .container.showPurposes .purposes li > h4 .arrow::after{visibility: hidden;}';
+                    css += '	#CMP_PV #step2 > .container.showPurposes .purposes li.active > h4 .arrow::after{visibility: visible;transform: rotate(0.5turn);}';
+                    css += '	#CMP_PV #step2 > .container.showPurposes {transform: translate3d(-42%, 0, 0);}';
+                    css += '	#CMP_PV #step2 .desc>div>div{margin-top: 5px;}';
+                    css += '	#CMP_PV #step2 .container .purposes li > h4 .title{padding: 8px;}';
+                    css += '    #CMP_PV .buttons > a{flex:1 50%;line-height: 42px;}';
+                    css += '	@keyframes bounce{';
+                    css += '		0% {transform:translate3d(0,0,0);}';
+                    css += '		30% {transform:translate3d(5px,0,0);}';
+                    css += '		60% {transform:translate3d(0px,0,0);}';
+                    css += '		80% {transform:translate3d(2px,0,0);}';
+                    css += '		100% {transform:translate3d(0,0,0);}';
+                    css += '	}';
+                    css += '}';
+                    css += '@media screen and (max-height: 600px) {';
+                    css += '    #CMP_PV #step2 .container .vendors{height: 260px;}';
+                    css += '}';
+                    // Hack IE 9
+                    var ie = this.detectIE();
+                    if (ie > 0) {
+                        if (ie > 9) {
+                            css += '#CMP_PV #step2 .desc>p{width: calc(100% - 260px);}';
+                            css += '@media screen and (max-width: 640px) {';
+                            css += '	#CMP_PV #step2 .desc>p{width: calc(100% - 130px);}';
+                            css += '}';
+                        } else {
+                            css += '#CMP_PV #step2 .container{display:table;width:100%;}';
+                            css += '#CMP_PV #step2 .container:not(.buttons)>*{display:table-cell;}';
+                            css += '#CMP_PV #step2 .desc > div{display:table-cell;vertical-align:middle;width:260px;}';
+                            css += '#CMP_PV #step2 .container .vendors{overflow-y: auto;overflow-x: hidden;}';
+                            css += '#CMP_PV #step2 .container .vendors_list{overflow: visible; width: 460px; height:280px;}';
+                            css += '@media screen and (max-width: 640px) {';
+                            css += '	#CMP_PV #step2 .container .vendors_list{width: 100%;}';
+                            css += '}';
+                        }
+                        this.displayStyle = 'block';
+                        css += '#CMP_PV {position: relative; top: calc(50% - 100px);}';
                     }
-                    this.displayStyle = 'block';
-                    css += '#CMP_PV {position: relative; top: calc(50% - 100px);}';
+
+                    var sheet = document.createElement('style');
+                    sheet.innerHTML = css;
+                    document.head.appendChild(sheet);
+
+                    var html = '<div id="CMP_PV">';
+                    html += '<div id="step1">';
+                    html += '	<div class="title">Vos choix en matière de cookies</div>';
+                    html += '	<div class="desc">';
+                    html += '		<p>Nos partenaires et nous-mêmes utilisons différentes technologies, telles que les cookies, pour personnaliser les contenus et les publicités, proposer des fonctionnalités sur les réseaux sociaux et analyser le trafic. Merci de cliquer sur le bouton ci-dessous pour donner votre accord. Vous pouvez changer d\'avis et modifier vos choix à tout moment. Le fait de ne pas consentir ne vous empechera pas d\'accèder à notre service. <a onclick="cmp_pv.ui.showPurposes();">Afficher les utilisations prévues et les accepter ou les refuser</a>.</p>';
+                    html += '	</div>';
+                    html += '	<div class="container buttons">';
+                    html += '	    <a onclick="cmp_pv.ui.toggleVendors()">Voir nos partenaires</a>';
+                    // html += '		<button class="inverse" onclick="cmp_pv.ui.showPurposes();">Je personnalise ou Je refuse</button>';
+                    html += '		<button onclick="cmp_pv.cookie.saveConsent(true);">J\'accepte</button>';
+                    html += '	</div>';
+                    html += '</div>';
+                    html += '<div id="step2" style="display: none;">';
+                    html += '	<div class="container desc">';
+                    html += '	    <div>';
+                    html += '		    <p>La collecte des données personnelles se fait en fonction des objectifs listés ci dessous. Vous pouvez configurer et choisir comment vous souhaitez que vos données personnelles soient utilisées de manière globale ou indépendemment pour chaque finalité et même pour chaque partenaire publicitaire. <a href="' + cmp_pv.conf.urlCookiesUsage + '" target="_blank">En savoir plus sur la gestion des cookies.</a></p>';
+                    html += '		    <div>';
+                    html += '			    <button onclick="cmp_pv.ui.switchAllPurpose(false);" class="inverse">Tout refuser</button>';
+                    html += '			    <button onclick="cmp_pv.ui.switchAllPurpose(true);">Tout accepter</button>';
+                    html += '		    </div>';
+                    html += '		</div>';
+                    html += '		<div><a href="javascript:cmp_pv.ui.toggleVendors();">&lsaquo; Retour</a><p></p></div>';
+                    html += '	</div>';
+                    html += '	<div class="container" id="purposes">';
+                    html += '		<ul class="purposes">';
+                    for (var i = 0; i < cmp_pv.globalVendorList.purposes.length; i++) {
+                        var purpose = cmp_pv.globalVendorList.purposes[i];
+                        html += '		<li id="purpose_' + purpose.id + '">';
+                        html += '			<h4><span class="title" onclick="cmp_pv.ui.showPurposeDescription(' + purpose.id + ');">' + cmp_pv.ui.language['fr'].purposes[purpose.id].name + '</span><label class="switch"><input type="checkbox" onchange="cmp_pv.ui.switchPurpose(' + purpose.id + ', this.checked);"' + ((cmp_pv.consentString.data.purposesAllowed[purpose.id]) ? 'checked' : '') + '><span class="slider"></span></label><span class="arrow" onclick="cmp_pv.ui.showPurposeDescription(' + purpose.id + ', true);"></span></h4>';
+                        html += '		</li>';
+                    }
+                    html += '		</ul>';
+                    html += '		<div class="purposes_desc">';
+                    html += '			<h4>Description</h4>';
+                    html += '			<div><p id="purpose_desc"></p></div>';
+                    html += '		</div>';
+                    html += '	</div>';
+                    html += '	<div class="container" id="vendors" style="display: none;">';
+                    html += '		<ul class="purposes vendors">';
+                    for (var y = 0; y < cmp_pv.globalVendorList.vendors.length; y++) {
+                        var vendor = cmp_pv.globalVendorList.vendors[y];
+                        html += '			<li class="pid' + vendor.purposeIds.join(' pid') + '"><h4><span onclick="cmp_pv.ui.showVendorDescription(' + y + ');">' + vendor.name + '</span><label class="switch"><input type="checkbox" value="' + vendor.id + '" ' + ((cmp_pv.consentString.data.bitField[vendor.id]) ? 'checked' : '') + ' onchange="cmp_pv.ui.switchVendor(' + vendor.id + ', this.checked);"><span class="slider"></span></label><span class="arrow" onclick="cmp_pv.ui.showVendorDescription(' + y + ', true);"></span></h4></li>';
+                    }
+                    html += '		</ul>';
+                    html += '		<div class="purposes_desc">';
+                    html += '			<h4>Description</h4>';
+                    html += '			<div><p id="vendor_desc"></p></div>';
+                    html += '		</div>';
+                    html += '	</div>';
+                    html += '	<div class="container buttons">';
+                    html += '		<a href="javascript:cmp_pv.ui.showStep(1);">&lsaquo; Retour</a>';
+                    html += '	    <a onclick="cmp_pv.ui.toggleVendors()" id="link_vendors">Voir nos partenaires</a>';
+                    html += '		<button onclick="cmp_pv.cookie.saveConsent();">Enregistrer</button>';
+                    html += '	</div>';
+                    html += '</div>';
+                    html += '</div>';
+
+                    cmp_pv.ui.dom.style.display = this.displayStyle;
+                    cmp_pv.ui.dom.innerHTML = html;
+                    document.body.appendChild(cmp_pv.ui.dom);
+
+                    // Select first
+                    cmp_pv.ui.showPurposeDescription(1);
+                    cmp_pv.ui.showVendorDescription(0);
+
+                    // Accept on scroll
+                    //window.addEventListener('scroll', cmp_pv.ui.acceptOnEvent, {passive: true, once: true});
+                } catch (e) {
+                    cmp_pv.ui.show(false);
                 }
-
-                var sheet = document.createElement('style');
-                sheet.innerHTML = css;
-                document.head.appendChild(sheet);
-
-                var html = '<div id="CMP_PV">';
-                html += '<div id="step1">';
-                html += '	<div class="title">Vos choix en matière de cookies</div>';
-                html += '	<div class="desc">';
-                html += '		<p>Nos partenaires et nous-mêmes utilisons différentes technologies, telles que les cookies, pour personnaliser les contenus et les publicités, proposer des fonctionnalités sur les réseaux sociaux et analyser le trafic. Merci de cliquer sur le bouton ci-dessous pour donner votre accord. Vous pouvez changer d\'avis et modifier vos choix à tout moment. Le fait de ne pas consentir ne vous empechera pas d\'accèder à notre service. <a onclick="cmp_pv.ui.showPurposes();">Afficher les utilisations prévues et les accepter ou les refuser</a>.</p>';
-                html += '	</div>';
-                html += '	<div class="container buttons">';
-                html += '	    <a onclick="cmp_pv.ui.toggleVendors()">Voir nos partenaires</a>';
-                // html += '		<button class="inverse" onclick="cmp_pv.ui.showPurposes();">Je personnalise ou Je refuse</button>';
-                html += '		<button onclick="cmp_pv.cookie.saveConsent(true);">J\'accepte</button>';
-                html += '	</div>';
-                html += '</div>';
-                html += '<div id="step2" style="display: none;">';
-                html += '	<div class="container desc">';
-                html += '	    <div>';
-                html += '		    <p>La collecte des données personnelles se fait en fonction des objectifs listés ci dessous. Vous pouvez configurer et choisir comment vous souhaitez que vos données personnelles soient utilisées de manière globale ou indépendemment pour chaque finalité et même pour chaque partenaire publicitaire. <a href="' + cmp_pv.conf.urlCookiesUsage + '" target="_blank">En savoir plus sur la gestion des cookies.</a></p>';
-                html += '		    <div>';
-                html += '			    <button onclick="cmp_pv.ui.switchAllPurpose(false);" class="inverse">Tout refuser</button>';
-                html += '			    <button onclick="cmp_pv.ui.switchAllPurpose(true);">Tout accepter</button>';
-                html += '		    </div>';
-                html += '		</div>';
-                html += '		<div><a href="javascript:cmp_pv.ui.toggleVendors();">&lsaquo; Retour</a><p></p></div>';
-                html += '	</div>';
-                html += '	<div class="container" id="purposes">';
-                html += '		<ul class="purposes">';
-                for (var i = 0; i < cmp_pv.globalVendorList.purposes.length; i++) {
-                    var purpose = cmp_pv.globalVendorList.purposes[i];
-                    html += '		<li id="purpose_' + purpose.id + '">';
-                    html += '			<h4><span class="title" onclick="cmp_pv.ui.showPurposeDescription(' + purpose.id + ');">' + cmp_pv.ui.language['fr'].purposes[purpose.id].name + '</span><label class="switch"><input type="checkbox" onchange="cmp_pv.ui.switchPurpose(' + purpose.id + ', this.checked);"' + ((cmp_pv.consentString.data.purposesAllowed[purpose.id]) ? 'checked' : '') + '><span class="slider"></span></label><span class="arrow" onclick="cmp_pv.ui.showPurposeDescription(' + purpose.id + ', true);"></span></h4>';
-                    html += '		</li>';
-                }
-                html += '		</ul>';
-                html += '		<div class="purposes_desc">';
-                html += '			<h4>Description</h4>';
-                html += '			<div><p id="purpose_desc"></p></div>';
-                html += '		</div>';
-                html += '	</div>';
-                html += '	<div class="container" id="vendors" style="display: none;">';
-                html += '		<ul class="purposes vendors">';
-                for (var y = 0; y < cmp_pv.globalVendorList.vendors.length; y++) {
-                    var vendor = cmp_pv.globalVendorList.vendors[y];
-                    html += '			<li class="pid' + vendor.purposeIds.join(' pid') + '"><h4><span onclick="cmp_pv.ui.showVendorDescription(' + y + ');">' + vendor.name + '</span><label class="switch"><input type="checkbox" value="' + vendor.id + '" ' + ((cmp_pv.consentString.data.bitField[vendor.id]) ? 'checked' : '') + ' onchange="cmp_pv.ui.switchVendor(' + vendor.id + ', this.checked);"><span class="slider"></span></label><span class="arrow" onclick="cmp_pv.ui.showVendorDescription(' + y + ', true);"></span></h4></li>';
-                }
-                html += '		</ul>';
-                html += '		<div class="purposes_desc">';
-                html += '			<h4>Description</h4>';
-                html += '			<div><p id="vendor_desc"></p></div>';
-                html += '		</div>';
-                html += '	</div>';
-                html += '	<div class="container buttons">';
-                html += '		<a href="javascript:cmp_pv.ui.showStep(1);">&lsaquo; Retour</a>';
-                html += '	    <a onclick="cmp_pv.ui.toggleVendors()" id="link_vendors">Voir nos partenaires</a>';
-                html += '		<button onclick="cmp_pv.cookie.saveConsent();">Enregistrer</button>';
-                html += '	</div>';
-                html += '</div>';
-                html += '</div>';
-
-                cmp_pv.ui.dom.style.display = this.displayStyle;
-                cmp_pv.ui.dom.innerHTML = html;
-                document.body.appendChild(cmp_pv.ui.dom);
-
-                // Select first
-                cmp_pv.ui.showPurposeDescription(1);
-                cmp_pv.ui.showVendorDescription(0);
-
-                // Accept on scroll
-                //window.addEventListener('scroll', cmp_pv.ui.acceptOnEvent, {passive: true, once: true});
             }
         },
         show: function (bool) {
             if (cmp_pv.ui.dom === null) {
-                cmp_pv.ui.create(0);
+                if(bool) cmp_pv.ui.create(0);
             } else {
                 cmp_pv.ui.dom.style.display = (!bool) ? 'none' : this.displayStyle;
             }
