@@ -182,7 +182,6 @@ var cmp_pv = {
 
                     // Create UI
                     cmp_pv.ui.dom = document.createElement('div');
-                    cmp_pv.ui.dom.className = "cmpcontainer";
 
                     var css = '';
                     css += '.cmpcontainer {position: fixed; top:0; bottom: 0; left: 0; right: 0; z-index: 100000; background: rgba(33,41,52,.66);}';
@@ -307,10 +306,6 @@ var cmp_pv = {
                         css += '#CMP_PV {position: relative; top: calc(50% - 100px);}';
                     }
 
-                    var sheet = document.createElement('style');
-                    sheet.innerHTML = css;
-                    document.head.appendChild(sheet);
-
                     var html = '<div id="CMP_PV">';
                     html += '<div id="step1">';
                     html += '	<div class="title">Vos choix en matière de cookies</div>';
@@ -371,6 +366,12 @@ var cmp_pv = {
                     cmp_pv.ui.dom.style.display = this.displayStyle;
                     cmp_pv.ui.dom.innerHTML = html;
                     document.body.appendChild(cmp_pv.ui.dom);
+
+                    var sheet = document.createElement('style');
+                    sheet.innerHTML = css;
+                    document.head.appendChild(sheet);
+
+                    cmp_pv.ui.dom.className = "cmpcontainer";
 
                     // Select first
                     cmp_pv.ui.showPurposeDescription(1);
