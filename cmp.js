@@ -147,7 +147,11 @@ var cmp_pv = {
             if (vendorListVersion !== null && cmp_pv.globalVendorList.vendorListVersion !== vendorListVersion && (typeof vendorListVersion === 'number' /*|| vendorListVersion === '?LATEST?'*/)) {
                 return cmp_pv._fetch("https://vendorlist.consensu.org/v-" + vendorListVersion + "/vendorlist.json", function (res) {
                     if (res.status === 200) {
-                        callback(JSON.parse(res.responseText), true);
+                        try {
+                            callback(JSON.parse(res.responseText), true);
+                        }catch (e) {
+                            callback(null, false);
+                        }
                     } else {
                         callback(null, false);
                     }
@@ -303,7 +307,7 @@ var cmp_pv = {
                             css += '}';
                         }
                         this.displayStyle = 'block';
-                        css += '#CMP_PV {position: relative; top: calc(50% - 100px);}';
+                        css += '#CMP_PV {position: relative; top: calc(50% - 150px);}';
                     }
 
                     var html = '<div id="CMP_PV">';
@@ -386,7 +390,7 @@ var cmp_pv = {
         },
         show: function (bool) {
             if (cmp_pv.ui.dom === null) {
-                if(bool) cmp_pv.ui.create(0);
+                if (bool) cmp_pv.ui.create(0);
             } else {
                 cmp_pv.ui.dom.style.display = (!bool) ? 'none' : this.displayStyle;
             }
@@ -410,13 +414,13 @@ var cmp_pv = {
             var el2 = document.getElementById('vendors');
             var step = document.getElementById('step2');
             el2.style.display = (el.style.display === 'none') ? 'none' : 'flex';
-            if(typeof purpose != 'undefined'){
+            if (typeof purpose != 'undefined') {
                 el2.children[0].className = 'purposes vendors pid' + purpose;
                 step.children[0].className += ' liste';
                 step.children[0].children[1].children[1].innerText = cmp_pv.ui.language['fr'].purposes[purpose].name;
                 step.children[3].style.visibility = 'hidden';
-                document.querySelector('#vendors ul li.pid'+purpose+' span').onclick();
-            }else{
+                document.querySelector('#vendors ul li.pid' + purpose + ' span').onclick();
+            } else {
                 el2.children[0].className = 'purposes vendors';
                 step.children[0].className = step.children[0].className.replace(' liste', '');
                 step.children[3].style.visibility = 'visible';
@@ -428,7 +432,7 @@ var cmp_pv = {
             for (var i = 1; i <= 5; i++) {
                 document.getElementById('purpose_' + i).className = (i === purpose) ? 'active' : '';
             }
-            document.getElementById('purpose_desc').innerHTML = "<p>"+cmp_pv.ui.language['fr'].purposes[purpose].description+"</p><a onclick='cmp_pv.ui.toggleVendors("+purpose+")'>Voir la liste</a>";
+            document.getElementById('purpose_desc').innerHTML = "<p>" + cmp_pv.ui.language['fr'].purposes[purpose].description + "</p><a onclick='cmp_pv.ui.toggleVendors(" + purpose + ")'>Voir la liste</a>";
             if (arrow === true) {
                 this.arrow('purposes');
             }
@@ -1203,11 +1207,14 @@ var cmp_pv = {
     /** **/
     _fetchGlobalVendorList: function (callback) {
         cmp_pv._fetch(cmp_pv.conf.urlVendorList, function (res) {
-            if (res.status === 200) {
-                cmp_pv.globalVendorList = JSON.parse(res.responseText);
-                cmp_pv.ui.sortVendors();
-            } else {
-                console.error("Can't fetch vendorlist: %d (%s)", res.status, res.statusText);
+            try {
+                if (res.status === 200) {
+                    cmp_pv.globalVendorList = JSON.parse(res.responseText);
+                    cmp_pv.ui.sortVendors();
+                } else {
+                    console.error("Can't fetch vendorlist: %d (%s)", res.status, res.statusText);
+                }
+            } catch (e) {
             }
             callback();
         });
@@ -1215,24 +1222,31 @@ var cmp_pv = {
 
     _fetchPubVendorList: function (callback) {
         cmp_pv._fetch("/.well-known/pubvendors.json", function (res) {
-            if (res.status === 200) {
-                cmp_pv.pubvendor = JSON.parse(res.responseText);
-            } else {
-                console.error("Can't fetch pubvendors: %d (%s)", res.status, res.statusText);
+            try {
+                if (res.status === 200) {
+                    cmp_pv.pubvendor = JSON.parse(res.responseText);
+                } else {
+                    console.error("Can't fetch pubvendors: %d (%s)", res.status, res.statusText);
+                }
+            } catch (e) {
             }
             callback();
         });
     },
 
     _fetch: function (url, callback) {
-        var xhr = new XMLHttpRequest();
-        xhr.onreadystatechange = function () {
-            if (this.readyState === XMLHttpRequest.DONE) {
-                callback(this);
-            }
-        };
-        xhr.open("GET", url, true);
-        xhr.send();
+        try {
+            var xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function () {
+                if (this.readyState === XMLHttpRequest.DONE) {
+                    callback(this);
+                }
+            };
+            xhr.open("GET", url, true);
+            xhr.send();
+        } catch (e) {
+            callback({status: 500, statusText: e});
+        }
     }
 };
 
