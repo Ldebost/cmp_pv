@@ -169,7 +169,6 @@ var cmp_pv = {
     /** UI **/
     ui: {
         dom: null,
-        displayStyle: 'flex',
         create: function (it) {
             // Security
             if (cmp_pv.ui.dom !== null) return cmp_pv.ui.show(true);
@@ -181,6 +180,14 @@ var cmp_pv = {
                 });
             } else {
                 try {
+                    // Check CMP visibility : if any problem then hide background
+                    setTimeout(function(){
+                        var el = document.getElementById('CMP_PV');
+                        if(el === null || window.getComputedStyle(el).display === "none" || window.getComputedStyle(el).visibility === "hidden" || !cmp_pv.ui.isElementInViewport(el)){
+                            cmp_pv.ui.show(false);
+                        }
+                    }, 2000);
+
                     if (cmp_pv.consentString.data.created === null) cmp_pv.consentString.data = cmp_pv.consentString.generateVendorConsentData();
                     if (cmp_pv.consentString.dataPub.created === null) cmp_pv.consentString.dataPub = cmp_pv.consentString.generatePublisherConsentData();
 
@@ -189,7 +196,7 @@ var cmp_pv = {
 
                     var css = '';
                     css += '.cmpcontainer {position: fixed; top:0; bottom: 0; left: 0; right: 0; z-index: 100000; background: rgba(33,41,52,.66);}';
-                    css += '#CMP_PV {background: #fff; padding: 15px;font-family:Tahoma, Geneva, sans-serif; font-size: 14px;box-shadow: 0 0 5px #000000a1;box-sizing: border-box;max-width: 1030px;margin: auto;min-width: 320px;border-radius: 2px;}';
+                    css += '#CMP_PV {background: #fff; padding: 15px;font-family:Tahoma, Geneva, sans-serif; font-size: 14px;box-shadow: 0 0 5px #000000a1;box-sizing: border-box;max-width: 1030px;margin: auto;min-width: 320px;border-radius: 2px;margin-top: 50vh;transform: translateY(-50%);}';
                     css += '#CMP_PV p{margin:0;}';
                     css += '#CMP_PV a{color:' + cmp_pv.conf.uiColor + '; text-decoration: underline; cursor: pointer;}';
                     css += '#CMP_PV a:hover{color:#D41920; text-decoration: none;}';
@@ -204,7 +211,7 @@ var cmp_pv = {
                     css += '#CMP_PV input:checked + .slider{background-color: #8BC34A;}';
                     css += '#CMP_PV input:focus + .slider{box-shadow: 0 0 1px #8BC34A;}';
                     css += '#CMP_PV input:checked + .slider:before {transform: translateX(34px);border-color:#7BAA44;}';
-                    css += '#CMP_PV #step1{max-width:770px;}';
+                    // css += '#CMP_PV #step1{max-width:770px;}';
                     css += '#CMP_PV #step1 .title{color: #111;font-weight: bold;text-align: center;font-size:32px;padding: 30px 10px 40px 10px;text-transform: uppercase;text-shadow: 0 1px 2px rgba(0, 0, 0, 0.39);}';
                     css += '#CMP_PV #step1 .buttons{margin:38px 0 10px 0;}';
                     css += '#CMP_PV #step1 .buttons > *{min-width: 210px; font-size: 16px;margin: 0 15px;text-align:center;}';
@@ -214,7 +221,7 @@ var cmp_pv = {
                     css += '#CMP_PV .container:after{content:\'\';display:block;clear:both;}';
                     css += '#CMP_PV #step2 .desc{background: white;box-shadow: 0 3px 1px -2px rgba(0,0,0,.2), 0 2px 2px 0 rgba(0,0,0,.14), 0 1px 5px 0 rgba(0,0,0,.12);padding: 10px;box-sizing: border-box;margin-top:10px;align-items: center;font-size:13px;}';
                     css += '#CMP_PV #step2 .desc div{display: flex;}';
-                    css += '#CMP_PV #step2 .desc button{font-size: 16px;margin-left: 9px;white-space:nowrap;flex: 1;}';
+                    css += '#CMP_PV #step2 .desc button{font-size: 16px;margin-left: 9px;white-space:nowrap;flex: 1;min-width:120px;}';
                     css += '#CMP_PV #step2 .desc.liste>div:first-child{display:none;}';
                     css += '#CMP_PV #step2 .desc:not(.liste)>div:last-child{display:none;}';
                     css += '#CMP_PV #step2 .desc.liste p{margin-left: 10px;font-weight: bold;font-size: 15px;}';
@@ -291,7 +298,12 @@ var cmp_pv = {
                     // Hack IE 9
                     var ie = this.detectIE();
                     if (ie > 0) {
-                        if (ie > 9) {
+                        if(ie<=10){
+                            css += '#CMP_PV #step2 .desc div {width:100%; display: block;}';
+                            css += '#CMP_PV #step1 .container.buttons > *{width:50%; display: block;}';
+                            css += '#CMP_PV #step2 .container.buttons > *{width:33%; display: block;}';
+                        }
+                        /*if (ie > 9) {
                             css += '#CMP_PV #step2 .desc>p{width: calc(100% - 260px);}';
                             css += '@media screen and (max-width: 640px) {';
                             css += '	#CMP_PV #step2 .desc>p{width: calc(100% - 130px);}';
@@ -305,9 +317,7 @@ var cmp_pv = {
                             css += '@media screen and (max-width: 640px) {';
                             css += '	#CMP_PV #step2 .container .vendors_list{width: 100%;}';
                             css += '}';
-                        }
-                        this.displayStyle = 'block';
-                        css += '#CMP_PV {position: relative; top: calc(50% - 150px);}';
+                        }*/
                     }
 
                     var html = '<div id="CMP_PV">';
@@ -367,7 +377,7 @@ var cmp_pv = {
                     html += '</div>';
                     html += '</div>';
 
-                    cmp_pv.ui.dom.style.display = this.displayStyle;
+                    cmp_pv.ui.dom.style.display = 'block';
                     cmp_pv.ui.dom.innerHTML = html;
                     document.body.appendChild(cmp_pv.ui.dom);
 
@@ -392,7 +402,7 @@ var cmp_pv = {
             if (cmp_pv.ui.dom === null) {
                 if (bool) cmp_pv.ui.create(0);
             } else {
-                cmp_pv.ui.dom.style.display = (!bool) ? 'none' : this.displayStyle;
+                cmp_pv.ui.dom.style.display = (!bool) ? 'none' : 'block';
             }
             document.body.style.overflow = (!bool) ? '' : 'hidden';
             return true;
@@ -513,6 +523,16 @@ var cmp_pv = {
             } else {
                 container.className = 'container';
             }
+        },
+        isElementInViewport: function(el){
+            var rect = el.getBoundingClientRect();
+
+            return (
+                rect.top >= 0 &&
+                rect.left >= 0 &&
+                rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+                rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+            );
         },
         /*acceptOnEvent: function () {
             window.removeEventListener('scroll', cmp_pv.ui.acceptOnEvent, {passive: true, once: true});
