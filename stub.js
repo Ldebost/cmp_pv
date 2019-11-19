@@ -7,12 +7,12 @@
     var gdprAppliesGlobally = false;
 
     function addFrame() {
-        if (!window.frames['__cmpLocator']) {
+        if (!window.frames['__tcfapiLocator']) {
             if (document.body) {
                 var body = document.body,
                     iframe = document.createElement('iframe');
                 iframe.style = 'display:none';
-                iframe.name = '__cmpLocator';
+                iframe.name = '__tcfapiLocator';
                 body.appendChild(iframe);
             } else {
                 // In the case where this stub is located in the head,
@@ -25,32 +25,33 @@
 
     addFrame();
 
-    function stubCMP(command, parameter, callback) {
-        __cmp.a = __cmp.a || [];
+    function __tcfapi(command, version, callback, parameter) {
+        __tcfapi.a = __tcfapi.a || [];
         if (command === 'ping') {
             callback({"gdprAppliesGlobally": gdprAppliesGlobally, "cmpLoaded": false}, true);
         } else {
-            __cmp.a.push({
+            __tcfapi.a.push({
                 command: command,
+                version: version,
                 parameter: parameter,
                 callback: callback
             });
         }
     }
 
-    function cmpMsgHandler(event) {
+    function postMessageEventHandler(event) {
         var msgIsString = typeof event.data === "string";
         var json;
         if (msgIsString) {
-            json = event.data.indexOf("__cmpCall") !== -1 ? JSON.parse(event.data) : {};
+            json = event.data.indexOf("__tcfapiCall") !== -1 ? JSON.parse(event.data) : {};
         } else {
             json = event.data;
         }
-        if (json.__cmpCall) {
-            var i = json.__cmpCall;
-            window.__cmp(i.command, i.parameter, function (retValue, success) {
+        if (json.__tcfapiCall) {
+            var i = json.__tcfapiCall;
+            window.__tcfapi(i.command, i.parameter, function (retValue, success) {
                 var returnMsg = {
-                    "__cmpReturn": {
+                    "__tcfapiReturn": {
                         "returnValue": retValue,
                         "success": success,
                         "callId": i.callId
@@ -64,11 +65,10 @@
         }
     }
 
-    // if (typeof (__cmp) !== 'function') {
-    window.__cmp = stubCMP;
-    __cmp.msgHandler = cmpMsgHandler;
+    // if (typeof (__tcfapi) !== 'function') {
+    window.__tcfapi = __tcfapi;
     if (window.addEventListener)
-        window.addEventListener('message', cmpMsgHandler, false);
-    else window.attachEvent('onmessage', cmpMsgHandler);
+        window.addEventListener('message', postMessageEventHandler, false);
+    else window.attachEvent('onmessage', postMessageEventHandler);
     // }
 })();
