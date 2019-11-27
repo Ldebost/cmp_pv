@@ -22,6 +22,7 @@ var cmp_pv = {
             cmp_pv.commands[command](parameter, callback);
         }
     },
+
     processCommandQueue: function () {
         var queue = this.commandQueue;
         if (queue.length) {
@@ -82,39 +83,6 @@ var cmp_pv = {
             });
         },
 
-        /*getVendorConsents: function (vendorIds, callback) {
-            var vendorList = {};
-            if (vendorIds && vendorIds.length) {
-                for (var i = 0; i < vendorIds.length; i++) {
-                    vendorList[vendorIds[i]] = !!cmp_pv.consentString.data.bitField[vendorIds[i]];
-                }
-            } else {
-                vendorList = cmp_pv.consentString.data.bitField;
-            }
-            var consent = {
-                metadata: cmp_pv.consentString.generateVendorConsentMetadata(),
-                gdprApplies: cmp_pv.conf.gdprApplies,
-                hasGlobalScope: cmp_pv.conf.hasGlobalScope,
-                purposeConsents: cmp_pv.consentString.data.purposesAllowed,
-                vendorConsents: vendorList
-            };
-
-            callback(consent, true);
-        },
-
-        getConsentData: function (consentStringVersion, callback) {
-            if (!consentStringVersion) consentStringVersion = 1;
-            var consent = null;
-            if (typeof cmp_pv.consentString.const['vendor_' + consentStringVersion] !== 'undefined') {
-                consent = {
-                    consentData: cmp_pv.consentString.generateVendorConsentString(),
-                    gdprApplies: cmp_pv.conf.gdprApplies,
-                    hasGlobalScope: cmp_pv.conf.hasGlobalScope
-                };
-            }
-            callback(consent, true);
-        },*/
-
         ping: function (_, callback) {
             callback({
                 gdprApplies: cmp_pv.conf.gdprApplies,
@@ -129,28 +97,22 @@ var cmp_pv = {
             });
         },
 
-        /*
-
-        getVendorList: function (vendorListVersion, callback) {
-            if (vendorListVersion !== null && cmp_pv.globalVendorList.vendorListVersion !== vendorListVersion && (typeof vendorListVersion === 'number' || vendorListVersion === '?LATEST?')) {
-                return cmp_pv._fetch("https://vendorlist.consensu.org/v-" + vendorListVersion + "/vendorlist.json", function (res) {
-                    if (res.status === 200) {
-                        callback(JSON.parse(res.responseText), true);
-                    } else {
-                        callback(null, false);
-                    }
-                });
-            } else {
-                callback(cmp_pv.globalVendorList, (cmp_pv.globalVendorList != null));
-            }
-        },*/
-
         showConsentUi: function (_, callback) {
             callback(cmp_pv.ui.show(true));
         },
 
         getTCData: function (vendorIds, callback) {
-            callback({
+            var vendorList;
+            if (vendorIds && vendorIds.length) {
+                vendorList = cmp_pv.consentString.defaultBits(false, cmp_pv.consentString.data.vendorConsent.maxVendorId);
+                for (var i = 0; i < vendorIds.length; i++) {
+                    vendorList[vendorIds[i]] = cmp_pv.consentString.data.vendorConsent.bitField[vendorIds[i]];
+                }
+            } else {
+                vendorList = cmp_pv.consentString.data.vendorConsent.bitField;
+            }
+
+            var consent = {
                 tcString: cmp_pv.consentString.generateVendorConsentString(),
                 tcfPolicyVersion: 2,
                 cmpId: cmp_pv.consentString.const.CMP_ID,
@@ -228,7 +190,7 @@ var cmp_pv = {
                     legitimateInterests: cmp_pv.consentString.data.purposesLITransparency
                 },
                 vendor: {
-                    consents: cmp_pv.consentString.data.vendorConsent.bitField,
+                    consents: vendorList,
                     legitimateInterests: cmp_pv.consentString.data.vendorLegitimateInterest.bitField
                 },
                 speicalFeatureOptins: cmp_pv.consentString.data.specialFeatureOptIns,
@@ -280,7 +242,9 @@ var cmp_pv = {
                         }*/
                     }
                 }
-            }, true)
+            };
+
+            callback(consent, true)
         },
 
         addEventListener: function (_, callback) {
@@ -296,15 +260,17 @@ var cmp_pv = {
     event: {
         listeners: [],
         send: function (eventStatus) {
-            console.info('Listeners fired : '+eventStatus);
-            cmp_pv.commands.getTCData(null, function (tcData, success) {
-                tcData.eventStatus = eventStatus;
-                for (var i = 0; i < cmp_pv.event.listeners.length; i++) {
-                    if (typeof cmp_pv.event.listeners[i] === 'function') {
-                        cmp_pv.event.listeners[i](tcData, success);
+            console.info('Listeners fired : ' + eventStatus);
+            if (cmp_pv.event.listeners.length > 0) {
+                cmp_pv.commands.getTCData(null, function (tcData, success) {
+                    tcData.eventStatus = eventStatus;
+                    for (var i = 0; i < cmp_pv.event.listeners.length; i++) {
+                        if (typeof cmp_pv.event.listeners[i] === 'function') {
+                            cmp_pv.event.listeners[i](tcData, success);
+                        }
                     }
-                }
-            });
+                });
+            }
         }
     },
 
@@ -366,7 +332,7 @@ var cmp_pv = {
                     css += '#CMP_PV #step2 .desc.liste>div:first-child{display:none;}';
                     css += '#CMP_PV #step2 .desc:not(.liste)>div:last-child{display:none;}';
                     css += '#CMP_PV #step2 .desc.liste p{margin-left: 10px;font-weight: bold;font-size: 15px;}';
-                    css += '#CMP_PV #step2 .container .purposes, #CMP_PV #step2 .container .purposes_desc {list-style:none; box-shadow: 0 3px 1px -2px rgba(0,0,0,.2), 0 2px 2px 0 rgba(0,0,0,.14), 0 1px 5px 0 rgba(0,0,0,.12);padding: 0;width: 50%;margin:0;}';
+                    css += '#CMP_PV #step2 .container .purposes, #CMP_PV #step2 .container .purposes_desc {list-style:none; box-shadow: 0 3px 1px -2px rgba(0,0,0,.2), 0 2px 2px 0 rgba(0,0,0,.14), 0 1px 5px 0 rgba(0,0,0,.12);padding: 0;width: 50%;margin:0;overflow: auto;height: 330px;}';
                     css += '#CMP_PV #step2 .container .purposes li{border-bottom: 1px solid rgba(0, 0, 0, 0.11);background: #3c3c3c; color: white;position:relative;}';
                     css += '#CMP_PV #step2 .container .purposes li:last-child{border-bottom: none;}';
                     css += '#CMP_PV #step2 .container .purposes li>h4:first-child{border-left: 3px solid transparent;}';
@@ -380,13 +346,12 @@ var cmp_pv = {
                     css += '#CMP_PV #step2 .container .purposes li.active>h4:first-child{border-left: 3px solid ' + cmp_pv.conf.uiColor + ';}';
                     css += '#CMP_PV #step2 .container .purposes li.active>h4 .arrow::after{transform: rotate(0.5turn);}';
                     css += '#CMP_PV #step2 .container .purposes_desc{background: white;position: relative;}';
-                    css += '#CMP_PV #step2 .container .vendors{overflow: auto;height: 340px;}';
                     css += '#CMP_PV #step2 .container .vendors li>h4>span{padding: 2px 5px;}';
                     css += '#CMP_PV #step2 .container .vendors li .switch{height: 0;width: 52px;}';
                     css += '#CMP_PV #step2 .container .vendors li .slider{height: 8px;}';
                     css += '#CMP_PV #step2 .container .vendors li .slider:before{height: 13px; width: 13px;bottom: -4px;}';
-                    css += '#CMP_PV #step2 .container .vendors li > h4{height: 20px;}';
-                    css += '#CMP_PV #step2 .container .vendors li > h4 .arrow::after{height: 20px;font-size:16px;}';
+                    css += '#CMP_PV #step2 .container .vendors li>h4{height: 30px;}';
+                    css += '#CMP_PV #step2 .container .vendors li>h4 .arrow::after{height: 20px;font-size:16px;}';
                     css += '#CMP_PV #step2 .container .purposes_desc>div{position: absolute;top: 30px;left: 0;right: 0;bottom: 0;overflow: auto;margin: 0;}';
                     css += '#CMP_PV #step2 .container .vendors.pid1 li:not(.pid1){display: none;}';
                     css += '#CMP_PV #step2 .container .vendors.pid2 li:not(.pid2){display: none;}';
@@ -425,6 +390,8 @@ var cmp_pv = {
                     css += '	#CMP_PV #step2 .desc>div>div{margin-top: 5px;}';
                     css += '	#CMP_PV #step2 .container .purposes li > h4 .title{padding: 8px;}';
                     css += '    #CMP_PV .buttons > a{flex:1 50%;line-height: 42px;}';
+                    css += '    #CMP_PV #step1 .buttons > *, #CMP_PV #step2 .buttons{margin: 0;}';
+                    css += '    #CMP_PV .buttons > a:first-child{padding-left: 10px;box-sizing: border-box;}';
                     css += '	@keyframes bounce{';
                     css += '		0% {transform:translate3d(0,0,0);}';
                     css += '		30% {transform:translate3d(5px,0,0);}';
@@ -434,7 +401,7 @@ var cmp_pv = {
                     css += '	}';
                     css += '}';
                     css += '@media screen and (max-height: 600px) {';
-                    css += '    #CMP_PV #step2 .container .vendors{height: 260px;}';
+                    css += '    #CMP_PV #step2 .container .vendors, #CMP_PV #step2 .container .purposes, #CMP_PV #step2 .container .purposes_desc {height: 282px;}';
                     css += '}';
                     // Hack IE
                     var ie = this.detectIE();
