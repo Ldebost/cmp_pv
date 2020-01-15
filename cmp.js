@@ -324,11 +324,11 @@ var cmp_pv = {
                     html += '<div id="step1">';
                     html += '	<div class="title">Vos choix en matière de cookies</div>';
                     html += '	<div class="desc">';
-                    html += '		<p>Nos partenaires et nous-mêmes utilisons différentes technologies, telles que les cookies, pour personnaliser les contenus et les publicités, proposer des fonctionnalités sur les réseaux sociaux et analyser le trafic. Merci de cliquer sur le bouton ci-dessous pour donner votre accord. Vous pouvez changer d\'avis et modifier vos choix à tout moment. Le fait de ne pas consentir ne vous empechera pas d\'accèder à notre service. <a onclick="cmp_pv.ui.showPurposes();">Afficher les utilisations prévues et les accepter ou les refuser</a>.</p>';
+                    html += '		<p>Nos partenaires et nous-mêmes utilisons différentes technologies, telles que les cookies, pour personnaliser les contenus et les publicités, proposer des fonctionnalités sur les réseaux sociaux et analyser le trafic. Merci de cliquer sur le bouton ci-dessous pour donner votre accord. Ce choix ne vaut que pour le site ' + cmp_pv.conf.publisherName + '. Vous pouvez changer d\'avis et modifier vos choix à tout moment. Le fait de ne pas consentir ne vous empechera pas d\'accèder à notre service. <a onclick="cmp_pv.ui.showPurposes();">Afficher les utilisations prévues et les accepter ou les refuser</a>.</p>';
                     html += '	</div>';
                     html += '	<div class="container buttons">';
                     html += '	    <a onclick="cmp_pv.ui.toggleVendors()">Voir nos partenaires</a>';
-                    // html += '		<button class="inverse" onclick="cmp_pv.ui.showPurposes();">Je personnalise ou Je refuse</button>';
+                    html += '		<button onclick="cmp_pv.cookie.saveConsent(false);">Je refuse</button>';
                     html += '		<button onclick="cmp_pv.cookie.saveConsent(true);">J\'accepte</button>';
                     html += '	</div>';
                     html += '</div>';
