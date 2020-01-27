@@ -37,6 +37,7 @@ var cmp_pv = {
         gdprApplies: true,
         hasGlobalScope: false,
         cookieDomain: 'paruvendu.fr',
+        cookieSecure: true,
         publisherName: 'ParuVendu.fr',
         urlVendorList: 'https://vendorlist.consensu.org/vendorlist.json',
         urlCookiesUsage: 'https://www.paruvendu.fr/communfo/defaultcommunfo/defaultcommunfo/infosLegales#cookies',
@@ -328,7 +329,6 @@ var cmp_pv = {
                     html += '	</div>';
                     html += '	<div class="container buttons">';
                     html += '	    <a onclick="cmp_pv.ui.toggleVendors()">Voir nos partenaires</a>';
-                    html += '		<button onclick="cmp_pv.cookie.saveConsent(false);">Je refuse</button>';
                     html += '		<button onclick="cmp_pv.cookie.saveConsent(true);">J\'accepte</button>';
                     html += '	</div>';
                     html += '</div>';
@@ -596,10 +596,11 @@ var cmp_pv = {
                 if (typeof cb === 'function') cb('');
             }
         },
-        writeCookie: function (name, value, maxAgeSeconds, path, domain) {
+        writeCookie: function (name, value, maxAgeSeconds, path, domain, secure) {
             var maxAge = maxAgeSeconds === null ? '' : ";max-age=" + maxAgeSeconds;
             var valDomain = domain === null ? '' : ';domain=' + domain;
-            document.cookie = name + "=" + value + ";path=" + path + maxAge + valDomain;
+            secure = (secure === null || secure === false) ? '' : ';secure';
+            document.cookie = name + "=" + value + ";path=" + path + maxAge + valDomain + secure + ";samesite=strict;";
             this.saveVerification(name);
         },
         readGlobalCookie: function (name, cb) {
@@ -633,11 +634,11 @@ var cmp_pv = {
         writeVendorCookie: function () {
             var data = cmp_pv.consentString.generateVendorConsentString();
             var fnct = (cmp_pv.conf.hasGlobalScope) ? 'writeGlobalCookie' : 'writeCookie';
-            this[fnct](this.vendorCookieName, data, 33696000, '/', cmp_pv.conf.cookieDomain);
+            this[fnct](this.vendorCookieName, data, 33696000, '/', cmp_pv.conf.cookieDomain, cmp_pv.conf.cookieSecure);
         },
         writePublisherCookie: function () {
             var data = cmp_pv.consentString.generatePublisherConsentString();
-            this.writeCookie(this.publisherCookieName, data, 33696000, '/', cmp_pv.conf.cookieDomain);
+            this.writeCookie(this.publisherCookieName, data, 33696000, '/', cmp_pv.conf.cookieDomain, cmp_pv.conf.cookieSecure);
         },
         saveConsent: function (all) {
             // Maj dates
