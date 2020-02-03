@@ -600,7 +600,7 @@ var cmp_pv = {
             var maxAge = maxAgeSeconds === null ? '' : ";max-age=" + maxAgeSeconds;
             var valDomain = domain === null ? '' : ';domain=' + domain;
             secure = (secure === null || secure === false) ? '' : ';secure';
-            document.cookie = name + "=" + value + ";path=" + path + maxAge + valDomain + secure + ";samesite=strict;";
+            document.cookie = name + "=" + value + ";path=" + path + maxAge + valDomain + secure + ";samesite=lax;";
             this.saveVerification(name);
         },
         readGlobalCookie: function (name, cb) {
