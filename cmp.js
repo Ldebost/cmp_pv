@@ -324,6 +324,8 @@ var cmp_pv = {
 					css += '#CMP_PV .switch input {display:none;}';
 					css += '#CMP_PV .slider{position: absolute; cursor: pointer; top: 0; right: 0; bottom: 0; background-color: #ccc; -webkit-transition: .2s; transition: .2s;border-radius: 34px;height: 22px; width: 80%;}';
 					css += '#CMP_PV .slider:before{position: absolute;content: "";height: 18px; width: 18px;bottom: 1px;left:1px;background-color: white;-webkit-transition: .2s;transition: .2s;border-radius: 50%;border:1px solid #aaa}';
+					css += '#CMP_PV .switchLI .slider:after{position: absolute;content: "LI";height: 18px; width: 18px;bottom: 1px;left:24px;}';
+					css += '#CMP_PV input:checked + .slider:after{left:8px;}';
 					css += '#CMP_PV input:checked + .slider{background-color: #8BC34A;}';
 					css += '#CMP_PV input:focus + .slider{box-shadow: 0 0 1px #8BC34A;}';
 					css += '#CMP_PV input:checked + .slider:before {transform: translateX(22px);border-color:#7BAA44;}';
@@ -334,9 +336,9 @@ var cmp_pv = {
 					css += '#CMP_PV #step1 .buttons > a{line-height: 43px;}';
 					css += '#CMP_PV #step1 .desc>p{font-size: 15px;padding: 0 15px;}';
 					css += '#CMP_PV #step1 .desc>p:first-child{text-align:justify;}';
-					css += '#CMP_PV .container{max-width: 1000px; margin-left:auto;margin-right:auto;display: flex;}';
+					css += '#CMP_PV .container{max-width: 1000px; margin-left:auto;margin-right:auto;/*display: flex;*/}';
 					css += '#CMP_PV .container:after{content:\'\';display:block;clear:both;}';
-					css += '#CMP_PV #step2 .desc{background: white;box-shadow: 0 3px 1px -2px rgba(0,0,0,.2), 0 2px 2px 0 rgba(0,0,0,.14), 0 1px 5px 0 rgba(0,0,0,.12);padding: 10px;box-sizing: border-box;margin-top:10px;align-items: center;font-size:13px;}';
+					css += '#CMP_PV #step2 .desc{background: white;box-shadow: 0 3px 1px -2px rgba(0,0,0,.2), 0 2px 2px 0 rgba(0,0,0,.14), 0 1px 5px 0 rgba(0,0,0,.12);padding: 10px;box-sizing: border-box;margin-top:10px;align-items: center;font-size:13px;padding-bottom: 0;}';
 					css += '#CMP_PV #step2 .desc div{display: flex;}';
 					css += '#CMP_PV #step2 .desc button{font-size: 16px;margin-left: 9px;white-space:nowrap;flex: 1;min-width:120px;}';
 					css += '#CMP_PV #step2 .desc.liste>div:first-child{display:none;}';
@@ -385,6 +387,10 @@ var cmp_pv = {
 					css += '#CMP_PV #step2 .buttons button{font-size: 16px;padding: 5px 15px;}';
 					css += '#CMP_PV #step2 .purposes_desc>h4{display:block;margin:0;padding:5px 0;text-align: center;text-decoration:none;background:#515151;color:#ededed;border-bottom: 3px solid ' + cmp_pv.conf.uiColor + ';}';
 					css += '#CMP_PV #step2 .purposes_desc p{padding:10px;white-space: pre-wrap;}';
+					css += '#CMP_PV #step2 .table-header{justify-content: end; width: 66%;padding: 3px 0;}';
+					css += '#CMP_PV #step2 .table-header span{font-size: 20px;line-height: 18px;}';
+					css += '#CMP_PV #step2 .table-header br{display: none;}';
+					css += '#CMP_PV #step2 .table-header span:nth-child(3){transform: scaleX(-1);margin-left: 43px;}';
 					//Responsive
 					css += '@media screen and (min-width: 1024px) {';
 					css += '	#CMP_PV #step2 .container{width:1000px;}';
@@ -397,7 +403,7 @@ var cmp_pv = {
 					css += '    #CMP_PV .buttons{flex-direction: column;margin-bottom: 10px;}';
 					css += '    #CMP_PV #step1 .buttons{margin:20px 0 10px 0;}';
 					css += '    #CMP_PV #step1 .title{padding: 15px 10px 20px 10px;}';
-					css += '	#CMP_PV #step2 .desc>div{flex-flow: column;justify-content: space-evenly;}';
+					css += '	#CMP_PV #step2 .desc>div:first-child{flex-flow: column;justify-content: space-evenly;}';
 					css += '	#CMP_PV #step2 .desc{align-items: initial;margin-top: 0;}';
 					css += '	#CMP_PV #step2 .buttons{margin: 10px;flex-wrap: wrap;flex-direction: row;}';
 					css += '	#CMP_PV #step2 #purposes, #CMP_PV #step2 #vendors{width:200%;max-width:initial;transition: transform .2s ease-in-out;}';
@@ -412,6 +418,8 @@ var cmp_pv = {
 					css += '    #CMP_PV .buttons > a{flex:1 50%;line-height: 42px;}';
 					css += '    #CMP_PV #step1 .buttons > *, #CMP_PV #step2 .buttons{margin: 0;}';
 					css += '    #CMP_PV .buttons > a:first-child{padding-left: 10px;box-sizing: border-box;}';
+					css += '    #CMP_PV #step2 .table-header{width: 100%;}';
+					css += '    #CMP_PV #step2 .table-header br{display: block;}';
 					css += '	@keyframes bounce{';
 					css += '		0% {transform:translate3d(0,0,0);}';
 					css += '		30% {transform:translate3d(5px,0,0);}';
@@ -463,6 +471,7 @@ var cmp_pv = {
 					html += '			    <button onclick="cmp_pv.ui.switchAllPurposes(true);">Tout accepter</button>';
 					html += '		    </div>';
 					html += '		</div>';
+					html += '		<div class="table-header">Interets<br/>Légitimes <span>&#8628;</span><span>&#8628;</span> Consen<br/>tement</div>';
 					html += '		<div><a href="javascript:cmp_pv.ui.toggleVendors();">&lsaquo; Retour</a><p></p></div>';
 					html += '	</div>';
 					html += '	<div class="container" id="purposes">';
@@ -472,7 +481,7 @@ var cmp_pv = {
 						html += '		<li id="purpose_' + purpose.id + '"><h4>';
 						html += '			<span class="title" onclick="cmp_pv.ui.showPurposeDescription(\'purposes\', ' + purpose.id + ');">' + purpose.name + '</span>';
 						if(i>1) {
-							html += '			<label class="switch"><input type="checkbox" onchange="cmp_pv.ui.switchPurpose(\'purposesLITransparency\',' + purpose.id + ', this.checked);"' + ((cmp_pv.consentString.data.coreString.purposesLITransparency[purpose.id]) ? 'checked' : '') + '><span class="slider"></span></label>';
+							html += '			<label class="switch switchLI"><input type="checkbox" onchange="cmp_pv.ui.switchPurpose(\'purposesLITransparency\',' + purpose.id + ', this.checked);"' + ((cmp_pv.consentString.data.coreString.purposesLITransparency[purpose.id]) ? 'checked' : '') + '><span class="slider"></span></label>';
 						}
 						html += '			<label class="switch"><input type="checkbox" onchange="cmp_pv.ui.switchPurpose(\'purposesConsent\',' + purpose.id + ', this.checked);"' + ((cmp_pv.consentString.data.coreString.purposesConsent[purpose.id]) ? 'checked' : '') + '><span class="slider"></span></label>';
 						html += '			<span class="arrow" onclick="cmp_pv.ui.showPurposeDescription(\'purposes\', ' + purpose.id + ', true);"></span>';
@@ -499,7 +508,7 @@ var cmp_pv = {
 						var vendor = cmp_pv.globalVendorList.vendors[cmp_pv.globalVendorList.vendorsOrder[y]];
 						html += '		<li class="pid' + vendor.purposes.join(' pid') + ' pids' + vendor.specialFeatures.join(' pids') +'"><h4>';
 						html += '           <span onclick="cmp_pv.ui.showVendorDescription(' + vendor.id + ',' + y + ');">' + vendor.name + '</span>';
-						html += '           <label class="switch"><input type="checkbox" value="' + vendor.id + '" ' + ((cmp_pv.consentString.data.coreString.vendorLegitimateInterest.bitField[vendor.id]) ? 'checked' : '') + ' onchange="cmp_pv.ui.switchVendor(\'vendorLegitimateInterest\', ' + vendor.id + ', this.checked);"><span class="slider"></span></label>';
+						html += '           <label class="switch switchLI"><input type="checkbox" value="' + vendor.id + '" ' + ((cmp_pv.consentString.data.coreString.vendorLegitimateInterest.bitField[vendor.id]) ? 'checked' : '') + ' onchange="cmp_pv.ui.switchVendor(\'vendorLegitimateInterest\', ' + vendor.id + ', this.checked);"><span class="slider"></span></label>';
 						html += '           <label class="switch"><input type="checkbox" value="' + vendor.id + '" ' + ((cmp_pv.consentString.data.coreString.vendorConsent.bitField[vendor.id]) ? 'checked' : '') + ' onchange="cmp_pv.ui.switchVendor(\'vendorConsent\', ' + vendor.id + ', this.checked);"><span class="slider"></span></label>';
 						html += '           <span class="arrow" onclick="cmp_pv.ui.showVendorDescription(' + vendor.id + ',' + y + ', true);"></span>';
 						html += '       </h4></li>';
@@ -599,7 +608,7 @@ var cmp_pv = {
 			var active = document.querySelector('.purposes li.active');
 			if (active != null) active.className = '';
 			document.getElementById('purpose_' +((field === 'specialFeatures')?'s':'')+ purpose).className = 'active';
-			document.getElementById('purpose_desc').innerHTML = "<p>" + cmp_pv.ui.language['fr'][field][purpose].description + "</p><p>" + cmp_pv.ui.language['fr'][field][purpose].descriptionLegal + "</p><a onclick='cmp_pv.ui.toggleVendors(\""+field+"\", " + purpose + ")'>Voir la liste</a>";
+			document.getElementById('purpose_desc').innerHTML = "<p>" + cmp_pv.ui.language['fr'][field][purpose].description + "</p><p>" + cmp_pv.ui.language['fr'][field][purpose].descriptionLegal.replace(/Les partenaires peuvent :/i, 'Nos partenaires et nous-mêmes pouvons :') + "</p><a onclick='cmp_pv.ui.toggleVendors(\""+field+"\", " + purpose + ")'>Voir la liste</a>";
 			if (arrow === true) {
 				this.arrow('purposes');
 			}
@@ -648,6 +657,7 @@ var cmp_pv = {
 		},
 		switchPurpose: function (field, purpose, checked) {
 			cmp_pv.consentString.data.coreString[field][purpose] = checked;
+			cmp_pv.consentString.data.publisherTC['pub'+field[0].toUpperCase() + field.slice(1)][purpose] = checked;
 			var matches = document.querySelectorAll("#vendors .pid" + purpose + " input");
 			for (var i = 0; i < matches.length; i++) {
 				cmp_pv.consentString.data.coreString.vendorConsent.bitField[matches[i].value] = checked;
@@ -1123,7 +1133,9 @@ var cmp_pv = {
 				}
 				for (i in cmp_pv.consentString.data.coreString.purposesConsent) {
 					cmp_pv.consentString.data.coreString.purposesConsent[i] = all;
+					cmp_pv.consentString.data.publisherTC.pubPurposesConsent[i] = all;
 					if(i > 1) cmp_pv.consentString.data.coreString.purposesLITransparency[i] = all;
+					if(i > 1) cmp_pv.consentString.data.publisherTC.pubPurposesLITransparency[i] = all;
 				}
 				for (i in cmp_pv.consentString.data.coreString.specialFeatureOptIns) {
 					cmp_pv.consentString.data.coreString.specialFeatureOptIns[i] = all;
@@ -1258,7 +1270,7 @@ var cmp_pv = {
 					fields: this._rangeVendor
 				}
 			],
-			publisherTC: [ //TODO
+			publisherTC: [
 				{name: 'segmentType', type: 'int', numBits: 3, default: 3},
 				{
 					name: 'pubPurposesConsent', type: 'bits', numBits: 24, default: function () {
@@ -1267,7 +1279,9 @@ var cmp_pv = {
 				},
 				{
 					name: 'pubPurposesLITransparency', type: 'bits', numBits: 24, default: function () {
-						return cmp_pv.consentString.defaultBits(false, this.numBits)
+						var lit = cmp_pv.consentString.defaultBits(true, this.numBits);
+						lit[1] = false;
+						return lit;
 					}
 				},
 				{name: 'numCustomPurposes', type: 'int', numBits: 6, default: 0},
@@ -1391,9 +1405,12 @@ var cmp_pv = {
 				this.data[part] = this.decodeConsentData(this.const[part], bitString, 0).obj;
 			}
 
+			if(typeof this.data['publisherTC'] === 'undefined') this.data['publisherTC'] = this.generateData(this.const['publisherTC']);
 			return true;
 		},
 		generateConsentString: function () {
+			// Core
+			var string = '';
 			var names = ['vendorConsent', 'vendorLegitimateInterest'];
 			var data = this.data['coreString'];
 			for (var i = 0; i < names.length; i++) {
@@ -1405,7 +1422,13 @@ var cmp_pv = {
 				data[name].isRangeEncoding = (inputBits.length > inputBitsRange.length) ? 1 : 0;
 			}
 			inputBits = this.encodeConsentData(this.const.coreString, data);
-			return this.encodeBase64UrlSafe(inputBits);
+			string = this.encodeBase64UrlSafe(inputBits);
+
+			// Publisher
+			inputBits = this.encodeConsentData(this.const.publisherTC, this.data['publisherTC']);
+			string += '.'+this.encodeBase64UrlSafe(inputBits);
+			
+			return string;
 		},
 		getConsentString: function () {
 			if (typeof this.data.tcString == 'undefined') {
@@ -1628,7 +1651,7 @@ var cmp_pv = {
 		generateConsentData: function () {
 			var obj = {};
 			obj['coreString'] = this.generateData(this.const['coreString'])
-			// obj['publisherTC'] = this.generateData(this.const['publisherTC'])
+			obj['publisherTC'] = this.generateData(this.const['publisherTC'])
 			return obj;
 		},
 		generateData: function (fields) {
