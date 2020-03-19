@@ -76,7 +76,7 @@
 			console.log('Event : '+a.eventStatus);
 			showResult(a);
 		}
-		// window.__tcfapi ('showConsentUi', null, function(){});
+		window.__tcfapi ('showConsentUi', null, function(){});
     </script>
     
 	<div id="menu">
@@ -101,8 +101,5 @@
 	<script src="polyfills/base64.polyfill.js" type="application/javascript"></script>
     <script src="cmp.js" type="application/javascript" async></script>
 	<!--<script src="cmp.min.js" type="application/javascript" async></script>-->
-	<script type="application/javascript">
-		window.__tcfapi ('showConsentUi', null, function(a, b){showResult(a);});
-	</script>
 </body>
 </html>

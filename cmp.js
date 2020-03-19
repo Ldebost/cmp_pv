@@ -342,19 +342,20 @@ var cmp_pv = {
 					css += '#CMP_PV #step2 .desc div{display: flex;}';
 					css += '#CMP_PV #step2 .desc button{font-size: 16px;margin-left: 9px;white-space:nowrap;flex: 1;min-width:120px;}';
 					css += '#CMP_PV #step2 .desc.liste>div:first-child{display:none;}';
-					css += '#CMP_PV #step2 .desc:not(.liste)>div:last-child{display:none;}';
+					css += '#CMP_PV #step2 .desc:not(.liste)>div:nth-child(2){display:none;}';
 					css += '#CMP_PV #step2 .desc.liste p{margin-left: 10px;font-weight: bold;font-size: 15px;}';
 					css += '#CMP_PV #step2 .container .purposes, #CMP_PV #step2 .container .purposes_desc {box-shadow: 0 3px 1px -2px rgba(0,0,0,.2), 0 2px 2px 0 rgba(0,0,0,.14), 0 1px 5px 0 rgba(0,0,0,.12);padding: 0;width: 50%;margin:0;overflow: auto;height: 330px;}';
 					css += '#CMP_PV #step2 .container .purposes {width: 65%;}';
 					css += '#CMP_PV #step2 .container .purposes_desc {width: 35%;}';
-					css += '#CMP_PV #step2 .container .purposes li{border-bottom: 1px solid rgba(0, 0, 0, 0.11);background: #3c3c3c; color: white;position:relative;}';
+					css += '#CMP_PV #step2 .container .purposes li{border-bottom: 1px solid rgba(0, 0, 0, 0.11);background: #3c3c3c; color: white;position:relative; margin:0;display: block;overflow: hidden;}';
 					css += '#CMP_PV #step2 .container .purposes li:last-child{border-bottom: none;}';
 					css += '#CMP_PV #step2 .container .purposes li>h4:first-child{border-left: 3px solid transparent;}';
 					css += '#CMP_PV #step2 .container .purposes li>h4 .arrow{padding: 0 16px 0 0;width: 28px;text-align: right;}';
 					css += '#CMP_PV #step2 .container .purposes li>h4 .title{padding: 8px}';
 					css += '#CMP_PV #step2 .container .purposes li>h4 .arrow:after{content:\'\\276c\'; font-size: 25px;transition: all 0.5s;display: inline-block;height: 40px;}';
-					css += '#CMP_PV #step2 .container .purposes li>h4{display:table;margin:0;font-weight:normal;cursor:pointer;height: 40px;width: 100%;box-sizing: border-box;}';
-					css += '#CMP_PV #step2 .container .purposes li>h4:hover, #CMP_PV #step2 .container .purposes li.titre{background: #5f5f5f;}';
+					css += '#CMP_PV #step2 .container .purposes li>h4{display:table;margin:0;font-weight:normal;cursor:pointer;height: 45px;width: 100%;box-sizing: border-box;}';
+					css += '#CMP_PV #step2 .container .purposes li>h4:hover{background: #5f5f5f;}';
+					css += '#CMP_PV #step2 .container .purposes li.titre{background: #5f5f5f; height:20px;}';
 					css += '#CMP_PV #step2 .container .purposes li>h4>span{display: table-cell;vertical-align: middle;}';
 					css += '#CMP_PV #step2 .container .purposes li>h4>label{display: table-cell;border-top: 9px solid transparent;border-bottom: 9px solid transparent;}';
 					css += '#CMP_PV #step2 .container .purposes li.active{background: #515151;}';
@@ -387,7 +388,7 @@ var cmp_pv = {
 					css += '#CMP_PV #step2 .buttons button{font-size: 16px;padding: 5px 15px;}';
 					css += '#CMP_PV #step2 .purposes_desc>h4{display:block;margin:0;padding:5px 0;text-align: center;text-decoration:none;background:#515151;color:#ededed;border-bottom: 3px solid ' + cmp_pv.conf.uiColor + ';}';
 					css += '#CMP_PV #step2 .purposes_desc p{padding:10px;white-space: pre-wrap;}';
-					css += '#CMP_PV #step2 .table-header{justify-content: end; width: 66%;padding: 3px 0;}';
+					css += '#CMP_PV #step2 .table-header{justify-content: flex-end; width: 66%;padding: 3px 0;}';
 					css += '#CMP_PV #step2 .table-header span{font-size: 20px;line-height: 18px;}';
 					css += '#CMP_PV #step2 .table-header br{display: none;}';
 					css += '#CMP_PV #step2 .table-header span:nth-child(3){transform: scaleX(-1);margin-left: 43px;}';
@@ -471,8 +472,8 @@ var cmp_pv = {
 					html += '			    <button onclick="cmp_pv.ui.switchAllPurposes(true);">Tout accepter</button>';
 					html += '		    </div>';
 					html += '		</div>';
-					html += '		<div class="table-header">Interets<br/>Légitimes <span>&#8628;</span><span>&#8628;</span> Consen<br/>tement</div>';
 					html += '		<div><a href="javascript:cmp_pv.ui.toggleVendors();">&lsaquo; Retour</a><p></p></div>';
+					html += '		<div class="table-header">Interets<br/>Légitimes <span>&#8628;</span><span>&#8628;</span> Consen<br/>tement</div>';
 					html += '	</div>';
 					html += '	<div class="container" id="purposes">';
 					html += '		<ul class="purposes">';
@@ -561,7 +562,7 @@ var cmp_pv = {
 				// Fire cmpuishown event
 				if (bool) {
 					cmp_pv.event.send('cmpuishown');
-					delete this.data.tcString;
+					delete cmp_pv.consentString.data.tcString;
 				}
 			}
 			document.body.style.overflow = (!bool) ? '' : 'hidden';
@@ -594,12 +595,12 @@ var cmp_pv = {
 				el2.children[0].className = 'purposes vendors pid' + ((field === 'specialFeatures')?'s':'') + purpose;
 				step.children[0].className += ' liste';
 				step.children[0].children[1].children[1].innerText = cmp_pv.ui.language['fr'][field][purpose].name;
-				step.children[3].style.visibility = 'hidden';
+				step.children[3].style.display = 'none';
 				document.querySelector('#vendors ul li.pid' + purpose + ' span').onclick();
 			} else {
 				el2.children[0].className = 'purposes vendors';
 				step.children[0].className = step.children[0].className.replace(' liste', '');
-				step.children[3].style.visibility = 'visible';
+				step.children[3].style.display = '';
 			}
 			document.getElementById('link_vendors').innerText = (el.style.display === 'none') ? 'Voir nos partenaires' : 'Voir les utilisations';
 			el.style.display = (el.style.display === 'none') ? 'flex' : 'none';
