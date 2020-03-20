@@ -25,7 +25,7 @@ window.__tcfapi('init', {
 ## TODO  List ##
 TODO V2 (CMP) :
 - [x] Tcf_v2 : Consent string basic (coreString)
-- [ ] Tcv_v2 : Consent string complete support (OOB, Publisher TC)
+- [ ] Tcv_v2 : Consent string complete support (OOB, ~~Publisher TC~~, Publisher Restrictions)
 - [x] Perf : Store tcString instead of calculating every time
 - [ ] tcf_v2 : Complete support (Special Purpose One Treatment, Publisher Uses Non-Standard Stacks)
 

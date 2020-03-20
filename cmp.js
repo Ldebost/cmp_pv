@@ -40,7 +40,7 @@ var cmp_pv = {
 		hasGlobalScope: false,
 		cookieDomain: 'paruvendu.fr',
 		publisherName: 'ParuVendu.fr',
-		urlVendorList: 'http://media.paruvendu-dev.fr:6081/vendor-list-v2.json',
+		urlVendorList: 'https://media-recette.paruvendu.fr/vendor-list-v2.json?1',
 		urlCookiesUsage: 'https://www.paruvendu.fr/communfo/defaultcommunfo/defaultcommunfo/infosLegales#cookies',
 		dayCheckInterval: 30,
 		globalConsentLocation: 'https://paruvendu.mgr.consensu.org/portal.html',
@@ -180,7 +180,7 @@ var cmp_pv = {
 						 */
 						//'[vendor id]': Boolean
 					},
-					discloseVendors: {
+					disclosedVendors: {
 
 						/**
 						 * true - Vendor has been disclosed to the user
@@ -199,39 +199,11 @@ var cmp_pv = {
 				},
 				speicalFeatureOptins: cmp_pv.consentString.data.coreString.specialFeatureOptIns,
 				publisher: {
-					consents: {
-
-						/**
-						 * true - Consent
-						 * false - No Consent
-						 */
-						// '[purpose id]': Boolean
-					},
-					legitimateInterests: {
-
-						/**
-						 * true - Legitimate Interest Established
-						 * false - No Legitimate Interest Established
-						 */
-						// '[purpose id]': Boolean
-					},
+					consents: cmp_pv.consentString.data.publisherTC.pubPurposesConsent,
+					legitimateInterests: cmp_pv.consentString.data.publisherTC.pubPurposesLITransparency,
 					customPurpose: {
-						consents: {
-
-							/**
-							 * true - Consent
-							 * false - No Consent
-							 */
-							// '[purpose id]': Boolean
-						},
-						legitimateInterests: {
-
-							/**
-							 * true - Legitimate Interest Established
-							 * false - No Legitimate Interest Established
-							 */
-							// '[purpose id]': Boolean
-						}
+						consents: cmp_pv.consentString.data.publisherTC.customPurposesConsent,
+						legitimateInterests: cmp_pv.consentString.data.publisherTC.customPurposesLITransparency
 					},
 					restrictions: {
 
@@ -310,6 +282,7 @@ var cmp_pv = {
 					var css = '';
 					css += '.cmpcontainer {position: fixed; top:0; bottom: 0; left: 0; right: 0; z-index: 100000; background: rgba(33,41,52,.66);}';
 					css += '#CMP_PV {background: #fff; padding: 15px;font-family:Tahoma, Geneva, sans-serif; font-size: 14px;box-shadow: 0 0 5px #000000a1;box-sizing: border-box;max-width: 1030px;margin: auto;min-width: 320px;border-radius: 2px;margin-top: 50vh;transform: translateY(-50%);}';
+					css += '#CMP_PV h2{font-size: initial;}';
 					css += '#CMP_PV h3{margin:16px 0;}';
 					css += '#CMP_PV p{margin:0;}';
 					css += '#CMP_PV ul{margin:14px 0;padding-left: 40px;}';
@@ -593,6 +566,7 @@ var cmp_pv = {
 			el2.style.display = (el.style.display === 'none') ? 'none' : 'flex';
 			if (typeof purpose != 'undefined') {
 				el2.children[0].className = 'purposes vendors pid' + ((field === 'specialFeatures')?'s':'') + purpose;
+				el2.children[0].scrollTop = 0;
 				step.children[0].className += ' liste';
 				step.children[0].children[1].children[1].innerText = cmp_pv.ui.language['fr'][field][purpose].name;
 				step.children[3].style.display = 'none';
@@ -651,7 +625,9 @@ var cmp_pv = {
 					html += '</ul>';
 				}
 			}
-			document.getElementById('vendor_desc').innerHTML = html;
+			var el = document.getElementById('vendor_desc');
+			el.innerHTML = html;
+			el.parentNode.scrollTop = 0;
 			if (arrow === true) {
 				this.arrow('vendors');
 			}
@@ -1255,7 +1231,18 @@ var cmp_pv = {
 						return cmp_pv.consentString.const._rangeVendor;
 					}
 				},
-				{name: 'numPubRestrictions', type: 'int', numBits: 12, default: 0}
+				{name: 'numPubRestrictions', type: 'int', numBits: 12, default: 0}/*,
+				{
+					name: 'pubRestrictions',
+					type: 'list',
+					listCount: function (obj) {
+						return obj.numPubRestrictions;
+					},
+					fields: [
+						{name: 'purposeId', type: 'int', numBits: 6, default: 0},
+						{name: 'restrictionType', type: 'int', numBits: 2, default: 0},
+					]
+				}*/
 			],
 			disclosedVendors: [ //TODO: OOB only global
 				{name: 'segmentType', type: 'int', numBits: 3, default: 1},
