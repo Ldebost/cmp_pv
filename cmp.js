@@ -102,7 +102,8 @@ var cmp_pv = {
 		},
 
 		showConsentUi: function (_, callback) {
-			callback(cmp_pv.ui.show(true));
+			var res = cmp_pv.ui.show(true);
+			if (typeof callback !== 'undefined') callback(res);
 		},
 
 		getTCData: function (vendorIds, callback) {
@@ -454,7 +455,7 @@ var cmp_pv = {
 						purpose = cmp_pv.ui.language['fr'].purposes[i];
 						html += '		<li id="purpose_' + purpose.id + '"><h4>';
 						html += '			<span class="title" onclick="cmp_pv.ui.showPurposeDescription(\'purposes\', ' + purpose.id + ');">' + purpose.name + '</span>';
-						if(i>1) {
+						if (i > 1) {
 							html += '			<label class="switch switchLI"><input type="checkbox" onchange="cmp_pv.ui.switchPurpose(\'purposesLITransparency\',' + purpose.id + ', this.checked);"' + ((cmp_pv.consentString.data.coreString.purposesLITransparency[purpose.id]) ? 'checked' : '') + '><span class="slider"></span></label>';
 						}
 						html += '			<label class="switch"><input type="checkbox" onchange="cmp_pv.ui.switchPurpose(\'purposesConsent\',' + purpose.id + ', this.checked);"' + ((cmp_pv.consentString.data.coreString.purposesConsent[purpose.id]) ? 'checked' : '') + '><span class="slider"></span></label>';
@@ -480,9 +481,9 @@ var cmp_pv = {
 					html += '		<ul class="purposes vendors">';
 					for (var y = 0; y < cmp_pv.globalVendorList.vendorsOrder.length; y++) {
 						var vendor = cmp_pv.globalVendorList.vendors[cmp_pv.globalVendorList.vendorsOrder[y]];
-						html += '		<li class="pid' + vendor.purposes.join(' pid') + ' pids' + vendor.specialFeatures.join(' pids') +'"><h4>';
+						html += '		<li class="pid' + vendor.purposes.join(' pid') + ' pidlit' + vendor.legIntPurposes.join(' pidlit') + ' pids' + vendor.specialFeatures.join(' pids') + '"><h4>';
 						html += '           <span onclick="cmp_pv.ui.showVendorDescription(' + vendor.id + ',' + y + ');">' + vendor.name + '</span>';
-						html += '           <label class="switch switchLI"><input type="checkbox" value="' + vendor.id + '" ' + ((cmp_pv.consentString.data.coreString.vendorLegitimateInterest.bitField[vendor.id]) ? 'checked' : '') + ' onchange="cmp_pv.ui.switchVendor(\'vendorLegitimateInterest\', ' + vendor.id + ', this.checked);"><span class="slider"></span></label>';
+						if (vendor.legIntPurposes.length > 1) html += '           <label class="switch switchLI"><input type="checkbox" value="' + vendor.id + '" ' + ((cmp_pv.consentString.data.coreString.vendorLegitimateInterest.bitField[vendor.id]) ? 'checked' : '') + ' onchange="cmp_pv.ui.switchVendor(\'vendorLegitimateInterest\', ' + vendor.id + ', this.checked);"><span class="slider"></span></label>';
 						html += '           <label class="switch"><input type="checkbox" value="' + vendor.id + '" ' + ((cmp_pv.consentString.data.coreString.vendorConsent.bitField[vendor.id]) ? 'checked' : '') + ' onchange="cmp_pv.ui.switchVendor(\'vendorConsent\', ' + vendor.id + ', this.checked);"><span class="slider"></span></label>';
 						html += '           <span class="arrow" onclick="cmp_pv.ui.showVendorDescription(' + vendor.id + ',' + y + ', true);"></span>';
 						html += '       </h4></li>';
@@ -565,7 +566,7 @@ var cmp_pv = {
 			var step = document.getElementById('step2');
 			el2.style.display = (el.style.display === 'none') ? 'none' : 'flex';
 			if (typeof purpose != 'undefined') {
-				el2.children[0].className = 'purposes vendors pid' + ((field === 'specialFeatures')?'s':'') + purpose;
+				el2.children[0].className = 'purposes vendors pid' + ((field === 'specialFeatures') ? 's' : '') + purpose;
 				el2.children[0].scrollTop = 0;
 				step.children[0].className += ' liste';
 				step.children[0].children[1].children[1].innerText = cmp_pv.ui.language['fr'][field][purpose].name;
@@ -582,8 +583,8 @@ var cmp_pv = {
 		showPurposeDescription: function (field, purpose, arrow) {
 			var active = document.querySelector('.purposes li.active');
 			if (active != null) active.className = '';
-			document.getElementById('purpose_' +((field === 'specialFeatures')?'s':'')+ purpose).className = 'active';
-			document.getElementById('purpose_desc').innerHTML = "<p>" + cmp_pv.ui.language['fr'][field][purpose].description + "</p><p>" + cmp_pv.ui.language['fr'][field][purpose].descriptionLegal.replace(/Les partenaires peuvent :/i, 'Nos partenaires et nous-mêmes pouvons :') + "</p><a onclick='cmp_pv.ui.toggleVendors(\""+field+"\", " + purpose + ")'>Voir la liste</a>";
+			document.getElementById('purpose_' + ((field === 'specialFeatures') ? 's' : '') + purpose).className = 'active';
+			document.getElementById('purpose_desc').innerHTML = "<p>" + cmp_pv.ui.language['fr'][field][purpose].description + "</p><p>" + cmp_pv.ui.language['fr'][field][purpose].descriptionLegal.replace(/Les partenaires peuvent :/i, 'Nos partenaires et nous-mêmes pouvons :') + "</p><a onclick='cmp_pv.ui.toggleVendors(\"" + field + "\", " + purpose + ")'>Voir la liste</a>";
 			if (arrow === true) {
 				this.arrow('purposes');
 			}
@@ -634,10 +635,12 @@ var cmp_pv = {
 		},
 		switchPurpose: function (field, purpose, checked) {
 			cmp_pv.consentString.data.coreString[field][purpose] = checked;
-			cmp_pv.consentString.data.publisherTC['pub'+field[0].toUpperCase() + field.slice(1)][purpose] = checked;
-			var matches = document.querySelectorAll("#vendors .pid" + purpose + " input");
+			cmp_pv.consentString.data.publisherTC['pub' + field[0].toUpperCase() + field.slice(1)][purpose] = checked;
+			var lit = field === 'purposesLITransparency';
+			var matches = document.querySelectorAll("#vendors .pid" + (lit ? 'lit' : '') + purpose + " .switch" + (lit ? '.switchLI' : '') + " input");
+			var vendorField = lit ? 'vendorLegitimateInterest' : 'vendorConsent';
 			for (var i = 0; i < matches.length; i++) {
-				cmp_pv.consentString.data.coreString.vendorConsent.bitField[matches[i].value] = checked;
+				cmp_pv.consentString.data.coreString[vendorField].bitField[matches[i].value] = checked;
 				matches[i].checked = checked;
 			}
 		},
@@ -1111,8 +1114,8 @@ var cmp_pv = {
 				for (i in cmp_pv.consentString.data.coreString.purposesConsent) {
 					cmp_pv.consentString.data.coreString.purposesConsent[i] = all;
 					cmp_pv.consentString.data.publisherTC.pubPurposesConsent[i] = all;
-					if(i > 1) cmp_pv.consentString.data.coreString.purposesLITransparency[i] = all;
-					if(i > 1) cmp_pv.consentString.data.publisherTC.pubPurposesLITransparency[i] = all;
+					if (i > 1) cmp_pv.consentString.data.coreString.purposesLITransparency[i] = all;
+					if (i > 1) cmp_pv.consentString.data.publisherTC.pubPurposesLITransparency[i] = all;
 				}
 				for (i in cmp_pv.consentString.data.coreString.specialFeatureOptIns) {
 					cmp_pv.consentString.data.coreString.specialFeatureOptIns[i] = all;
@@ -1219,14 +1222,8 @@ var cmp_pv = {
 				{
 					name: ['vendorConsent', 'vendorLegitimateInterest'],
 					fields: function (name) {
-						if (name === 'vendorLegitimateInterest') {
-							cmp_pv.consentString.const._rangeVendor[2].default = function (obj) {
-								return cmp_pv.consentString.defaultBits(true, obj.maxVendorId);
-							}
-						} else {
-							cmp_pv.consentString.const._rangeVendor[2].default = function (obj) {
-								return cmp_pv.consentString.defaultBits(false, obj.maxVendorId);
-							}
+						cmp_pv.consentString.const._rangeVendor[2].default = function (obj) {
+							return cmp_pv.consentString.defaultBits(name === 'vendorLegitimateInterest', obj.maxVendorId);
 						}
 						return cmp_pv.consentString.const._rangeVendor;
 					}
@@ -1393,7 +1390,7 @@ var cmp_pv = {
 				this.data[part] = this.decodeConsentData(this.const[part], bitString, 0).obj;
 			}
 
-			if(typeof this.data['publisherTC'] === 'undefined') this.data['publisherTC'] = this.generateData(this.const['publisherTC']);
+			if (typeof this.data['publisherTC'] === 'undefined') this.data['publisherTC'] = this.generateData(this.const['publisherTC']);
 			return true;
 		},
 		generateConsentString: function () {
@@ -1414,8 +1411,8 @@ var cmp_pv = {
 
 			// Publisher
 			inputBits = this.encodeConsentData(this.const.publisherTC, this.data['publisherTC']);
-			string += '.'+this.encodeBase64UrlSafe(inputBits);
-			
+			string += '.' + this.encodeBase64UrlSafe(inputBits);
+
 			return string;
 		},
 		getConsentString: function () {

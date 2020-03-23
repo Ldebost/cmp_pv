@@ -7,7 +7,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<style>
 		body{
-			padding: 0; 
+			padding: 0;
 			margin: 0;
 		}
 		#menu {
@@ -76,9 +76,9 @@
 			console.log('Event : '+a.eventStatus);
 			showResult(a);
 		}
-		window.__tcfapi ('showConsentUi', null, function(){});
+		window.__tcfapi('showConsentUi');
     </script>
-    
+
 	<div id="menu">
 		<button id="APImenu" onclick="showTab('API');" class="active">API</button>
 		<button id="Iframemenu" onclick="showTab('Iframe');">iframe</button>
@@ -95,7 +95,7 @@
 		<iframe id="ifrCall" src="iframe.html"></iframe>
 	</div>
 	<div id="res" style="white-space: pre; font-family: monospace;"></div>
-	
+
 	<!-- Chargement du CMP -->
 	<script src="polyfills/assign.polyfill.js" type="application/javascript"></script>
 	<script src="polyfills/base64.polyfill.js" type="application/javascript"></script>
