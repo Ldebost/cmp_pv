@@ -198,7 +198,7 @@ var cmp_pv = {
 					consents: vendorList,
 					legitimateInterests: cmp_pv.consentString.data.coreString.vendorLegitimateInterest.bitField
 				},
-				speicalFeatureOptins: cmp_pv.consentString.data.coreString.specialFeatureOptIns,
+				specialFeatureOptins: cmp_pv.consentString.data.coreString.specialFeatureOptIns,
 				publisher: {
 					consents: cmp_pv.consentString.data.publisherTC.pubPurposesConsent,
 					legitimateInterests: cmp_pv.consentString.data.publisherTC.pubPurposesLITransparency,
