@@ -5,6 +5,7 @@ var cmp_pv = {
 	/** Interface **/
 	isLoaded: false,
 	cmpReady: false,
+	lastEvent: '',
 	commandQueue: window.__tcfapi.a || [],
 	processCommand: function (command, version, callback, parameter) {
 		if (typeof cmp_pv.commands[command] !== 'function') {
@@ -142,7 +143,7 @@ var cmp_pv = {
 				 * cmpuishown
 				 * useractioncomplete
 				 */
-				eventStatus: 'string',
+				eventStatus: cmp_pv.lastEvent,
 
 				/**
 				 * true - CMP is using publisher-customized stack descriptions
@@ -240,6 +241,7 @@ var cmp_pv = {
 		listeners: [],
 		send: function (eventStatus) {
 			console.info('Listeners fired : ' + eventStatus);
+			cmp_pv.lastEvent = eventStatus;
 			if (cmp_pv.event.listeners.length > 0) {
 				cmp_pv.commands.getTCData(null, function (tcData, success) {
 					tcData.eventStatus = eventStatus;
@@ -276,7 +278,8 @@ var cmp_pv = {
 					}, 2000);
 
 					if (typeof cmp_pv.consentString.data.coreString === 'undefined') cmp_pv.consentString.data = cmp_pv.consentString.generateConsentData();
-
+					// Update VendorList Version
+					cmp_pv.consentString.data.coreString.vendorListVersion = cmp_pv.globalVendorList.vendorListVersion;
 					// Create UI
 					cmp_pv.ui.dom = document.createElement('div');
 
@@ -420,7 +423,7 @@ var cmp_pv = {
 					html += '<div id="step1">';
 					html += '	<div class="title">Vos choix en matière de cookies</div>';
 					html += '	<div class="desc">';
-					html += '		<p>Nos partenaires et nous-mêmes utilisons différentes technologies, telles que les cookies, pour personnaliser les contenus et les publicités, proposer des fonctionnalités sur les réseaux sociaux et analyser le trafic. Merci de cliquer sur le bouton ci-dessous pour donner votre accord. Vous pouvez changer d\'avis et modifier vos choix à tout moment. Le fait de ne pas consentir ne vous empechera pas d\'accèder à notre service. <a onclick="cmp_pv.ui.showPurposes();">Afficher les utilisations prévues et les accepter ou les refuser</a>.</p>';
+					html += '		<p>Nos partenaires et nous-mêmes utilisons différentes technologies, telles que les cookies, pour personnaliser les contenus et les publicités, proposer des fonctionnalités sur les réseaux sociaux et analyser le trafic. Merci de cliquer sur le bouton ci-dessous pour donner votre accord. Vous pouvez changer d\'avis et modifier vos choix à tout moment. Le fait de ne pas consentir ne vous empêchera pas d\'accèder à notre service. <a onclick="cmp_pv.ui.showPurposes();">Afficher les utilisations prévues et les accepter ou les refuser</a>.</p>';
 					html += '		<p>Usages : </p>';
 					for (var key in cmp_pv.conf.firstScreenPurposes) {
 						for (var i in cmp_pv.conf.firstScreenPurposes[key]) {
