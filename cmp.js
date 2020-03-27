@@ -307,12 +307,12 @@ var cmp_pv = {
 					css += '#CMP_PV input:focus + .slider{box-shadow: 0 0 1px #8BC34A;}';
 					css += '#CMP_PV input:checked + .slider:before {transform: translateX(22px);border-color:#7BAA44;}';
 					// css += '#CMP_PV #step1{max-width:770px;}';
-					css += '#CMP_PV #step1 .title{color: #111;font-weight: bold;text-align: center;font-size:32px;padding: 30px 10px 40px 10px;text-transform: uppercase;text-shadow: 0 1px 2px rgba(0, 0, 0, 0.39);}';
+					css += '#CMP_PV #step1 .title{color: #111;font-weight: bold;text-align: center;font-size:32px;padding: 20px 10px 25px 10px;text-transform: uppercase;text-shadow: 0 1px 2px rgba(0, 0, 0, 0.39);}';
 					css += '#CMP_PV #step1 .buttons{margin:38px 0 10px 0;}';
 					css += '#CMP_PV #step1 .buttons > *{min-width: 210px; font-size: 16px;margin: 0 15px;text-align:center;}';
 					css += '#CMP_PV #step1 .buttons > a{line-height: 43px;}';
-					css += '#CMP_PV #step1 .desc>p{font-size: 15px;padding: 0 15px;}';
-					css += '#CMP_PV #step1 .desc>p:first-child{text-align:justify;}';
+					css += '#CMP_PV #step1 .desc>p{font-size: 15px;padding: 5px 15px;text-align:justify;}';
+					css += '#CMP_PV #step1 .desc>p>i{display: block; font-style: normal;}';
 					css += '#CMP_PV .container{max-width: 1000px; margin-left:auto;margin-right:auto;/*display: flex;*/}';
 					css += '#CMP_PV .container:after{content:\'\';display:block;clear:both;}';
 					css += '#CMP_PV #step2 .desc{background: white;box-shadow: 0 3px 1px -2px rgba(0,0,0,.2), 0 2px 2px 0 rgba(0,0,0,.14), 0 1px 5px 0 rgba(0,0,0,.12);padding: 10px;box-sizing: border-box;margin-top:10px;align-items: center;font-size:13px;padding-bottom: 0;}';
@@ -377,10 +377,10 @@ var cmp_pv = {
 					css += '	#CMP_PV{padding:0;width:100%;}';
 					css += '	#CMP_PV button{min-height: 46px;}';
 					css += '	#CMP_PV #step1{text-align: center;}';
-					css += '	#CMP_PV #step1 .desc{display:block;padding: 0 10px 10px 10px;}';
+					css += '	#CMP_PV #step1 .desc{display:block;padding: 0 10px 10px 10px;height: calc(100vh - 136px);max-height: 516px;overflow-y: auto;}';
 					css += '    #CMP_PV .buttons{flex-direction: column;margin-bottom: 10px;}';
-					css += '    #CMP_PV #step1 .buttons{margin:20px 0 10px 0;}';
-					css += '    #CMP_PV #step1 .title{padding: 15px 10px 20px 10px;}';
+					css += '    #CMP_PV #step1 .buttons{margin:0;border-top:1px solid #bbbbbb;}';
+					css += '    #CMP_PV #step1 .title{padding: 10px; font-size: 15px;}';
 					css += '	#CMP_PV #step2 .desc>div:first-child{flex-flow: column;justify-content: space-evenly;}';
 					css += '	#CMP_PV #step2 .desc{align-items: initial;margin-top: 0;}';
 					css += '	#CMP_PV #step2 .buttons{margin: 10px;flex-wrap: wrap;flex-direction: row;}';
@@ -424,15 +424,17 @@ var cmp_pv = {
 					html += '	<div class="title">Vos choix en matière de cookies</div>';
 					html += '	<div class="desc">';
 					html += '		<p>Nos partenaires et nous-mêmes utilisons différentes technologies, telles que les cookies, pour personnaliser les contenus et les publicités, proposer des fonctionnalités sur les réseaux sociaux et analyser le trafic. Merci de cliquer sur le bouton ci-dessous pour donner votre accord. Vous pouvez changer d\'avis et modifier vos choix à tout moment. Le fait de ne pas consentir ne vous empêchera pas d\'accèder à notre service. <a onclick="cmp_pv.ui.showPurposes();">Afficher les utilisations prévues et les accepter ou les refuser</a>.</p>';
-					html += '		<p>Usages : </p>';
+					html += '       <p>Certains de nos partenaires ne demandent pas votre consentement pour traiter vos données, et se basent à la place sur leur intérêt légitime pour le faire. Vous pouvez consulter la liste de ces partenaires, les usages pour lesquels ils traitent vos données et vous y opposer en cliquant ici. <br/> Vos choix ne s\'appliqueront sur que les sites du groupe Paruvendu.fr.</p>';
+					html += '		<p>Usages : ';
 					for (var key in cmp_pv.conf.firstScreenPurposes) {
 						for (var i in cmp_pv.conf.firstScreenPurposes[key]) {
 							if (cmp_pv.ui.language['fr'].hasOwnProperty(key)) {
 								var purpose = cmp_pv.ui.language['fr'][key][cmp_pv.conf.firstScreenPurposes[key][i]];
-								html += '<p> - ' + purpose.name + '</p>';
+								html += '<i> - ' + purpose.name + '</i>';
 							}
 						}
 					}
+					html += '		</p>';
 					html += '	</div>';
 					html += '	<div class="container buttons">';
 					html += '	    <a onclick="cmp_pv.ui.showVendors()">Voir nos partenaires</a>';
