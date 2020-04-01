@@ -582,7 +582,7 @@ var cmp_pv = {
 				step.children[3].style.display = 'none';
 				step.children[0].children[1].children[2].className = (s==='lit')?'switch switchLI':'switch';
 				step.children[0].children[1].children[2].children[0].onchange = function() {cmp_pv.ui.switchPurposeUI(field, this.checked, purpose);};
-				step.children[0].children[1].children[2].children[0].checked = document.querySelector('#purpose_'+purpose+ ' .switch'+((s==='lit')?'.switchLI' : ':not(.switchLI)')+' input').checked;
+				step.children[0].children[1].children[2].children[0].checked = (purpose === '')?true:document.querySelector('#purpose_'+purpose+ ' .switch'+((s==='lit')?'.switchLI' : ':not(.switchLI)')+' input').checked;
 				document.querySelector('#vendors ul li.pid' + s + purpose + ' span').onclick();
 			} else {
 				el2.children[0].className = 'purposes vendors';
