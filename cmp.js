@@ -47,7 +47,7 @@ var cmp_pv = {
 		globalConsentLocation: 'https://paruvendu.mgr.consensu.org/portal.html',
 		uiColor: '#EE1C24',
 		firstScreenPurposes: {
-			"purposes": [1],
+			"purposes": [1, 3],
 			"stacks": [31]
 		}
 	},
@@ -312,7 +312,8 @@ var cmp_pv = {
 					css += '#CMP_PV #step1 .buttons > *{min-width: 210px; font-size: 16px;margin: 0 15px;text-align:center;}';
 					css += '#CMP_PV #step1 .buttons > a{line-height: 43px;}';
 					css += '#CMP_PV #step1 .desc>p{font-size: 15px;padding: 5px 15px;text-align:justify;}';
-					css += '#CMP_PV #step1 .desc>p>i{display: block; font-style: normal;}';
+					css += '#CMP_PV #step1 .desc>p:last-child{font-size: 12px;font-weight: bold;}';
+					css += '#CMP_PV #step1 .desc>p>i{display: inline; font-style: normal;color: #b5b5b5;}';
 					css += '#CMP_PV .container{max-width: 1000px; margin-left:auto;margin-right:auto;/*display: flex;*/}';
 					css += '#CMP_PV .container:after{content:\'\';display:block;clear:both;}';
 					css += '#CMP_PV #step2 .desc{background: white;box-shadow: 0 3px 1px -2px rgba(0,0,0,.2), 0 2px 2px 0 rgba(0,0,0,.14), 0 1px 5px 0 rgba(0,0,0,.12);padding: 10px;box-sizing: border-box;margin-top:10px;align-items: center;font-size:13px;padding-bottom: 0;}';
@@ -426,7 +427,7 @@ var cmp_pv = {
 						for (i in cmp_pv.conf.firstScreenPurposes[key]) {
 							if (cmp_pv.ui.language['fr'].hasOwnProperty(key)) {
 								var purpose = cmp_pv.ui.language['fr'][key][cmp_pv.conf.firstScreenPurposes[key][i]];
-								html += '<i> - ' + purpose.name + '</i>';
+								html += '<i>' + purpose.name + '. </i>';
 							}
 						}
 					}
