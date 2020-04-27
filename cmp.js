@@ -258,6 +258,7 @@ var cmp_pv = {
 	/** UI **/
 	ui: {
 		dom: null,
+		htmlOverflow: '',
 		create: function (it) {
 			// Security
 			if (cmp_pv.ui.dom !== null) return cmp_pv.ui.show(true);
@@ -297,9 +298,9 @@ var cmp_pv = {
 					css += '#CMP_PV button:hover{background-color: #FFF;color:' + cmp_pv.conf.uiColor + ';}';
 					css += '#CMP_PV button.inverse{background-color: #FFF;color:' + cmp_pv.conf.uiColor + ';}';
 					css += '#CMP_PV button.inverse:hover{background-color: ' + cmp_pv.conf.uiColor + ';color:#FFF;}';
-					css += '#CMP_PV .switch{position: relative;display: inline-block;width: 56px;height: 22px;cursor: pointer;color:white;}';
+					css += '#CMP_PV .switch{position: relative;display: inline-block;width: 56px;height: 22px;cursor: pointer;color:white;vertical-align: middle;}';
 					css += '#CMP_PV .switch input {display:none;}';
-					css += '#CMP_PV .slider{position: absolute; cursor: pointer; top: 0; right: 0; bottom: 0; background-color: #ccc; -webkit-transition: .2s; transition: .2s;border-radius: 34px;height: 22px; width: 80%;}';
+					css += '#CMP_PV .slider{display: block;position: relative; cursor: pointer; background-color: #ccc; -webkit-transition: .2s; transition: .2s;border-radius: 34px;height: 22px; width: 80%;}';
 					css += '#CMP_PV .slider:before{position: absolute;content: "";height: 18px; width: 18px;bottom: 1px;left:1px;background-color: white;-webkit-transition: .2s;transition: .2s;border-radius: 50%;border:1px solid #aaa}';
 					css += '#CMP_PV .switchLI .slider:after{position: absolute;content: "LI";height: 18px; width: 18px;bottom: 1px;left:24px;}';
 					css += '#CMP_PV input:checked + .slider:after{left:8px;}';
@@ -307,12 +308,12 @@ var cmp_pv = {
 					css += '#CMP_PV input:focus + .slider{box-shadow: 0 0 1px #8BC34A;}';
 					css += '#CMP_PV input:checked + .slider:before {transform: translateX(22px);border-color:#7BAA44;}';
 					// css += '#CMP_PV #step1{max-width:770px;}';
-					css += '#CMP_PV #step1 .title{color: #111;font-weight: bold;text-align: center;font-size:32px;padding: 20px 10px 25px 10px;text-transform: uppercase;text-shadow: 0 1px 2px rgba(0, 0, 0, 0.39);}';
+					css += '#CMP_PV #step1 .title{color: #111;font-weight: bold;text-align: center;font-size:28px;padding: 10px 10px 20px 10px;text-transform: uppercase;text-shadow: 0 1px 2px rgba(0, 0, 0, 0.39);}';
 					css += '#CMP_PV #step1 .buttons{margin:38px 0 10px 0;}';
 					css += '#CMP_PV #step1 .buttons > *{min-width: 210px; font-size: 16px;margin: 0 15px;text-align:center;}';
 					css += '#CMP_PV #step1 .buttons > a{line-height: 43px;}';
-					css += '#CMP_PV #step1 .desc>p{font-size: 15px;padding: 5px 15px;text-align:justify;}';
-					css += '#CMP_PV #step1 .desc>p:last-child{font-size: 12px;font-weight: bold;}';
+					css += '#CMP_PV #step1 .desc>p{font-size: 15px;padding: 5px 15px;text-align:justify;line-height: 21px;color: #5d5d5d;}';
+					css += '#CMP_PV #step1 .desc>p:last-child{font-size: 13px; line-height: normal;}';
 					css += '#CMP_PV #step1 .desc>p>i{display: inline; font-style: normal;color: #b5b5b5;}';
 					css += '#CMP_PV .container{max-width: 1000px; margin-left:auto;margin-right:auto;/*display: flex;*/}';
 					css += '#CMP_PV .container:after{content:\'\';display:block;clear:both;}';
@@ -331,7 +332,7 @@ var cmp_pv = {
 					css += '#CMP_PV #step2 .container .purposes li>h4:first-child{border-left: 3px solid transparent;}';
 					css += '#CMP_PV #step2 .container .purposes li>h4 .arrow{padding: 0 16px 0 0;width: 28px;text-align: right;}';
 					css += '#CMP_PV #step2 .container .purposes li>h4 .title{padding: 8px}';
-					css += '#CMP_PV #step2 .container .purposes li>h4 .arrow:after{content:\'\\276c\'; font-size: 25px;transition: all 0.5s;display: inline-block;height: 40px;}';
+					css += '#CMP_PV #step2 .container .purposes li>h4 .arrow:after{content:\'\\276d\'; font-size: 25px;transition: all 0.5s;display: inline-block;height: 40px;}';
 					css += '#CMP_PV #step2 .container .purposes li>h4{display:table;margin:0;font-weight:normal;cursor:pointer;height: 45px;width: 100%;box-sizing: border-box;}';
 					css += '#CMP_PV #step2 .container .purposes li>h4:hover{background: #5f5f5f;}';
 					css += '#CMP_PV #step2 .container .purposes li.titre{background: #5f5f5f; height:20px;}';
@@ -374,25 +375,27 @@ var cmp_pv = {
 					css += '	#CMP_PV{padding:0;width:100%;}';
 					css += '	#CMP_PV button{min-height: 46px;}';
 					css += '	#CMP_PV #step1{text-align: center;}';
-					css += '	#CMP_PV #step1 .desc{display:block;padding: 0 10px 10px 10px;height: calc(100vh - 136px);max-height: 516px;overflow-y: auto;}';
+					css += '	#CMP_PV #step1 .desc{display:block;padding: 0 10px 10px 10px;height: calc(100vh - 172px);max-height: 516px;overflow-y: auto;}';
 					css += '    #CMP_PV .buttons{flex-direction: column;margin-bottom: 10px;}';
 					css += '    #CMP_PV #step1 .buttons{margin:0;border-top:1px solid #bbbbbb;}';
-					css += '    #CMP_PV #step1 .title{padding: 10px; font-size: 15px;}';
+					css += '    #CMP_PV #step1 .title{padding: 15px 20px; font-size: 18px;}';
 					css += '	#CMP_PV #step2 .desc>div:first-child{flex-flow: column;justify-content: space-evenly;}';
 					css += '	#CMP_PV #step2 .desc{align-items: initial;margin-top: 0;}';
 					css += '	#CMP_PV #step2 .buttons{margin: 10px;flex-wrap: wrap;flex-direction: row;}';
 					css += '	#CMP_PV #step2 #purposes, #CMP_PV #step2 #vendors{width:200%;max-width:initial;transition: transform .2s ease-in-out;}';
-					css += '	#CMP_PV #step2 .container .purposes, #CMP_PV #step2 .container .purposes_desc{width:50%;}';
+					css += '	#CMP_PV #step2 .container .purposes{width:50%;}';
+					css += '	#CMP_PV #step2 .container .purposes_desc{width:46%;}';
 					css += '	#CMP_PV #step2 .container .purposes li{width:auto;}';
 					css += '	#CMP_PV #step2 .container .purposes li.active > h4 .arrow::after{transform: none;animation: bounce 0.6s ease-out;}';
 					css += '	#CMP_PV #step2 > .container.showPurposes .purposes li > h4 .arrow::after{visibility: hidden;}';
 					css += '	#CMP_PV #step2 > .container.showPurposes .purposes li.active > h4 .arrow::after{visibility: visible;transform: rotate(0.5turn);}';
 					css += '	#CMP_PV #step2 > .container.showPurposes {transform: translate3d(-46%, 0, 0);}';
-					css += '	#CMP_PV #step2 .desc>div>div{margin-top: 5px;}';
+					css += '	#CMP_PV #step2 .desc>div>div{margin-top: 10px;}';
 					css += '	#CMP_PV #step2 .container .purposes li > h4 .title{padding: 8px;}';
-					css += '    #CMP_PV .buttons > a{flex:1 50%;line-height: 42px;}';
+					css += '    #CMP_PV .buttons>a{flex:1 50%;line-height: 42px;}';
 					css += '    #CMP_PV #step1 .buttons > *, #CMP_PV #step2 .buttons{margin: 0;}';
-					css += '    #CMP_PV .buttons > a:first-child{padding-left: 10px;box-sizing: border-box;}';
+					css += '    #CMP_PV .buttons>a:first-child{padding-left: 15px;box-sizing: border-box;}';
+					css += '    #CMP_PV .buttons>a:nth-child(2){padding-right: 15px;text-align:right;box-sizing: border-box;}';
 					css += '    #CMP_PV #step2 .table-header{width: 100%;}';
 					css += '    #CMP_PV #step2 .table-header br{display: block;}';
 					css += '	@keyframes bounce{';
@@ -442,7 +445,7 @@ var cmp_pv = {
 					html += '<div id="step2" style="display: none;">';
 					html += '	<div class="container desc">';
 					html += '		<div>';
-					html += '			<p>La collecte des données personnelles se fait en fonction des objectifs listés ci dessous. Vous pouvez configurer et choisir comment vous souhaitez que vos données personnelles soient utilisées de manière globale ou indépendemment pour chaque finalité et même pour chaque partenaire publicitaire. <a href="' + cmp_pv.conf.urlCookiesUsage + '" target="_blank">En savoir plus sur la gestion des cookies.</a></p>';
+					html += '			<p>La collecte des données personnelles se fait en fonction des objectifs listés ci dessous. Choisissez comment vos données personnelles sont utilisées pour chaque finalité et pour chaque partenaire publicitaire. <a href="' + cmp_pv.conf.urlCookiesUsage + '" target="_blank">En savoir plus sur la gestion des cookies.</a></p>';
 					html += '			<div>';
 					html += '				<button onclick="cmp_pv.ui.switchAllPurposes(false);" class="inverse">Tout refuser</button>';
 					html += '				<button onclick="cmp_pv.ui.switchAllPurposes(true);">Tout accepter</button>';
@@ -529,6 +532,13 @@ var cmp_pv = {
 				}
 			}
 		},
+		observer: new MutationObserver(function(mutations) {
+			mutations.forEach(function() {
+				if(document.documentElement.style.overflow === 'hidden') return;
+				cmp_pv.ui.htmlOverflow = document.documentElement.style.overflow;
+				document.documentElement.style.overflow = 'hidden';
+			});
+		}),
 		show: function (bool) {
 			if (cmp_pv.ui.dom === null) {
 				if (bool) cmp_pv.ui.create(0);
@@ -541,7 +551,13 @@ var cmp_pv = {
 					delete cmp_pv.consentString.data.tcString;
 				}
 			}
-			document.body.style.overflow = (!bool) ? '' : 'hidden';
+			if(bool) {
+				this.htmlOverflow = document.documentElement.style.overflow;
+				this.observer.observe(document.documentElement, { attributes : true, attributeFilter : ['style'] });
+			}else{
+				this.observer.disconnect();
+			}
+			document.documentElement.style.overflow = (!bool) ? this.htmlOverflow : 'hidden';
 			return true;
 		},
 		showPurposes: function () {
