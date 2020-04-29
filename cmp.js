@@ -314,7 +314,7 @@ var cmp_pv = {
 					css += '#CMP_PV #step1 .buttons > *{min-width: 210px; font-size: 16px;margin: 0 15px;text-align:center;}';
 					css += '#CMP_PV #step1 .buttons > a{line-height: 43px;}';
 					css += '#CMP_PV #step1 .desc>p{font-size: 15px;padding: 5px 15px;text-align:justify;line-height: 21px;color: #5d5d5d;}';
-					css += '#CMP_PV #step1 .desc>p:last-child{font-size: 13px; line-height: normal;}';
+					css += '#CMP_PV #step1 .desc>p:nth-child(2){line-height: normal;}';
 					css += '#CMP_PV #step1 .desc>p>i{display: inline; font-style: normal;color: #b5b5b5;}';
 					css += '#CMP_PV .container{max-width: 1000px; margin-left:auto;margin-right:auto;/*display: flex;*/}';
 					css += '#CMP_PV .container:after{content:\'\';display:block;clear:both;}';
@@ -354,8 +354,8 @@ var cmp_pv = {
 						css += '#CMP_PV #step2 .container .vendors.pid'+ i +' li:not(.pid'+ i +'){display: none;}';
 						css += '#CMP_PV #step2 .container .vendors.pidlit'+ i +' li:not(.pidlit'+ i +'){display: none;}';
 					}
-					css += '#CMP_PV #step2 .container .vendors.pids1 li:not(.pids1){display: none;}';
-					css += '#CMP_PV #step2 .container .vendors.pids2 li:not(.pids2){display: none;}';
+					css += '#CMP_PV #step2 .container .vendors.pids1 li:not(.pids1){display: none;}#CMP_PV #step2 .container .vendors.pids2 li:not(.pids2){display: none;}';
+					css += '#CMP_PV #step2 .container .vendors.pidf1 li:not(.pidf1){display: none;}#CMP_PV #step2 .container .vendors.pidf2 li:not(.pidf2){display: none;}#CMP_PV #step2 .container .vendors.pidf3 li:not(.pidf3){display: none;}';
 					css += '#CMP_PV #step2 .container .vendors.pidlit li.pidlit{display: none;}';
 					css += '#CMP_PV .buttons{display:flex;margin-top:10px;}';
 					css += '#CMP_PV .buttons>*{flex:1;}';
@@ -364,7 +364,7 @@ var cmp_pv = {
 					css += '#CMP_PV #step2 .buttons button{font-size: 16px;padding: 5px 15px;}';
 					css += '#CMP_PV #step2 .purposes_desc>h4{display:block;margin:0;padding:5px 0;text-align: center;text-decoration:none;background:#515151;color:#ededed;border-bottom: 3px solid ' + cmp_pv.conf.uiColor + ';}';
 					css += '#CMP_PV #step2 .purposes_desc p{padding:10px;white-space: pre-wrap;}';
-					css += '#CMP_PV #step2 .table-header{justify-content: flex-end; width: 66%;padding: 3px 0;}';
+					css += '#CMP_PV #step2 .table-header{justify-content: flex-end; width: 64.5%;padding: 3px 0;}';
 					css += '#CMP_PV #step2 .table-header span{font-size: 20px;line-height: 18px;}';
 					css += '#CMP_PV #step2 .table-header br{display: none;}';
 					css += '#CMP_PV #step2 .table-header span:nth-child(3){transform: scaleX(-1);margin-left: 43px;}';
@@ -425,8 +425,7 @@ var cmp_pv = {
 					html += '	<div class="title">Vos choix en matière de cookies</div>';
 					html += '	<div class="desc">';
 					html += '		<p>Nos partenaires et nous-mêmes utilisons différentes technologies, telles que les cookies, qui nous permettent d\'accéder a votre historique de navigation, votre IP, etc., pour personnaliser les contenus et les publicités, proposer des fonctionnalités sur les réseaux sociaux et analyser le trafic. Merci de cliquer sur le bouton ci-dessous pour donner votre accord. Vous pouvez changer d\'avis et modifier vos choix à tout moment. Le fait de ne pas consentir ne vous empêchera pas d\'accèder à notre service. <a onclick="cmp_pv.ui.showPurposes();">Afficher les utilisations prévues et les accepter ou les refuser</a>.</p>';
-					html += '		<p>Certains de nos partenaires ne demandent pas votre consentement pour traiter vos données, et se basent à la place sur leur intérêt légitime pour le faire. Vous pouvez consulter la liste de ces partenaires, les usages pour lesquels ils traitent vos données et vous y opposer en <a onclick="cmp_pv.ui.showVendorsPurpose(\'LIT\', \'\')">cliquant ici</a>. <br/> Vos choix ne s\'appliqueront sur que les sites du groupe Paruvendu.fr.</p>';
-					html += '		<p>Usages : ';
+					html += '		<p>Exemples d\'usages : ';
 					for (var key in cmp_pv.conf.firstScreenPurposes) {
 						for (i in cmp_pv.conf.firstScreenPurposes[key]) {
 							if (cmp_pv.ui.language['fr'].hasOwnProperty(key)) {
@@ -436,6 +435,7 @@ var cmp_pv = {
 						}
 					}
 					html += '		</p>';
+					html += '		<p>Certains de nos partenaires ne demandent pas votre consentement pour traiter vos données, et se basent à la place sur leur intérêt légitime pour le faire. Vous pouvez consulter la liste de ces partenaires, les usages pour lesquels ils traitent vos données et vous y opposer en <a onclick="cmp_pv.ui.showVendorsPurpose(\'LIT\', \'\')">cliquant ici</a>. <br/> Vos choix ne s\'appliqueront sur que les sites du groupe Paruvendu.fr.</p>';
 					html += '	</div>';
 					html += '	<div class="container buttons">';
 					html += '		<a onclick="cmp_pv.ui.showVendors()">Voir nos partenaires</a>';
@@ -477,6 +477,14 @@ var cmp_pv = {
 						html += '			<span class="arrow" onclick="cmp_pv.ui.showPurposeDescription(\'specialFeatures\', ' + purpose.id + ', true);"></span>';
 						html += '		</h4></li>';
 					}
+					html += '			<li class="titre"></li>';
+					for (i in cmp_pv.globalVendorList.features) {
+						purpose = cmp_pv.ui.language['fr'].features[i];
+						html += '		<li id="purpose_f' + purpose.id + '"><h4>';
+						html += '			<span class="title" onclick="cmp_pv.ui.showPurposeDescription(\'features\', ' + purpose.id + ');">' + purpose.name + '</span>';
+						html += '			<span class="arrow" onclick="cmp_pv.ui.showPurposeDescription(\'features\', ' + purpose.id + ', true);"></span>';
+						html += '		</h4></li>';
+					}
 					html += '		</ul>';
 					html += '		<div class="purposes_desc">';
 					html += '			<h4>Description</h4>';
@@ -487,7 +495,7 @@ var cmp_pv = {
 					html += '		<ul class="purposes vendors">';
 					for (var y = 0; y < cmp_pv.globalVendorList.vendorsOrder.length; y++) {
 						var vendor = cmp_pv.globalVendorList.vendors[cmp_pv.globalVendorList.vendorsOrder[y]];
-						html += '		<li class="pid' + vendor.purposes.join(' pid') + ' pidlit' + vendor.legIntPurposes.join(' pidlit') + ' pids' + vendor.specialFeatures.join(' pids') + '"><h4>';
+						html += '		<li class="pid' + vendor.purposes.join(' pid') + ' pidlit' + vendor.legIntPurposes.join(' pidlit') + ' pids' + vendor.specialFeatures.join(' pids') + ' pidf' + vendor.features.join(' pidf') +'"><h4>';
 						html += '			<span onclick="cmp_pv.ui.showVendorDescription(' + vendor.id + ',' + y + ');">' + vendor.name + '</span>';
 						if (vendor.legIntPurposes.length > 0) html += '           <label class="switch switchLI"><input type="checkbox" value="' + vendor.id + '" ' + ((cmp_pv.consentString.data.coreString.vendorLegitimateInterest.bitField[vendor.id]) ? 'checked' : '') + ' onchange="cmp_pv.ui.switchVendor(\'vendorLegitimateInterest\', ' + vendor.id + ', this.checked);"><span class="slider"></span></label>';
 						html += '			<label class="switch"><input type="checkbox" value="' + vendor.id + '" ' + ((cmp_pv.consentString.data.coreString.vendorConsent.bitField[vendor.id]) ? 'checked' : '') + ' onchange="cmp_pv.ui.switchVendor(\'vendorConsent\', ' + vendor.id + ', this.checked);"><span class="slider"></span></label>';
@@ -592,12 +600,15 @@ var cmp_pv = {
 				}else if(field === 'LIT'){
 					f = "purposes";
 					s = 'lit';
+				}else if(field === 'features'){
+					s = 'f';
 				}
 				el2.children[0].className = 'purposes vendors pid' + s + purpose;
 				el2.children[0].scrollTop = 0;
 				step.children[0].className += ' liste';
 				step.children[0].children[1].children[1].innerText = (purpose === '' && field === 'LIT')?'Partenaires utilisant les traitements de données basés sur l\'intérêt légitime':((field === 'LIT')?'Intérêt légitime : ':'')+cmp_pv.ui.language['fr'][f][purpose].name;
 				step.children[3].style.display = 'none';
+				step.children[0].children[1].children[2].style.display = (field === 'features')?'none':'inline-block';
 				step.children[0].children[1].children[2].className = (s==='lit')?'switch switchLI':'switch';
 				step.children[0].children[1].children[2].children[0].onchange = function() {cmp_pv.ui.switchPurposeUI(field, this.checked, purpose);};
 				step.children[0].children[1].children[2].children[0].checked = (purpose === '')?true:document.querySelector('#purpose_'+purpose+ ' .switch'+((s==='lit')?'.switchLI' : ':not(.switchLI)')+' input').checked;
@@ -613,7 +624,10 @@ var cmp_pv = {
 		showPurposeDescription: function (field, purpose, arrow) {
 			var active = document.querySelector('.purposes li.active');
 			if (active != null) active.className = '';
-			document.getElementById('purpose_' + ((field === 'specialFeatures') ? 's' : '') + purpose).className = 'active';
+			var id = '';
+			if(field === 'specialFeatures') id='s';
+			else if(field === 'features') id='f';
+			document.getElementById('purpose_' + id + purpose).className = 'active';
 			document.getElementById('purpose_desc').innerHTML = "<p>" + cmp_pv.ui.language['fr'][field][purpose].description + "</p><p>" + cmp_pv.ui.language['fr'][field][purpose].descriptionLegal.replace(/Les partenaires peuvent :/i, 'Nos partenaires et nous-mêmes pouvons :') + "</p><a onclick='cmp_pv.ui.showVendorsPurpose(\"" + field + "\", " + purpose + ")'>Voir la liste</a>" + ((purpose > 1 && field === "purposes")?"<br/><a onclick='cmp_pv.ui.showVendorsPurpose(\"LIT\", " + purpose + ")'>Voir la liste intérêt légitime</a>":"");
 			if (arrow === true) {
 				this.arrow('purposes');
