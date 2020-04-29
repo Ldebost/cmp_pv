@@ -41,14 +41,15 @@ var cmp_pv = {
 		hasGlobalScope: false,
 		cookieDomain: 'paruvendu.fr',
 		publisherName: 'ParuVendu.fr',
-		urlVendorList: 'https://media-recette.paruvendu.fr/vendor-list-v2.json?1',
+		urlVendorList: 'https://media-recette.paruvendu.fr/vendor-list-v2.json?[RND]',
 		urlCookiesUsage: 'https://www.paruvendu.fr/communfo/defaultcommunfo/defaultcommunfo/infosLegales#cookies',
 		dayCheckInterval: 30,
 		globalConsentLocation: 'https://paruvendu.mgr.consensu.org/portal.html',
 		uiColor: '#EE1C24',
 		firstScreenPurposes: {
 			"purposes": [1, 3],
-			"stacks": [31]
+			"stacks": [31],
+			"specialFeatures": [1, 2]
 		}
 	},
 
@@ -423,7 +424,7 @@ var cmp_pv = {
 					html += '<div id="step1">';
 					html += '	<div class="title">Vos choix en matière de cookies</div>';
 					html += '	<div class="desc">';
-					html += '		<p>Nos partenaires et nous-mêmes utilisons différentes technologies, telles que les cookies, pour personnaliser les contenus et les publicités, proposer des fonctionnalités sur les réseaux sociaux et analyser le trafic. Merci de cliquer sur le bouton ci-dessous pour donner votre accord. Vous pouvez changer d\'avis et modifier vos choix à tout moment. Le fait de ne pas consentir ne vous empêchera pas d\'accèder à notre service. <a onclick="cmp_pv.ui.showPurposes();">Afficher les utilisations prévues et les accepter ou les refuser</a>.</p>';
+					html += '		<p>Nos partenaires et nous-mêmes utilisons différentes technologies, telles que les cookies, qui nous permettent d\'accéder a votre historique de navigation, votre IP, etc., pour personnaliser les contenus et les publicités, proposer des fonctionnalités sur les réseaux sociaux et analyser le trafic. Merci de cliquer sur le bouton ci-dessous pour donner votre accord. Vous pouvez changer d\'avis et modifier vos choix à tout moment. Le fait de ne pas consentir ne vous empêchera pas d\'accèder à notre service. <a onclick="cmp_pv.ui.showPurposes();">Afficher les utilisations prévues et les accepter ou les refuser</a>.</p>';
 					html += '		<p>Certains de nos partenaires ne demandent pas votre consentement pour traiter vos données, et se basent à la place sur leur intérêt légitime pour le faire. Vous pouvez consulter la liste de ces partenaires, les usages pour lesquels ils traitent vos données et vous y opposer en <a onclick="cmp_pv.ui.showVendorsPurpose(\'LIT\', \'\')">cliquant ici</a>. <br/> Vos choix ne s\'appliqueront sur que les sites du groupe Paruvendu.fr.</p>';
 					html += '		<p>Usages : ';
 					for (var key in cmp_pv.conf.firstScreenPurposes) {
@@ -1808,7 +1809,8 @@ var cmp_pv = {
 
 	/** **/
 	_fetchGlobalVendorList: function (callback) {
-		cmp_pv._fetch(cmp_pv.conf.urlVendorList, function (res) {
+		var dt = new Date();
+		cmp_pv._fetch(cmp_pv.conf.urlVendorList.replace('[RND]', dt.getFullYear()+dt.getMonth()+dt.getDate()), function (res) {
 			try {
 				if (res.status === 200) {
 					cmp_pv.globalVendorList = JSON.parse(res.responseText);
