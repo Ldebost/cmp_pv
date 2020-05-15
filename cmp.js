@@ -407,8 +407,13 @@ var cmp_pv = {
 					css += '		100% {transform:translate3d(0,0,0);}';
 					css += '	}';
 					css += '}';
-					css += '@media screen and (max-height: 600px) {';
-					css += '    #CMP_PV #step2 .container .vendors, #CMP_PV #step2 .container .purposes, #CMP_PV #step2 .container .purposes_desc {height: 282px;}';
+					css += '@media screen and (max-height: 670px) {';
+					css += '    #CMP_PV #step2 .container .vendors, #CMP_PV #step2 .container .purposes, #CMP_PV #step2 .container .purposes_desc {height: 272px;}';
+					css += '	#CMP_PV #step1 .desc{max-height: 356px;}';
+					css += '}';
+					css += '@media screen and (max-height: 550px) {';
+					css += '	#CMP_PV #step1 .desc{max-height: 256px;}';
+					css += '    #CMP_PV #step2 .container .vendors, #CMP_PV #step2 .container .purposes, #CMP_PV #step2 .container .purposes_desc {height: 172px;}';
 					css += '}';
 					// Hack IE
 					var ie = this.detectIE();
@@ -419,7 +424,16 @@ var cmp_pv = {
 							css += '#CMP_PV #step2 .container.buttons > *{width:33%; display: block;}';
 						}
 					}
-
+					// BottomBar fix
+					if(this.detectIOS()){
+						css += '#CMP_PV{margin-top: calc(50vh - 44px);}';
+						css += '@media screen and (max-height: 670px) {';
+						css += '	#CMP_PV{margin-top: calc(50vh - 34px);}';
+						css += '}';
+						css += '@media screen and (max-height: 550px) {';
+						css += '	#CMP_PV{margin-top: calc(50vh - 34px);}';
+						css += '}';
+					}
 					var html = '<div id="CMP_PV">';
 					html += '<div id="step1">';
 					html += '	<div class="title">Vos choix en matière de cookies</div>';
@@ -733,6 +747,9 @@ var cmp_pv = {
 				return 11;
 			}
 			return 0;
+		},
+		detectIOS: function () {
+			return /iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
 		},
 		sortVendors: function () {
 			cmp_pv.globalVendorList.vendorsOrder = Object.keys(cmp_pv.globalVendorList.vendors).sort(function (a, b) {
