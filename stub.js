@@ -11,7 +11,7 @@
             if (document.body) {
                 var body = document.body,
                     iframe = document.createElement('iframe');
-                iframe.style = 'display:none';
+                iframe.style.display = 'none';
                 iframe.name = '__tcfapiLocator';
                 body.appendChild(iframe);
             } else {
