@@ -58,6 +58,7 @@
 		window.__tcfapi ('init', 2, function(){}, {
 			// hasGlobalScope: true,
 			cookieDomain: null,
+			cookieSecure: false,
 			// urlVendorList: 'test/vendorlist.json',
 			// globalConsentLocation: 'http://cmp.paruvendu.consensu.org:8000/portal.html'
 		});
@@ -76,6 +77,7 @@
 			console.log('Event : '+a.eventStatus);
 			showResult(a);
 		}
+		// window.__tcfapi ('addEventListener', 2, eventListener);
 		window.__tcfapi('showConsentUi');
     </script>
 
