@@ -408,7 +408,7 @@ var cmp_pv = {
 					css += '    #CMP_PV #step1 .buttons > *, #CMP_PV #step2 .buttons{margin: 0;}';
 					css += '    #CMP_PV .buttons>a:first-child{padding-left: 15px;box-sizing: border-box;}';
 					css += '    #CMP_PV .buttons>a:nth-child(2){padding-right: 15px;text-align:right;box-sizing: border-box;}';
-					css += '    #CMP_PV #step2 .table-header{width: 100%;}';
+					css += '    #CMP_PV #step2 .table-header{width: 95%;}';
 					css += '    #CMP_PV #step2 .table-header br{display: block;}';
 					css += '	@keyframes bounce{';
 					css += '		0% {transform:translate3d(0,0,0);}';
@@ -517,35 +517,8 @@ var cmp_pv = {
 					html += '		</div>';
 					html += '	</div>';
 					html += '	<div class="container" id="vendors" style="display: none;">';
-					var virtual = true;
-					if (virtual) {
-						html += '		<div class="purposes vendors">';
-						html += '		</div>';
-					} else {
-						html += '		<ul class="purposes vendors">';
-						for (var y = 0; y < cmp_pv.globalVendorList.vendorsOrder.length; y++) {
-							var vendor = cmp_pv.globalVendorList.vendors[cmp_pv.globalVendorList.vendorsOrder[y]];
-							html += '		<li class="pid' + vendor.purposes.join(' pid') + ' pidlit' + vendor.legIntPurposes.join(' pidlit') + ' pids' + vendor.specialFeatures.join(' pids') + ' pidf' + vendor.features.join(' pidf') + '"><h4>';
-							html += '			<span onclick="cmp_pv.ui.showVendorDescription(' + vendor.id + ',' + y + ');">' + vendor.name + '</span>';
-							if (vendor.legIntPurposes.length > 0) html += '           <label class="switch switchLI"><input type="checkbox" value="' + vendor.id + '" ' + ((cmp_pv.consentString.data.coreString.vendorLegitimateInterest.bitField[vendor.id]) ? 'checked' : '') + ' onchange="cmp_pv.ui.switchVendor(\'vendorLegitimateInterest\', ' + vendor.id + ', this.checked);"><span class="slider"></span></label>';
-							html += '			<label class="switch"><input type="checkbox" value="' + vendor.id + '" ' + ((cmp_pv.consentString.data.coreString.vendorConsent.bitField[vendor.id]) ? 'checked' : '') + ' onchange="cmp_pv.ui.switchVendor(\'vendorConsent\', ' + vendor.id + ', this.checked);"><span class="slider"></span></label>';
-							html += '			<span class="arrow" onclick="cmp_pv.ui.showVendorDescription(' + vendor.id + ',' + y + ', true);"></span>';
-							html += '		</h4></li>';
-						}
-						if (cmp_pv.conf.googleAC) {
-							html += '		<li class="titre">Partenaires de Google</li>';
-							for (var z = 0; z < cmp_pv.googleACList.length; z++) {
-								y++;
-								vendor = cmp_pv.googleACList[z];
-								html += '		<li><h4>';
-								html += '			<span onclick="cmp_pv.ui.showGoogleVendorDescription(' + z + ',' + y + ');">' + vendor[1] + '</span>';
-								html += '			<label class="switch"><input type="checkbox" value="' + z + '" ' + ((cmp_pv.consentString.data.googleAC[vendor[0]]) ? 'checked' : '') + ' onchange="cmp_pv.ui.switchGoogleVendor(' + vendor[0] + ', this.checked);"><span class="slider"></span></label>';
-								html += '			<span class="arrow" onclick="cmp_pv.ui.showGoogleVendorDescription(' + z + ',' + y + ', true);"></span>';
-								html += '		</h4></li>';
-							}
-						}
-						html += '		</ul>';
-					}
+					html += '		<div class="purposes vendors">';
+					html += '		</div>';
 					html += '		<div class="purposes_desc">';
 					html += '			<h4>Description</h4>';
 					html += '			<div><p id="vendor_desc"></p></div>';
@@ -570,10 +543,8 @@ var cmp_pv = {
 					cmp_pv.ui.dom.className = "cmpcontainer";
 
 					// VirtualScroll
-					if (virtual) {
-						var list = this.virtualList.init();
-						document.getElementById("vendors").children[0].appendChild(list);
-					}
+					var list = this.virtualList.init();
+					document.getElementById("vendors").children[0].appendChild(list);
 
 					// Select first
 					cmp_pv.ui.showPurposeDescription('purposes', 1);
@@ -742,7 +713,7 @@ var cmp_pv = {
 			if (arrow === true) {
 				this.arrow('vendors');
 			}
-			this.virtualList.active = 'G'+id;
+			this.virtualList.active = 'G' + id;
 		},
 		switchPurpose: function (field, purpose, checked) {
 			cmp_pv.consentString.data.coreString[field][purpose] = checked;
@@ -836,7 +807,6 @@ var cmp_pv = {
 		},
 		virtualList: {
 			itemHeight: 31,
-			scroller: null,
 			container: null,
 			lastRepaintY: null,
 			screenItemsLen: null,
@@ -848,42 +818,38 @@ var cmp_pv = {
 			init: function () {
 				this.totalRows = cmp_pv.globalVendorList.vendorsOrder.length;
 				if (cmp_pv.conf.googleAC) this.totalRows += cmp_pv.googleACList.length;
-				this.scroller = this.createScroller(this.totalRows * this.itemHeight);
-				this.container = this.createContainer('100%', '100%');
-				this.container.addEventListener("scroll", this.onScroll.bind(this));
-				// this.screenItemsLen = this.container.innerHeight / this.itemHeight;
+				var container = this.createContainer(this.totalRows * this.itemHeight);
 				this.screenItemsLen = 15;
 				this.cachedItemsLen = this.screenItemsLen * 3;
 				this.maxBuffer = this.screenItemsLen * this.itemHeight;
 				this.renderChunk(0, this.cachedItemsLen);
-				return this.container;
+				return container;
 			},
 
-			createContainer: function (w, h) {
+			createContainer: function (h) {
 				var c = document.createElement("div");
-				c.style.width = w;
-				c.style.height = h;
+				c.style.height = '100%';
 				c.style.overflow = "auto";
-				c.style.position = "relative";
-				c.style.padding = 0;
+				c.addEventListener("scroll", function (e) {
+					if(cmp_pv.ui.virtualList.animation) cancelAnimationFrame(cmp_pv.ui.virtualList.animation);
+					cmp_pv.ui.virtualList.animation = window.requestAnimationFrame(function () {
+						cmp_pv.ui.virtualList.onScroll(e);
+					})
+				});
+				var v = document.createElement("div");
+				v.style.overflow = "hidden";
+				v.style.height = h + "px";
+				v.style.position = "relative";
+				var t = document.createElement("div");
+				t.style.willChange = "transform";
+				v.appendChild(t);
+				c.appendChild(v);
+				this.container = t;
 				return c;
-			},
-
-			createScroller: function (h) {
-				var scroller = document.createElement("div");
-				scroller.style.opacity = 0;
-				scroller.style.position = "absolute";
-				scroller.style.top = 0;
-				scroller.style.left = 0;
-				scroller.style.width = "1px";
-				scroller.style.height = h + "px";
-				return scroller;
 			},
 
 			renderChunk: function (fromPos, howMany) {
 				var fragment = document.createDocumentFragment();
-				fragment.appendChild(this.scroller);
-
 				var finalItem = fromPos + howMany;
 				if (finalItem > this.totalRows) finalItem = this.totalRows;
 				var vendor, html;
@@ -898,7 +864,7 @@ var cmp_pv = {
 						html += '	<label class="switch"><input type="checkbox" value="" ' + ((cmp_pv.consentString.data.googleAC[vendor[0]]) ? 'checked' : '') + ' onchange="cmp_pv.ui.switchGoogleVendor(' + vendor[0] + ', this.checked);"><span class="slider"></span></label>';
 						html += '	<span class="arrow" onclick="cmp_pv.ui.showGoogleVendorDescription(' + y + ',' + (i - fromPos) + ', true);"></span>';
 						html += '</h4>';
-						item.className = (this.active === 'G'+y) ? ' active' : '';
+						item.className = (this.active === 'G' + y) ? ' active' : '';
 					} else {
 						vendor = cmp_pv.globalVendorList.vendors[cmp_pv.globalVendorList.vendorsOrder[i]];
 						html = '<h4>';
@@ -910,12 +876,10 @@ var cmp_pv = {
 						item.className = 'pid' + vendor.purposes.join(' pid') + ' pidlit' + vendor.legIntPurposes.join(' pidlit') + ' pids' + vendor.specialFeatures.join(' pids') + ' pidf' + vendor.features.join(' pidf') + ((this.active === vendor.id) ? ' active' : '');
 					}
 					item.innerHTML = html;
-					item.style.width = "100%";
-					item.style.position = "absolute";
-					item.style.top = i * this.itemHeight + "px";
 					fragment.appendChild(item);
 				}
 				this.container.innerHTML = "";
+				this.container.style.transform = 'translateY(' + (fromPos * this.itemHeight) + 'px)';
 				this.container.appendChild(fragment);
 			},
 
