@@ -54,8 +54,7 @@ var cmp_pv = {
 			"specialFeatures": [1, 2]
 		},
 		googleAC: true,
-		// urlGoogleACList: 'https://media-recette.paruvendu.fr/vendor-list-v0.json?[RND]'
-		urlGoogleACList: 'http://media.paruvendu-dev.fr/vendor-list-v0.json?[RND]'
+		urlGoogleACList: 'https://media-recette.paruvendu.fr/vendor-list-v0.json?[RND]'
 	},
 
 	/** Commandes **/
@@ -339,15 +338,15 @@ var cmp_pv = {
 					css += '#CMP_PV #step2 .container .purposes, #CMP_PV #step2 .container .purposes_desc {box-shadow: 0 3px 1px -2px rgba(0,0,0,.2), 0 2px 2px 0 rgba(0,0,0,.14), 0 1px 5px 0 rgba(0,0,0,.12);padding: 0;width: 50%;margin:0;overflow: auto;height: 330px;}';
 					css += '#CMP_PV #step2 .container .purposes {width: 65%;}';
 					css += '#CMP_PV #step2 .container .purposes_desc {width: 35%;}';
-					css += '#CMP_PV #step2 .container .purposes li{border-bottom: 1px solid rgba(0, 0, 0, 0.11);background: #3c3c3c; color: white;position:relative; margin:0;display: block;overflow: hidden;}';
+					css += '#CMP_PV #step2 .container .purposes li{background: #3c3c3c; color: white;position:relative; margin:0;display: block;overflow: hidden;}';
 					css += '#CMP_PV #step2 .container .purposes li:last-child{border-bottom: none;}';
 					css += '#CMP_PV #step2 .container .purposes li>h4:first-child{border-left: 3px solid transparent;}';
 					css += '#CMP_PV #step2 .container .purposes li>h4 .arrow{padding: 0 16px 0 0;width: 28px;text-align: right;}';
 					css += '#CMP_PV #step2 .container .purposes li>h4 .title{padding: 8px}';
 					css += '#CMP_PV #step2 .container .purposes li>h4 .arrow:after{content:\'\\276d\'; font-size: 25px;transition: all 0.5s;display: inline-block;height: 40px;}';
-					css += '#CMP_PV #step2 .container .purposes li>h4{display:table;margin:0;font-weight:normal;cursor:pointer;height: 45px;width: 100%;box-sizing: border-box;}';
+					css += '#CMP_PV #step2 .container .purposes li>h4{display:table;margin:0;font-weight:normal;cursor:pointer;height: 45px;width: 100%;box-sizing: border-box;border-bottom: 1px solid rgba(51, 51, 51);}';
 					css += '#CMP_PV #step2 .container .purposes li>h4:hover{background: #5f5f5f;}';
-					css += '#CMP_PV #step2 .container .purposes li.titre{background: #5f5f5f; height:20px;}';
+					css += '#CMP_PV #step2 .container .purposes li.titre{background: #5f5f5f;}';
 					css += '#CMP_PV #step2 .container .purposes li>h4>span{display: table-cell;vertical-align: middle;}';
 					css += '#CMP_PV #step2 .container .purposes li>h4>label{display: table-cell;border-top: 9px solid transparent;border-bottom: 9px solid transparent;}';
 					css += '#CMP_PV #step2 .container .purposes li.active{background: #515151;}';
@@ -706,7 +705,7 @@ var cmp_pv = {
 			document.querySelector('.vendors li:nth-of-type(' + (i + 1) + ')').className += ' active';
 			var vendor = cmp_pv.googleACList[id];
 			if (typeof vendor == 'undefined') return;
-			var html = '<h2>' + vendor[1] + '</h2><a href="' + vendor[2] + '" target="_blank">Politique de confidentialité</a><br/>';
+			var html = '<div>Partenaire Google</div><h2>' + vendor[1] + '</h2><a href="' + vendor[2] + '" target="_blank">Politique de confidentialité</a><br/>';
 			var el = document.getElementById('vendor_desc');
 			el.innerHTML = html;
 			el.parentNode.scrollTop = 0;
@@ -853,16 +852,25 @@ var cmp_pv = {
 				var finalItem = fromPos + howMany;
 				if (finalItem > this.totalRows) finalItem = this.totalRows;
 				var vendor, html;
+				var i2 = 0;
 
 				for (var i = fromPos; i < finalItem; i++) {
 					var item = document.createElement("li");
 					if (typeof cmp_pv.globalVendorList.vendorsOrder[i] == 'undefined') {
 						var y = i - cmp_pv.globalVendorList.vendorsOrder.length;
+						if(y === 0){
+							var item2 = document.createElement("li");
+							html = '<h4><span>Partenaires Google</span></h4>';
+							item2.className = 'titre';
+							item2.innerHTML = html;
+							fragment.appendChild(item2);
+							i2 = 1;
+						}
 						vendor = cmp_pv.googleACList[y];
 						html = '<h4>';
-						html += '	<span onclick="cmp_pv.ui.showGoogleVendorDescription(' + y + ',' + (i - fromPos) + ');">' + vendor[1] + '</span>';
+						html += '	<span onclick="cmp_pv.ui.showGoogleVendorDescription(' + y + ',' + (i - fromPos + i2) + ');">' + vendor[1] + '</span>';
 						html += '	<label class="switch"><input type="checkbox" value="" ' + ((cmp_pv.consentString.data.googleAC[vendor[0]]) ? 'checked' : '') + ' onchange="cmp_pv.ui.switchGoogleVendor(' + vendor[0] + ', this.checked);"><span class="slider"></span></label>';
-						html += '	<span class="arrow" onclick="cmp_pv.ui.showGoogleVendorDescription(' + y + ',' + (i - fromPos) + ', true);"></span>';
+						html += '	<span class="arrow" onclick="cmp_pv.ui.showGoogleVendorDescription(' + y + ',' + (i - fromPos + i2) + ', true);"></span>';
 						html += '</h4>';
 						item.className = (this.active === 'G' + y) ? ' active' : '';
 					} else {
