@@ -43,4 +43,4 @@ TODO V2 (CMP) :
 TODO (Cookie Manager) :
 
 ## TCF v1 (obsolete) ##
-[TCF v1 branch](tree/tcf_v1)
+[TCF v1 branch](https://github.com/Ldebost/cmp_pv/tree/tcf_v1)
