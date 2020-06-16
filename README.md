@@ -1,18 +1,29 @@
 # cmp_pv
-> ParuVendu.fr Consent Management Platform
+> ParuVendu.fr Consent Management Platform (TCF v2)
 
 Démo : https://ldebost.github.io/cmp_pv/
 
 ## Configuration ##
-| Command | Type | Description |
+| Option | Type | Description |
 | --- | --- | --- |
-| gdprApplies | boolean | Does GDRP applies (Default:true) |
-| hasGlobalScope | boolean | Store cookie globally on consensu.org |
 | cookieDomain | String | Cookie domain for publisher consent string (Default: paruvendu.fr) |
-| urlVendorList | String | (Default: https://vendorlist.consensu.org/vendorlist.json) |
-| urlCookiesUsage | String | URL for cookie usage description (Default: https://www.paruvendu.fr/communfo/defaultcommunfo/defaultcommunfo/infosLegales#pc) |
+| cookieSecure | boolean | Cookie secure flag (Default:true) |
 | dayCheckInterval | Int | Number of days (Default:30) |
+| firstScreenPurposes | Object | Purposes and Stack to be displayed on first screen |
+| gdprApplies | boolean | Does GDRP applies (Default:true) |
 | globalConsentLocation | String | URL to portal.html |
+| hasGlobalScope | boolean | Store cookie globally on consensu.org (Default:false) |
+| publisherName | String | Name of publisher (Default: ParuVendu.fr) |
+| uiColor | String | Main color of UI (Default: #EE1C24) |
+| urlCookiesUsage | String | URL for cookie usage description (Default: https://www.paruvendu.fr/communfo/defaultcommunfo/defaultcommunfo/infosLegales#pc) |
+| urlVendorList | String | URL of IAB's vendorlist |
+
+Google’s Additional Consent Mode : https://support.google.com/admanager/answer/9681920
+
+| Option | Type | Description |
+| --- | --- | --- |
+| googleAC | boolean | Add Google's vendors (Default: true) |
+| urlGoogleACList | String | URL of Google's vendorlist |
 
 
 ##### Example : #####
@@ -30,3 +41,6 @@ TODO V2 (CMP) :
 - [ ] tcf_v2 : Complete support (Special Purpose One Treatment, Publisher Uses Non-Standard Stacks)
 
 TODO (Cookie Manager) :
+
+## TCF v1 (obsolete) ##
+[TCF v1 branch](tree/tcf_v1)
