@@ -66,12 +66,11 @@ var cmp_pv = {
                     cmp_pv.cmpReady = true;
                     cmp_pv.processCommandQueue();
                     // Ask consent every X days if globalVendorList.version has changed
-                    if(typeof cmp_pv.consentString.dataPub.bitField[1] === 'undefined'){
+                    if (typeof cmp_pv.consentString.dataPub.bitField[1] === 'undefined') {
                         cmp_pv.ui.show(true);
                         // Update checked time
                         cmp_pv.cookie.saveVerification(cmp_pv.cookie.vendorCookieName);
-                    }
-                    else if (parseInt((new Date() - cmp_pv.cookie.lastVerification(cmp_pv.cookie.vendorCookieName)) / (24 * 3600 * 1000)) >= cmp_pv.conf.dayCheckInterval) {
+                    } else if (parseInt((new Date() - cmp_pv.cookie.lastVerification(cmp_pv.cookie.vendorCookieName)) / (24 * 3600 * 1000)) >= cmp_pv.conf.dayCheckInterval) {
                         cmp_pv._fetchGlobalVendorList(function () {
                             if (cmp_pv.globalVendorList.vendorListVersion !== cmp_pv.consentString.data.vendorListVersion) {
                                 cmp_pv.ui.show(true);
@@ -155,7 +154,7 @@ var cmp_pv = {
                     if (res.status === 200) {
                         try {
                             callback(JSON.parse(res.responseText), true);
-                        }catch (e) {
+                        } catch (e) {
                             callback(null, false);
                         }
                     } else {
@@ -187,9 +186,9 @@ var cmp_pv = {
             } else {
                 try {
                     // Check CMP visibility : if any problem then hide background
-                    setTimeout(function(){
+                    setTimeout(function () {
                         var el = document.getElementById('CMP_PV');
-                        if(el === null || window.getComputedStyle(el).display === "none" || window.getComputedStyle(el).visibility === "hidden" || !cmp_pv.ui.isElementInViewport(el)){
+                        if (el === null || window.getComputedStyle(el).display === "none" || window.getComputedStyle(el).visibility === "hidden" || !cmp_pv.ui.isElementInViewport(el)) {
                             cmp_pv.ui.show(false);
                         }
                     }, 2000);
@@ -304,7 +303,7 @@ var cmp_pv = {
                     // Hack IE 9
                     var ie = this.detectIE();
                     if (ie > 0) {
-                        if(ie<=10){
+                        if (ie <= 10) {
                             css += '#CMP_PV #step2 .desc div {width:100%; display: block;}';
                             css += '#CMP_PV #step1 .container.buttons > *{width:50%; display: block;}';
                             css += '#CMP_PV #step2 .container.buttons > *{width:33%; display: block;}';
@@ -371,7 +370,7 @@ var cmp_pv = {
                     html += '			<li style="height: 20px;"></li>';
                     for (y = 0; y < cmp_pv.pubvendor.length; y++) {
                         vendor = cmp_pv.pubvendor[y];
-                        html += '			<li class="pid' + vendor.purposeIds.join(' pid') + '"><h4><span onclick="cmp_pv.ui.showVendorDescription(' + y + ', \'pub\');">' + vendor.name + '</span><label class="switch"><input type="checkbox" value="' + vendor.id + '" ' + ((cmp_pv.consentString.dataPub.bitField[vendor.id]) ? 'checked' : '') + ' onchange="cmp_pv.ui.switchPubVendor(' + vendor.id + ', this.checked);"><span class="slider"></span></label><span class="arrow" onclick="cmp_pv.ui.showVendorDescription(' + y + ', \'pub\', true);"></span></h4></li>';
+                        html += '			<li class="pid' + vendor.purposeIds.join(' pid') + '"><h4><span onclick="cmp_pv.ui.showVendorDescription(' + y + ', \'pub\');">' + vendor.name + '</span><label class="switch"><input type="checkbox" value="' + vendor.id + '" ' + ((cmp_pv.consentString.dataPub.bitField[vendor.id]) ? 'checked' : '') + ' onchange="cmp_pv.ui.switchPubVendor(' + vendor.id + ', this.checked, ' + vendor.dep + ');"><span class="slider"></span></label><span class="arrow" onclick="cmp_pv.ui.showVendorDescription(' + y + ', \'pub\', true);"></span></h4></li>';
                     }
                     html += '		</ul>';
                     html += '		<div class="purposes_desc">';
@@ -462,10 +461,10 @@ var cmp_pv = {
             var active = document.querySelector('.vendors li.active');
             if (active != null) active.className = active.className.replace(' active', '');
             var vendor;
-            if(field === 'pub'){
+            if (field === 'pub') {
                 document.querySelector('.vendors li:nth-of-type(' + (i + cmp_pv.globalVendorList.vendors.length + 2) + ')').className += ' active';
                 vendor = cmp_pv.pubvendor[i];
-            }else{
+            } else {
                 document.querySelector('.vendors li:nth-of-type(' + (i + 1) + ')').className += ' active';
                 vendor = cmp_pv.globalVendorList.vendors[i];
             }
@@ -512,8 +511,15 @@ var cmp_pv = {
         switchVendor: function (vendor, checked) {
             cmp_pv.consentString.data.bitField[vendor] = checked;
         },
-        switchPubVendor: function (vendor, checked) {
+        switchPubVendor: function (vendor, checked, dep) {
             cmp_pv.consentString.dataPub.bitField[vendor] = checked;
+            if (dep > 0) {
+                var match = document.querySelector("#vendors input[value='" + dep + "']");
+                if (match != null) {
+                    cmp_pv.consentString.data.bitField[match.value] = checked;
+                    match.checked = checked;
+                }
+            }
         },
         detectIE: function () {
             var ua = window.navigator.userAgent;
@@ -544,7 +550,7 @@ var cmp_pv = {
                 container.className = 'container';
             }
         },
-        isElementInViewport: function(el){
+        isElementInViewport: function (el) {
             var rect = el.getBoundingClientRect();
 
             return (
@@ -1290,10 +1296,19 @@ var cmp_pv = {
             {
                 id: 1,
                 name: 'Google',
-                purposeIds: [1,2,3,4,5],
-                legIntPurposeIds:[],
-                featureIds:[],
+                purposeIds: [1, 2, 3, 4, 5],
+                legIntPurposeIds: [],
+                featureIds: [],
                 policyUrl: 'https://policies.google.com/privacy'
+            },
+            {
+                id: 2,
+                name: 'Sofinco (par Numberly)',
+                purposeIds: [1, 2, 3, 4, 5],
+                legIntPurposeIds: [],
+                featureIds: [],
+                policyUrl: 'https://www.sofinco.fr/organisme-credit/sofinco-informations-legales.htm#finalitecollecte',
+                dep: 388
             }
         ];
         cmp_pv.consentString.dataPub.maxVendorId = cmp_pv.consentString.const.publisher_1[12].default();
