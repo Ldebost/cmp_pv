@@ -654,11 +654,16 @@ var cmp_pv = {
 				this.arrow('purposes');
 			}
 		},
-		showVendorDescription: function (id, i, arrow) {
+		showVendorDescription: function (id, i, f, arrow) {
 			var active = document.querySelector('.vendors li.active');
 			if (active != null) active.className = active.className.replace(' active', '');
 			document.querySelector('.vendors li:nth-of-type(' + (i + 1) + ')').className += ' active';
-			var vendor = cmp_pv.globalVendorList.vendors[id];
+			var vendor;
+			if (f === 'specific') {
+				vendor = cmp_pv.pubvendor[id];
+			} else {
+				vendor = cmp_pv.globalVendorList.vendors[id];
+			}
 			if (typeof vendor == 'undefined') return;
 			var html = '<h2>' + vendor.name + '</h2><a href="' + vendor.policyUrl + '" target="_blank">Politique de confidentialité</a><br/>';
 			var y = 0;
@@ -728,8 +733,15 @@ var cmp_pv = {
 		switchAllPurposes: function (checked) {
 			cmp_pv.cookie.saveConsent(checked);
 		},
-		switchVendor: function (field, vendor, checked) {
-			cmp_pv.consentString.data.coreString[field].bitField[vendor] = checked;
+		switchVendor: function (field, vendor, f, checked) {
+			cmp_pv.consentString.data[f][field].bitField[vendor] = checked;
+			if (f === 'specific' && cmp_pv.pubvendor[vendor].dep > 0) {
+				cmp_pv.consentString.data.coreString.vendorConsent.bitField[vendor] = checked;
+				var match = document.querySelector("#vendors input[value='" + cmp_pv.pubvendor[vendor].dep + "']");
+				if (match != null) {
+					match.checked = checked;
+				}
+			}
 		},
 		switchGoogleVendor: function (vendor, checked) {
 			cmp_pv.consentString.data.googleAC[vendor] = checked;
@@ -815,7 +827,7 @@ var cmp_pv = {
 			active: null,
 
 			init: function () {
-				this.totalRows = cmp_pv.globalVendorList.vendorsOrder.length;
+				this.totalRows = cmp_pv.globalVendorList.vendorsOrder.length + cmp_pv.pubvendorOrder.length;
 				if (cmp_pv.conf.googleAC) this.totalRows += cmp_pv.googleACList.length;
 				var container = this.createContainer(this.totalRows * this.itemHeight);
 				this.screenItemsLen = 15;
@@ -830,7 +842,7 @@ var cmp_pv = {
 				c.style.height = '100%';
 				c.style.overflow = "auto";
 				c.addEventListener("scroll", function (e) {
-					if(cmp_pv.ui.virtualList.animation) cancelAnimationFrame(cmp_pv.ui.virtualList.animation);
+					if (cmp_pv.ui.virtualList.animation) cancelAnimationFrame(cmp_pv.ui.virtualList.animation);
 					cmp_pv.ui.virtualList.animation = window.requestAnimationFrame(function () {
 						cmp_pv.ui.virtualList.onScroll(e);
 					})
@@ -851,20 +863,22 @@ var cmp_pv = {
 				var fragment = document.createDocumentFragment();
 				var finalItem = fromPos + howMany;
 				if (finalItem > this.totalRows) finalItem = this.totalRows;
-				var vendor, html;
+				var vendor, html, item, item2, y, y2, field;
 				var i2 = 0;
 
 				for (var i = fromPos; i < finalItem; i++) {
-					var item = document.createElement("li");
-					if (typeof cmp_pv.globalVendorList.vendorsOrder[i] == 'undefined') {
-						var y = i - cmp_pv.globalVendorList.vendorsOrder.length;
-						if(y === 0){
-							var item2 = document.createElement("li");
+					item = document.createElement("li");
+					y = i - cmp_pv.globalVendorList.vendorsOrder.length;
+					y2 = y - cmp_pv.pubvendorOrder.length;
+					if (y2 >= 0) {
+						y = y2;
+						if (y === 0) {
+							item2 = document.createElement("li");
 							html = '<h4><span>Partenaires Google</span></h4>';
 							item2.className = 'titre';
 							item2.innerHTML = html;
 							fragment.appendChild(item2);
-							i2 = 1;
+							i2 += 1;
 						}
 						vendor = cmp_pv.googleACList[y];
 						html = '<h4>';
@@ -874,12 +888,26 @@ var cmp_pv = {
 						html += '</h4>';
 						item.className = (this.active === 'G' + y) ? ' active' : '';
 					} else {
-						vendor = cmp_pv.globalVendorList.vendors[cmp_pv.globalVendorList.vendorsOrder[i]];
+						if (y === 0) {
+							item2 = document.createElement("li");
+							html = '<h4><span>Partenaires ParuVendu.fr</span></h4>';
+							item2.className = 'titre';
+							item2.innerHTML = html;
+							fragment.appendChild(item2);
+							i2 += 1;
+						}
+						if (y >= 0) {
+							vendor = cmp_pv.pubvendor[cmp_pv.pubvendorOrder[y]];
+							field = 'specific';
+						} else {
+							vendor = cmp_pv.globalVendorList.vendors[cmp_pv.globalVendorList.vendorsOrder[i]];
+							field = 'coreString';
+						}
 						html = '<h4>';
-						html += '	<span onclick="cmp_pv.ui.showVendorDescription(' + vendor.id + ',' + (i - fromPos) + ');">' + vendor.name + '</span>';
-						if (vendor.legIntPurposes.length > 0) html += '<label class="switch switchLI"><input type="checkbox" value="' + vendor.id + '" ' + ((cmp_pv.consentString.data.coreString.vendorLegitimateInterest.bitField[vendor.id]) ? 'checked' : '') + ' onchange="cmp_pv.ui.switchVendor(\'vendorLegitimateInterest\', ' + vendor.id + ', this.checked);"><span class="slider"></span></label>';
-						html += '	<label class="switch"><input type="checkbox" value="' + vendor.id + '" ' + ((cmp_pv.consentString.data.coreString.vendorConsent.bitField[vendor.id]) ? 'checked' : '') + ' onchange="cmp_pv.ui.switchVendor(\'vendorConsent\', ' + vendor.id + ', this.checked);"><span class="slider"></span></label>';
-						html += '	<span class="arrow" onclick="cmp_pv.ui.showVendorDescription(' + vendor.id + ',' + (i - fromPos) + ', true);"></span>';
+						html += '	<span onclick="cmp_pv.ui.showVendorDescription(' + vendor.id + ',' + (i - fromPos + i2) + ', \'' + field + '\');">' + vendor.name + '</span>';
+						if (vendor.legIntPurposes.length > 0) html += '<label class="switch switchLI"><input type="checkbox" value="' + vendor.id + '" ' + ((cmp_pv.consentString.data[field].vendorLegitimateInterest.bitField[vendor.id]) ? 'checked' : '') + ' onchange="cmp_pv.ui.switchVendor(\'vendorLegitimateInterest\', ' + vendor.id + ', \'' + field + '\', this.checked);"><span class="slider"></span></label>';
+						html += '	<label class="switch"><input type="checkbox" value="' + vendor.id + '" ' + ((cmp_pv.consentString.data[field].vendorConsent.bitField[vendor.id]) ? 'checked' : '') + ' onchange="cmp_pv.ui.switchVendor(\'vendorConsent\', ' + vendor.id + ', \'' + field + '\', this.checked);"><span class="slider"></span></label>';
+						html += '	<span class="arrow" onclick="cmp_pv.ui.showVendorDescription(' + vendor.id + ',' + (i - fromPos + i2) + ', \'' + field + '\', true);"></span>';
 						html += '</h4>';
 						item.className = 'pid' + vendor.purposes.join(' pid') + ' pidlit' + vendor.legIntPurposes.join(' pidlit') + ' pids' + vendor.specialFeatures.join(' pids') + ' pidf' + vendor.features.join(' pidf') + ((this.active === vendor.id) ? ' active' : '');
 					}
@@ -1552,6 +1580,21 @@ var cmp_pv = {
 					}
 				}
 			],
+			specific: [
+				{name: 'segmentType', type: 'int', numBits: 3, default: 4},
+				{
+					name: ['vendorConsent'],
+					fields: function () {
+						cmp_pv.consentString.const._rangeVendor[0].default = function () {
+							return parseInt(Object.keys(cmp_pv.pubvendor).pop());
+						}
+						cmp_pv.consentString.const._rangeVendor[2].default = function (obj) {
+							return cmp_pv.consentString.defaultBits(false, obj.maxVendorId);
+						}
+						return cmp_pv.consentString.const._rangeVendor;
+					}
+				}
+			],
 
 			_rangeVendor: [
 				{
@@ -1644,6 +1687,9 @@ var cmp_pv = {
 						case 3:
 							part = 'publisherTC';
 							break;
+						case 4:
+							part = 'specific';
+							break;
 						default:
 							continue;
 					}
@@ -1659,6 +1705,7 @@ var cmp_pv = {
 			}
 
 			if (typeof this.data['publisherTC'] === 'undefined') this.data['publisherTC'] = this.generateData(this.const['publisherTC']);
+			if (typeof this.data['specific'] === 'undefined') this.data['specific'] = this.generateData(this.const['specific']);
 			return true;
 		},
 		generateConsentString: function () {
@@ -1677,9 +1724,12 @@ var cmp_pv = {
 			inputBits = this.encodeConsentData(this.const.coreString, data);
 			string = this.encodeBase64UrlSafe(inputBits);
 
-			// Publisher
-			inputBits = this.encodeConsentData(this.const.publisherTC, this.data['publisherTC']);
-			string += '.' + this.encodeBase64UrlSafe(inputBits);
+			// Publisher, Specific
+			names = ['publisherTC', 'specific'];
+			for (i = 0; i < names.length; i++) {
+				inputBits = this.encodeConsentData(this.const[names[i]], this.data[names[i]]);
+				string += '.' + this.encodeBase64UrlSafe(inputBits);
+			}
 
 			return string;
 		},
@@ -1905,6 +1955,7 @@ var cmp_pv = {
 			var obj = {};
 			obj.coreString = this.generateData(this.const['coreString']);
 			obj.publisherTC = this.generateData(this.const['publisherTC']);
+			obj.specific = this.generateData(this.const['specific']);
 			if (cmp_pv.conf.googleAC) obj.googleAC = {};
 			return obj;
 		},
@@ -2025,6 +2076,7 @@ var cmp_pv = {
 			try {
 				if (res.status === 200) {
 					cmp_pv.globalVendorList = JSON.parse(res.responseText);
+					cmp_pv._fetchPubVendorList();
 					cmp_pv.ui.sortVendors();
 				} else {
 					console.error("Can't fetch vendorlist: %d (%s)", res.status, res.statusText);
@@ -2052,6 +2104,23 @@ var cmp_pv = {
 			}
 			callback();
 		});
+	},
+
+	_fetchPubVendorList: function () {
+		cmp_pv.pubvendor = {
+			1: {
+				id: 1,
+				name: 'Sofinco (par Numberly)',
+				purposes: [1, 2, 3, 4, 5],
+				legIntPurposes: [],
+				specialPurposes: [],
+				features: [],
+				specialFeatures: [],
+				policyUrl: 'https://www.sofinco.fr/organisme-credit/sofinco-informations-legales.htm#finalitecollecte',
+				dep: 388
+			}
+		};
+		cmp_pv.pubvendorOrder = [1];
 	},
 
 	_fetch: function (url, callback) {
