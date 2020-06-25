@@ -1586,7 +1586,7 @@ var cmp_pv = {
 					name: ['vendorConsent'],
 					fields: function () {
 						cmp_pv.consentString.const._rangeVendor[0].default = function () {
-							return parseInt(Object.keys(cmp_pv.pubvendor).pop());
+							return cmp_pv.pubvendorOrder.length;
 						}
 						cmp_pv.consentString.const._rangeVendor[2].default = function (obj) {
 							return cmp_pv.consentString.defaultBits(false, obj.maxVendorId);
