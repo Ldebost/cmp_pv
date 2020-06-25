@@ -1338,7 +1338,7 @@ var cmp_pv = {
 			})
 		},
 		writeCookie: function () {
-			var data = cmp_pv.consentString.getConsentString();
+			var data = cmp_pv.consentString.generateConsentString();
 			var fnct = (cmp_pv.conf.hasGlobalScope) ? '_writeGlobalCookie' : '_writeCookie';
 			this[fnct](this.vendorCookieName, data, 33696000, '/', cmp_pv.conf.cookieDomain, cmp_pv.conf.cookieSecure);
 		},
@@ -1353,6 +1353,9 @@ var cmp_pv = {
 				for (i = 1; i <= cmp_pv.consentString.data.coreString.vendorConsent.maxVendorId; i++) {
 					cmp_pv.consentString.data.coreString.vendorConsent.bitField[i] = all;
 					cmp_pv.consentString.data.coreString.vendorLegitimateInterest.bitField[i] = all;
+				}
+				for (i = 1; i <= cmp_pv.consentString.data.specific.vendorConsent.maxVendorId; i++) {
+					cmp_pv.consentString.data.specific.vendorConsent.bitField[i] = all;
 				}
 				for (i in cmp_pv.consentString.data.coreString.purposesConsent) {
 					cmp_pv.consentString.data.coreString.purposesConsent[i] = all;
@@ -1422,6 +1425,7 @@ var cmp_pv = {
 					if (all || cmp_pv.consentString.data.googleAC[id]) {
 						data += id + '.'
 					}
+					if (all) cmp_pv.consentString.data.googleAC[id] = all;
 				}
 			}
 			cmp_pv.consentString.data.acString = data;
@@ -1705,7 +1709,10 @@ var cmp_pv = {
 			}
 
 			if (typeof this.data['publisherTC'] === 'undefined') this.data['publisherTC'] = this.generateData(this.const['publisherTC']);
-			if (typeof this.data['specific'] === 'undefined') this.data['specific'] = this.generateData(this.const['specific']);
+			if (typeof this.data['specific'] === 'undefined') {
+				cmp_pv._fetchPubVendorList();
+				this.data['specific'] = this.generateData(this.const['specific']);
+			}
 			return true;
 		},
 		generateConsentString: function () {
