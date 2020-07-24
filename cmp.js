@@ -167,7 +167,8 @@ var cmp_pv = {
         },
 
         showConsentUi: function (_, callback) {
-            callback(cmp_pv.ui.show(true));
+            var res = cmp_pv.ui.show(true);
+            if(callback) callback(res);
         }
     },
 
