@@ -43,7 +43,7 @@ var cmp_pv = {
 		cookieDomain: 'paruvendu.fr',
 		cookieSecure: true,
 		publisherName: 'ParuVendu.fr',
-		urlVendorList: 'https://media-recette.paruvendu.fr/vendor-list-v2.json?[RND]',
+		urlVendorList: 'https://media.paruvendu.fr/vendor-list-v2.json?[RND]',
 		urlCookiesUsage: 'https://www.paruvendu.fr/communfo/defaultcommunfo/defaultcommunfo/infosLegales#cookies',
 		dayCheckInterval: 30,
 		globalConsentLocation: 'https://paruvendu.mgr.consensu.org/portal.html',
@@ -54,7 +54,7 @@ var cmp_pv = {
 			"specialFeatures": [1, 2]
 		},
 		googleAC: true,
-		urlGoogleACList: 'https://media-recette.paruvendu.fr/vendor-list-v0.json?[RND]'
+		urlGoogleACList: 'https://media.paruvendu.fr/vendor-list-v0.json?[RND]'
 	},
 
 	/** Commandes **/
@@ -142,17 +142,22 @@ var cmp_pv = {
 				gdprApplies: cmp_pv.conf.gdprApplies,
 
 				/**
-				 * true - if using a service-specific or publisher-specific TC String
-				 * false - if using a global TC String.
-				 */
-				isServiceSpecific: !cmp_pv.conf.hasGlobalScope,
-
-				/**
 				 * tcloaded
 				 * cmpuishown
 				 * useractioncomplete
 				 */
 				eventStatus: cmp_pv.lastEvent,
+
+				/**
+				 *
+				 */
+				cmpStatus: (cmp_pv.cmpReady) ? 'loaded' : 'loading',
+
+				/**
+				 * true - if using a service-specific or publisher-specific TC String
+				 * false - if using a global TC String.
+				 */
+				isServiceSpecific: !cmp_pv.conf.hasGlobalScope,
 
 				/**
 				 * true - CMP is using publisher-customized stack descriptions
@@ -237,27 +242,30 @@ var cmp_pv = {
 		},
 
 		addEventListener: function (_, callback) {
-			cmp_pv.event.listeners.push(callback);
+			cmp_pv.event.listenerId++;
+			cmp_pv.event.listeners[cmp_pv.event.listenerId] = callback;
 			cmp_pv.event.send((cmp_pv.ui.dom != null && cmp_pv.ui.dom.style.display === 'block') ? 'cmpuishown' : 'tcloaded');
 		},
 
-		removeEventListener: function (_, callback) {
-			delete cmp_pv.event.listeners[cmp_pv.event.listeners.indexOf(callback)];
+		removeEventListener: function (idEvent, callback) {
+			delete cmp_pv.event.listeners[idEvent];
 			callback(true);
 		}
 	},
 
 	/** Events **/
 	event: {
-		listeners: [],
+		listenerId: 0,
+		listeners: {},
 		send: function (eventStatus) {
 			console.info('Listeners fired : ' + eventStatus);
 			cmp_pv.lastEvent = eventStatus;
-			if (cmp_pv.event.listeners.length > 0) {
+			if (Object.keys(cmp_pv.event.listeners).length > 0) {
 				cmp_pv.commands.getTCData(null, function (tcData, success) {
 					tcData.eventStatus = eventStatus;
-					for (var i = 0; i < cmp_pv.event.listeners.length; i++) {
+					for (var i in cmp_pv.event.listeners) {
 						if (typeof cmp_pv.event.listeners[i] === 'function') {
+							tcData.listenerId = i;
 							cmp_pv.event.listeners[i](tcData, success);
 						}
 					}
@@ -1649,6 +1657,9 @@ var cmp_pv = {
 			var res = this.decodeCookieData(cookieValue);
 			if (res) {
 				this.data.tcString = cookieValue;
+				if(typeof this.data.specific !== 'undefined'){
+					this.data.tcString = cookieValue.substr(0, cookieValue.lastIndexOf('.'));
+				}
 				var data = this.data['coreString'];
 				var names = ['vendorConsent', 'vendorLegitimateInterest'];
 				for (var z = 0; z < names.length; z++) {
@@ -1738,6 +1749,7 @@ var cmp_pv = {
 				string += '.' + this.encodeBase64UrlSafe(inputBits);
 			}
 
+			this.data.tcString = string.substr(0, string.lastIndexOf('.'));
 			return string;
 		},
 		getConsentString: function () {
@@ -2083,6 +2095,12 @@ var cmp_pv = {
 			try {
 				if (res.status === 200) {
 					cmp_pv.globalVendorList = JSON.parse(res.responseText);
+					if (typeof cmp_pv.consentString.data.coreString !== 'undefined') {
+						// cmp_pv.consentString.const._rangeVendor[0].default();
+						var maxVendorId =  parseInt(Object.keys(cmp_pv.globalVendorList.vendors).pop());
+						cmp_pv.consentString.data.coreString.vendorConsent.maxVendorId = maxVendorId;
+						cmp_pv.consentString.data.coreString.vendorLegitimateInterest.maxVendorId = maxVendorId;
+					}
 					cmp_pv._fetchPubVendorList();
 					cmp_pv.ui.sortVendors();
 				} else {

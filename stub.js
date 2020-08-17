@@ -28,7 +28,7 @@
     function __tcfapi(command, version, callback, parameter) {
         __tcfapi.a = __tcfapi.a || [];
         if (command === 'ping') {
-            callback({"gdprAppliesGlobally": gdprAppliesGlobally, "cmpLoaded": false}, true);
+            callback({"gdprApplies": gdprAppliesGlobally, "cmpLoaded": false, "cmpStatus": "stub", "apiVersion": "2.0"}, true);
         } else {
             __tcfapi.a.push({
                 command: command,

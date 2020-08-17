@@ -74,8 +74,12 @@
 			document.getElementById(tab+'menu').className = 'active';
 		}
 		function eventListener(a,b){
-			console.log('Event : '+a.eventStatus);
+			console.log('Event : '+a.eventStatus+', ID : '+a.listenerId);
 			showResult(a);
+		}
+		function removeListener(){
+			var id = prompt('Numéro de Listener ?');
+			window.__tcfapi ('removeEventListener', 2, eventListener, id);
 		}
 		// window.__tcfapi ('addEventListener', 2, eventListener);
 		window.__tcfapi('showConsentUi');
@@ -91,7 +95,7 @@
 		<button onclick="window.__tcfapi ('getTCData', 2, function(a, b){showResult(a);});">getTCData</button>
 		<button onclick="window.__tcfapi ('getTCData', 2, function(a, b){showResult(a);}, [1,2,3,4,10,1000]);">getTCData [1,2,3,4,10,1000]</button>
 		<button onclick="window.__tcfapi ('addEventListener', 2, eventListener);">addEventListener</button>
-		<button onclick="window.__tcfapi ('removeEventListener', 2, eventListener);">removeEventListener</button>
+		<button onclick="removeListener();">removeEventListener</button>
 	</div>
 	<div id="Iframe" style="display: none;">
 		<iframe id="ifrCall" src="iframe.html"></iframe>
