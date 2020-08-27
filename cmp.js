@@ -244,7 +244,7 @@ var cmp_pv = {
 		addEventListener: function (_, callback) {
 			cmp_pv.event.listenerId++;
 			cmp_pv.event.listeners[cmp_pv.event.listenerId] = callback;
-			cmp_pv.event.send((cmp_pv.ui.dom != null && cmp_pv.ui.dom.style.display === 'block') ? 'cmpuishown' : 'tcloaded');
+			cmp_pv.event.send((cmp_pv.ui.dom != null && cmp_pv.ui.dom.style.display === 'block') ? 'cmpuishown' : 'tcloaded', cmp_pv.event.listenerId);
 		},
 
 		removeEventListener: function (idEvent, callback) {
@@ -257,14 +257,15 @@ var cmp_pv = {
 	event: {
 		listenerId: 0,
 		listeners: {},
-		send: function (eventStatus) {
-			console.info('Listeners fired : ' + eventStatus);
+		send: function (eventStatus, listenerId) {
+			if (typeof listenerId === 'undefined') listenerId = 0;
+			console.info('Listeners fired : ' + eventStatus + ' (' + listenerId + ')');
 			cmp_pv.lastEvent = eventStatus;
 			if (Object.keys(cmp_pv.event.listeners).length > 0) {
 				cmp_pv.commands.getTCData(null, function (tcData, success) {
 					tcData.eventStatus = eventStatus;
 					for (var i in cmp_pv.event.listeners) {
-						if (typeof cmp_pv.event.listeners[i] === 'function') {
+						if ((listenerId == 0 || i == listenerId) && typeof cmp_pv.event.listeners[i] === 'function') {
 							tcData.listenerId = i;
 							cmp_pv.event.listeners[i](tcData, success);
 						}
@@ -1657,7 +1658,7 @@ var cmp_pv = {
 			var res = this.decodeCookieData(cookieValue);
 			if (res) {
 				this.data.tcString = cookieValue;
-				if(typeof this.data.specific !== 'undefined'){
+				if (typeof this.data.specific !== 'undefined') {
 					this.data.tcString = cookieValue.substr(0, cookieValue.lastIndexOf('.'));
 				}
 				var data = this.data['coreString'];
@@ -2097,7 +2098,7 @@ var cmp_pv = {
 					cmp_pv.globalVendorList = JSON.parse(res.responseText);
 					if (typeof cmp_pv.consentString.data.coreString !== 'undefined') {
 						// cmp_pv.consentString.const._rangeVendor[0].default();
-						var maxVendorId =  parseInt(Object.keys(cmp_pv.globalVendorList.vendors).pop());
+						var maxVendorId = parseInt(Object.keys(cmp_pv.globalVendorList.vendors).pop());
 						cmp_pv.consentString.data.coreString.vendorConsent.maxVendorId = maxVendorId;
 						cmp_pv.consentString.data.coreString.vendorLegitimateInterest.maxVendorId = maxVendorId;
 					}
