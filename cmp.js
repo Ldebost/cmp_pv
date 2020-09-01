@@ -45,7 +45,7 @@ var cmp_pv = {
 		publisherName: 'ParuVendu.fr',
 		urlVendorList: 'https://media.paruvendu.fr/vendor-list-v2.json?[RND]',
 		urlCookiesUsage: 'https://www.paruvendu.fr/communfo/defaultcommunfo/defaultcommunfo/infosLegales#cookies',
-		dayCheckInterval: 30,
+		dayCheckInterval: 5,
 		globalConsentLocation: 'https://paruvendu.mgr.consensu.org/portal.html',
 		uiColor: '#EE1C24',
 		firstScreenPurposes: {
@@ -265,7 +265,8 @@ var cmp_pv = {
 				cmp_pv.commands.getTCData(null, function (tcData, success) {
 					tcData.eventStatus = eventStatus;
 					for (var i in cmp_pv.event.listeners) {
-						if ((listenerId == 0 || i == listenerId) && typeof cmp_pv.event.listeners[i] === 'function') {
+						i = parseInt(i);
+						if ((listenerId === 0 || i === listenerId) && typeof cmp_pv.event.listeners[i] === 'function') {
 							tcData.listenerId = i;
 							cmp_pv.event.listeners[i](tcData, success);
 						}
