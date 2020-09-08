@@ -100,9 +100,9 @@ var cmp_pv = {
 				cmpStatus: (cmp_pv.cmpReady) ? 'loaded' : 'loading',
 				displayStatus: (cmp_pv.ui.dom != null && cmp_pv.ui.dom.style.display === 'block') ? 'visible' : 'hidden',
 				apiVersion: "2.0",
-				cmpVersion: cmp_pv.consentString.data.coreString.cmpVersion,
+				cmpVersion: cmp_pv.consentString.const.CMP_VERSION,
 				cmpId: cmp_pv.consentString.const.CMP_ID,
-				gvlVersion: cmp_pv.consentString.data.coreString.vendorListVersion,
+				gvlVersion: (cmp_pv.consentString.data.coreString) ? cmp_pv.consentString.data.coreString.vendorListVersion : null,
 				tcfPolicyVersion: 2
 			});
 		},
