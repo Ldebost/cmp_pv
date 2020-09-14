@@ -1729,10 +1729,13 @@ var cmp_pv = {
 			return true;
 		},
 		generateConsentString: function () {
+			// CMP infos
+			this.data.coreString.cmpId = cmp_pv.consentString.const.CMP_ID;
+			this.data.coreString.cmpVersion = cmp_pv.consentString.const.CMP_VERSION;
 			// Core
 			var string = '';
 			var names = ['vendorConsent', 'vendorLegitimateInterest'];
-			var data = this.data['coreString'];
+			var data = this.data.coreString;
 			for (var i = 0; i < names.length; i++) {
 				var name = names[i];
 				data[name] = Object.assign(data[name], this.convertVendorsToRanges(data, name));
@@ -1756,7 +1759,7 @@ var cmp_pv = {
 		},
 		getConsentString: function () {
 			if (typeof this.data.tcString == 'undefined') {
-				this.data.tcString = this.generateConsentString();
+				this.generateConsentString();
 			}
 
 			return this.data.tcString;
