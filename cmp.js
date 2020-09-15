@@ -464,7 +464,7 @@ var cmp_pv = {
 						for (i in cmp_pv.conf.firstScreenPurposes[key]) {
 							if (cmp_pv.ui.language['fr'].hasOwnProperty(key)) {
 								var purpose = cmp_pv.ui.language['fr'][key][cmp_pv.conf.firstScreenPurposes[key][i]];
-								html += '<i>' + purpose.name + '. </i>';
+								if (purpose) html += '<i>' + purpose.name + '. </i>';
 							}
 						}
 					}
