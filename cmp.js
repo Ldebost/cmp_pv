@@ -346,6 +346,7 @@ var cmp_pv = {
 					css += '#CMP_PV #step2 .desc:not(.liste)>div:nth-child(2){display:none;}';
 					css += '#CMP_PV #step2 .desc.liste p{margin-left: 10px;font-weight: bold;font-size: 15px;}';
 					css += '#CMP_PV #step2 .container .purposes, #CMP_PV #step2 .container .purposes_desc {box-shadow: 0 3px 1px -2px rgba(0,0,0,.2), 0 2px 2px 0 rgba(0,0,0,.14), 0 1px 5px 0 rgba(0,0,0,.12);padding: 0;width: 50%;margin:0;overflow: auto;height: 330px;}';
+					css += '#CMP_PV #step2 .container .purposes ul {margin: 0; padding:0;}';
 					css += '#CMP_PV #step2 .container .purposes {width: 65%;}';
 					css += '#CMP_PV #step2 .container .purposes_desc {width: 35%;}';
 					css += '#CMP_PV #step2 .container .purposes li{background: #3c3c3c; color: white;position:relative; margin:0;display: block;overflow: hidden;}';
@@ -861,7 +862,7 @@ var cmp_pv = {
 				v.style.overflow = "hidden";
 				v.style.height = h + "px";
 				v.style.position = "relative";
-				var t = document.createElement("div");
+				var t = document.createElement("ul");
 				t.style.willChange = "transform";
 				v.appendChild(t);
 				c.appendChild(v);
