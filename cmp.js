@@ -455,7 +455,7 @@ var cmp_pv = {
 						css += '	#CMP_PV{margin-top: calc(50vh - 34px);}';
 						css += '}';
 					}
-					var html = '<div id="CMP_PV">';
+					var html = '<div id="CMP_PV" data-nosnippet>';
 					html += '<div id="step1">';
 					html += '	<div class="title">Vos choix en matière de cookies</div>';
 					html += '	<div class="desc">';
@@ -670,11 +670,11 @@ var cmp_pv = {
 			if (active != null) active.className = active.className.replace(' active', '');
 			document.querySelector('.vendors li:nth-of-type(' + (i + 1) + ')').className += ' active';
 			var vendor;
-			if (f === 'specific') {
+			/*if (f === 'specific') {
 				vendor = cmp_pv.pubvendor[id];
-			} else {
+			} else {*/
 				vendor = cmp_pv.globalVendorList.vendors[id];
-			}
+			//}
 			if (typeof vendor == 'undefined') return;
 			var html = '<h2>' + vendor.name + '</h2><a href="' + vendor.policyUrl + '" target="_blank">Politique de confidentialité</a><br/>';
 			var y = 0;
@@ -746,13 +746,13 @@ var cmp_pv = {
 		},
 		switchVendor: function (field, vendor, f, checked) {
 			cmp_pv.consentString.data[f][field].bitField[vendor] = checked;
-			if (f === 'specific' && cmp_pv.pubvendor[vendor].dep > 0) {
+			/*if (f === 'specific' && cmp_pv.pubvendor[vendor].dep > 0) {
 				cmp_pv.consentString.data.coreString.vendorConsent.bitField[vendor] = checked;
 				var match = document.querySelector("#vendors input[value='" + cmp_pv.pubvendor[vendor].dep + "']");
 				if (match != null) {
 					match.checked = checked;
 				}
-			}
+			}*/
 		},
 		switchGoogleVendor: function (vendor, checked) {
 			cmp_pv.consentString.data.googleAC[vendor] = checked;
@@ -838,7 +838,7 @@ var cmp_pv = {
 			active: null,
 
 			init: function () {
-				this.totalRows = cmp_pv.globalVendorList.vendorsOrder.length + cmp_pv.pubvendorOrder.length;
+				this.totalRows = cmp_pv.globalVendorList.vendorsOrder.length/* + cmp_pv.pubvendorOrder.length*/;
 				if (cmp_pv.conf.googleAC) this.totalRows += cmp_pv.googleACList.length;
 				var container = this.createContainer(this.totalRows * this.itemHeight);
 				this.screenItemsLen = 15;
@@ -880,7 +880,7 @@ var cmp_pv = {
 				for (var i = fromPos; i < finalItem; i++) {
 					item = document.createElement("li");
 					y = i - cmp_pv.globalVendorList.vendorsOrder.length;
-					y2 = y - cmp_pv.pubvendorOrder.length;
+					y2 = y /*- cmp_pv.pubvendorOrder.length*/;
 					if (y2 >= 0) {
 						y = y2;
 						if (y === 0) {
@@ -907,13 +907,13 @@ var cmp_pv = {
 							fragment.appendChild(item2);
 							i2 += 1;
 						}
-						if (y >= 0) {
+						/*if (y >= 0) {
 							vendor = cmp_pv.pubvendor[cmp_pv.pubvendorOrder[y]];
 							field = 'specific';
-						} else {
+						} else {*/
 							vendor = cmp_pv.globalVendorList.vendors[cmp_pv.globalVendorList.vendorsOrder[i]];
 							field = 'coreString';
-						}
+						//}
 						html = '<h4>';
 						html += '	<span onclick="cmp_pv.ui.showVendorDescription(' + vendor.id + ',' + (i - fromPos + i2) + ', \'' + field + '\');">' + vendor.name + '</span>';
 						if (vendor.legIntPurposes.length > 0) html += '<label class="switch switchLI"><input type="checkbox" value="' + vendor.id + '" ' + ((cmp_pv.consentString.data[field].vendorLegitimateInterest.bitField[vendor.id]) ? 'checked' : '') + ' onchange="cmp_pv.ui.switchVendor(\'vendorLegitimateInterest\', ' + vendor.id + ', \'' + field + '\', this.checked);"><span class="slider"></span></label>';
@@ -1365,9 +1365,9 @@ var cmp_pv = {
 					cmp_pv.consentString.data.coreString.vendorConsent.bitField[i] = all;
 					cmp_pv.consentString.data.coreString.vendorLegitimateInterest.bitField[i] = all;
 				}
-				for (i = 1; i <= cmp_pv.consentString.data.specific.vendorConsent.maxVendorId; i++) {
+				/*for (i = 1; i <= cmp_pv.consentString.data.specific.vendorConsent.maxVendorId; i++) {
 					cmp_pv.consentString.data.specific.vendorConsent.bitField[i] = all;
-				}
+				}*/
 				for (i in cmp_pv.consentString.data.coreString.purposesConsent) {
 					cmp_pv.consentString.data.coreString.purposesConsent[i] = all;
 					cmp_pv.consentString.data.publisherTC.pubPurposesConsent[i] = all;
@@ -1595,7 +1595,7 @@ var cmp_pv = {
 					}
 				}
 			],
-			specific: [
+			/*specific: [
 				{name: 'segmentType', type: 'int', numBits: 3, default: 4},
 				{
 					name: ['vendorConsent'],
@@ -1609,7 +1609,7 @@ var cmp_pv = {
 						return cmp_pv.consentString.const._rangeVendor;
 					}
 				}
-			],
+			],*/
 
 			_rangeVendor: [
 				{
@@ -1660,9 +1660,9 @@ var cmp_pv = {
 			var res = this.decodeCookieData(cookieValue);
 			if (res) {
 				this.data.tcString = cookieValue;
-				if (typeof this.data.specific !== 'undefined') {
+				/*if (typeof this.data.specific !== 'undefined') {
 					this.data.tcString = cookieValue.substr(0, cookieValue.lastIndexOf('.'));
-				}
+				}*/
 				var data = this.data['coreString'];
 				var names = ['vendorConsent', 'vendorLegitimateInterest'];
 				for (var z = 0; z < names.length; z++) {
@@ -1705,9 +1705,9 @@ var cmp_pv = {
 						case 3:
 							part = 'publisherTC';
 							break;
-						case 4:
+						/*case 4:
 							part = 'specific';
-							break;
+							break;*/
 						default:
 							continue;
 					}
@@ -1723,10 +1723,10 @@ var cmp_pv = {
 			}
 
 			if (typeof this.data['publisherTC'] === 'undefined') this.data['publisherTC'] = this.generateData(this.const['publisherTC']);
-			if (typeof this.data['specific'] === 'undefined') {
+			/*if (typeof this.data['specific'] === 'undefined') {
 				cmp_pv._fetchPubVendorList();
 				this.data['specific'] = this.generateData(this.const['specific']);
-			}
+			}*/
 			return true;
 		},
 		generateConsentString: function () {
@@ -1749,7 +1749,7 @@ var cmp_pv = {
 			string = this.encodeBase64UrlSafe(inputBits);
 
 			// Publisher, Specific
-			names = ['publisherTC', 'specific'];
+			names = ['publisherTC'/*, 'specific'*/];
 			for (i = 0; i < names.length; i++) {
 				inputBits = this.encodeConsentData(this.const[names[i]], this.data[names[i]]);
 				string += '.' + this.encodeBase64UrlSafe(inputBits);
@@ -1980,7 +1980,7 @@ var cmp_pv = {
 			var obj = {};
 			obj.coreString = this.generateData(this.const['coreString']);
 			obj.publisherTC = this.generateData(this.const['publisherTC']);
-			obj.specific = this.generateData(this.const['specific']);
+			//obj.specific = this.generateData(this.const['specific']);
 			if (cmp_pv.conf.googleAC) obj.googleAC = {};
 			return obj;
 		},
@@ -2107,7 +2107,7 @@ var cmp_pv = {
 						cmp_pv.consentString.data.coreString.vendorConsent.maxVendorId = maxVendorId;
 						cmp_pv.consentString.data.coreString.vendorLegitimateInterest.maxVendorId = maxVendorId;
 					}
-					cmp_pv._fetchPubVendorList();
+					//cmp_pv._fetchPubVendorList();
 					cmp_pv.ui.sortVendors();
 				} else {
 					console.error("Can't fetch vendorlist: %d (%s)", res.status, res.statusText);
@@ -2137,7 +2137,7 @@ var cmp_pv = {
 		});
 	},
 
-	_fetchPubVendorList: function () {
+	/*_fetchPubVendorList: function () {
 		cmp_pv.pubvendor = {
 			1: {
 				id: 1,
@@ -2152,7 +2152,7 @@ var cmp_pv = {
 			}
 		};
 		cmp_pv.pubvendorOrder = [1];
-	},
+	},*/
 
 	_fetch: function (url, callback) {
 		try {
