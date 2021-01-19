@@ -235,7 +235,7 @@ var cmp_pv = {
 					}
 				}
 			};
-
+			if (!cmp_pv.conf.hasGlobalScope) delete consent.outOfBand;
 			if (cmp_pv.conf.googleAC) consent.addtlConsent = cmp_pv.consentString.data.acString;
 
 			callback(consent, true)
