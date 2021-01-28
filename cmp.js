@@ -723,7 +723,7 @@ var cmp_pv = {
 			this.virtualList.active = id;
 		},
 		readableTime: function (seconds) {
-			if (seconds < 0) return "Non renseigné";
+			if (seconds <= 0) return "Durant toute votre session de navigation";
 			var levels = [
 				[Math.floor(seconds / 31536000), 'ans'],
 				[Math.floor((seconds % 31536000) / 86400), 'jours'],
