@@ -100,7 +100,7 @@ var cmp_pv = {
 				cmpStatus: (cmp_pv.cmpReady) ? 'loaded' : 'loading',
 				displayStatus: (cmp_pv.ui.dom != null && cmp_pv.ui.dom.style.display === 'block') ? 'visible' : 'hidden',
 				apiVersion: "2.0",
-				cmpVersion: cmp_pv.consentString.const.CMP_VERSION,
+				cmpVersion: cmp_pv.consentString.data.coreString.cmpVersion,
 				cmpId: cmp_pv.consentString.const.CMP_ID,
 				gvlVersion: (cmp_pv.consentString.data.coreString) ? cmp_pv.consentString.data.coreString.vendorListVersion : null,
 				tcfPolicyVersion: 2
@@ -389,6 +389,11 @@ var cmp_pv = {
 					css += '#CMP_PV #step2 .table-header span{font-size: 20px;line-height: 18px;}';
 					css += '#CMP_PV #step2 .table-header br{display: none;}';
 					css += '#CMP_PV #step2 .table-header span:nth-child(3){transform: scaleX(-1);margin-left: 43px;}';
+					css += '#CMP_PV #storageDisclosure table{width: 100%;border-collapse: collapse;}';
+					css += '#CMP_PV #storageDisclosure table th{background-color: #3c3c3c;color: #ffffff;text-align: left;padding:2px 4px;}';
+					css += '#CMP_PV #storageDisclosure table td{padding:2px;}';
+					css += '#CMP_PV #storageDisclosure table tr{border-bottom: 1px solid #dddddd;}';
+					css += '#CMP_PV #storageDisclosure table tr:nth-of-type(even){background-color: #f3f3f3;}';
 					//Responsive
 					css += '@media screen and (max-width: 640px) {';
 					css += '	#CMP_PV{padding:0;}';
@@ -671,7 +676,7 @@ var cmp_pv = {
 			/*if (f === 'specific') {
 				vendor = cmp_pv.pubvendor[id];
 			} else {*/
-				vendor = cmp_pv.globalVendorList.vendors[id];
+			vendor = cmp_pv.globalVendorList.vendors[id];
 			//}
 			if (typeof vendor == 'undefined') return;
 			var html = '<h2>' + vendor.name + '</h2><a href="' + vendor.policyUrl + '" target="_blank">Politique de confidentialité</a><br/>';
@@ -705,6 +710,10 @@ var cmp_pv = {
 					html += '</ul>';
 				}
 			}
+			html += '<h3>Durée maximale des cookies :</h3><ul><li>' + this.readableTime(vendor.cookieMaxAgeSeconds) + '</li>';
+			if (vendor.usesNonCookieAccess) html += '<li>Utilisation d\'autres méthodes de stockage (ex: Local Storage)</li>';
+			if (vendor.deviceStorageDisclosureUrl) html += '<li id="showStorage"><a onclick="cmp_pv.ui.showStorageDisclosure(\'' + vendor.deviceStorageDisclosureUrl + '\');" target="_blank">plus d\'informations</a></li>';
+			html += '</ul><div id="storageDisclosure"></div>';
 			var el = document.getElementById('vendor_desc');
 			el.innerHTML = html;
 			el.parentNode.scrollTop = 0;
@@ -712,6 +721,42 @@ var cmp_pv = {
 				this.arrow('vendors');
 			}
 			this.virtualList.active = id;
+		},
+		readableTime: function (seconds) {
+			if (seconds < 0) return "Non renseigné";
+			var levels = [
+				[Math.floor(seconds / 31536000), 'ans'],
+				[Math.floor((seconds % 31536000) / 86400), 'jours'],
+				[Math.floor(((seconds % 31536000) % 86400) / 3600), 'heures'],
+				[Math.floor((((seconds % 31536000) % 86400) % 3600) / 60), 'minutes'],
+				[(((seconds % 31536000) % 86400) % 3600) % 60, 'secondes']
+			];
+			var returntext = '';
+
+			for (var i = 0, max = levels.length; i < max; i++) {
+				if (levels[i][0] === 0) continue;
+				returntext += ' ' + levels[i][0] + ' ' + (levels[i][0] === 1 ? levels[i][1].substr(0, levels[i][1].length - 1) : levels[i][1]);
+			}
+			return returntext.trim();
+		},
+		showStorageDisclosure: function (url) {
+			var el = document.getElementById('storageDisclosure');
+			var el2 = document.getElementById('showStorage');
+			var html = '';
+			cmp_pv._fetch(url, function (res) {
+				if (res.status === 200) {
+					var data = JSON.parse(res.responseText);
+					html = '<table><tr><th>Nom</th><th>Type</th><th>Durée</th></tr>'
+					for (var i = 0; i < data.disclosures.length; i++) {
+						html += '<tr><td>' + data.disclosures[i].identifier + '</td><td>' + data.disclosures[i].type + '</td><td>' + cmp_pv.ui.readableTime(data.disclosures[i].maxAgeSeconds) + '</td></tr>';
+					}
+					html += '</ul>'
+				} else {
+					html = 'Impossible de charger les informations.';
+				}
+				el.innerHTML = html;
+				el2.style.display = 'none';
+			});
 		},
 		showGoogleVendorDescription: function (id, i, arrow) {
 			var active = document.querySelector('.vendors li.active');
@@ -909,8 +954,8 @@ var cmp_pv = {
 							vendor = cmp_pv.pubvendor[cmp_pv.pubvendorOrder[y]];
 							field = 'specific';
 						} else {*/
-							vendor = cmp_pv.globalVendorList.vendors[cmp_pv.globalVendorList.vendorsOrder[i]];
-							field = 'coreString';
+						vendor = cmp_pv.globalVendorList.vendors[cmp_pv.globalVendorList.vendorsOrder[i]];
+						field = 'coreString';
 						//}
 						html = '<h4>';
 						html += '	<span onclick="cmp_pv.ui.showVendorDescription(' + vendor.id + ',' + (i - fromPos + i2) + ', \'' + field + '\');">' + vendor.name + '</span>';
