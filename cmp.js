@@ -47,7 +47,7 @@ var cmp_pv = {
 		urlCookiesUsage: 'https://www.paruvendu.fr/communfo/defaultcommunfo/defaultcommunfo/infosLegales#cookies',
 		dayCheckInterval: 5,
 		globalConsentLocation: 'https://paruvendu.mgr.consensu.org/portal.html',
-		uiColor: '#EE1C24',
+		uiColor: '#f44336',
 		firstScreenPurposes: {
 			"purposes": [1, 3],
 			"stacks": [31],
@@ -328,12 +328,14 @@ var cmp_pv = {
 					css += '#CMP_PV input:checked + .slider{background-color: #8BC34A;}';
 					css += '#CMP_PV input:focus + .slider{box-shadow: 0 0 1px #8BC34A;}';
 					css += '#CMP_PV input:checked + .slider:before {transform: translateX(22px);border-color:#7BAA44;}';
-					// css += '#CMP_PV #step1{max-width:770px;}';
-					css += '#CMP_PV #step1 .title{color: #111;font-weight: bold;text-align: center;font-size:28px;padding: 10px 10px 20px 10px;text-transform: uppercase;text-shadow: 0 1px 2px rgba(0, 0, 0, 0.39);}';
+					css += '#CMP_PV #step1 .title{color: #111;font-weight: bold;text-align: center;font-size:20px;padding: 10px;text-transform: uppercase;text-shadow: 0 1px 2px rgba(0, 0, 0, 0.39);}';
 					css += '#CMP_PV #step1 .buttons{margin:38px 0 10px 0;}';
+					css += '#CMP_PV #step1 .validate{background-color:#4caf50;border-color:#4caf50;}';
+					css += '#CMP_PV #step1 .validate:hover{background-color:#FFF;color:#4caf50;}';
+					css += '#CMP_PV #step1 > a{color: #a5a4a4;display: block;text-align: right;padding-right: 15px;}';
 					css += '#CMP_PV #step1 .buttons > *{min-width: 210px; font-size: 16px;margin: 0 15px;text-align:center;}';
 					css += '#CMP_PV #step1 .buttons > a{line-height: 43px;}';
-					css += '#CMP_PV #step1 .desc>p{font-size: 15px;padding: 5px 15px;text-align:justify;line-height: 21px;color: #5d5d5d;}';
+					css += '#CMP_PV #step1 .desc>p{font-size: 15px;padding: 5px 15px;text-align:justify;line-height: 20px;color: #5d5d5d;}';
 					css += '#CMP_PV #step1 .desc>p:nth-child(2){line-height: normal;}';
 					css += '#CMP_PV #step1 .desc>p>i{display: inline; font-style: normal;color: #b5b5b5;}';
 					css += '#CMP_PV .container{max-width: 1000px; margin-left:auto;margin-right:auto;/*display: flex;*/}';
@@ -366,8 +368,6 @@ var cmp_pv = {
 					css += '#CMP_PV #step2 .container .purposes_desc{background: white;position: relative;}';
 					css += '#CMP_PV #step2 .container .vendors li>h4>span{padding: 2px 5px;}';
 					css += '#CMP_PV #step2 .container .vendors li .switch{border-top: 4px solid transparent;border-bottom: 4px solid transparent;}';
-					// css += '#CMP_PV #step2 .container .vendors li .slider{height: 8px;}';
-					// css += '#CMP_PV #step2 .container .vendors li .slider:before{height: 18px; width: 18px;bottom: 1px;left:1px;}';
 					css += '#CMP_PV #step2 .container .vendors li>h4{height: 30px;}';
 					css += '#CMP_PV #step2 .container .vendors li>h4 .arrow::after{height: 20px;font-size:16px;}';
 					css += '#CMP_PV #step2 .container .purposes_desc>div{position: absolute;top: 30px;left: 0;right: 0;bottom: 0;overflow: auto;margin: 0;}';
@@ -403,6 +403,7 @@ var cmp_pv = {
 					css += '    #CMP_PV .buttons{flex-direction: column;margin-bottom: 10px;}';
 					css += '    #CMP_PV #step1 .buttons{margin:0;border-top:1px solid #bbbbbb;}';
 					css += '    #CMP_PV #step1 .title{padding: 15px 20px; font-size: 18px;}';
+					css += '	#CMP_PV #step1 > a{padding: 10px 15px 0 0;}';
 					css += '	#CMP_PV #step2{overflow: hidden;}';
 					css += '	#CMP_PV #step2 .desc>div:first-child{flex-flow: column;justify-content: space-evenly;}';
 					css += '	#CMP_PV #step2 .desc{align-items: initial;margin-top: 0;}';
@@ -460,9 +461,10 @@ var cmp_pv = {
 					}
 					var html = '<div id="CMP_PV" data-nosnippet>';
 					html += '<div id="step1">';
+					html += '	<a onclick="cmp_pv.cookie.saveConsent(false);">Continuer sans accepter &rarr;</a>';
 					html += '	<div class="title">Vos choix en matière de cookies</div>';
 					html += '	<div class="desc">';
-					html += '		<p>Nos partenaires et nous-mêmes utilisons différentes technologies, telles que les cookies, qui nous permettent d\'accéder a votre historique de navigation, votre IP, etc., pour personnaliser les contenus et les publicités, proposer des fonctionnalités sur les réseaux sociaux et analyser le trafic. Merci de cliquer sur le bouton ci-dessous pour donner votre accord. Vous pouvez changer d\'avis et modifier vos choix à tout moment. Le fait de ne pas consentir ne vous empêchera pas d\'accèder à notre service. <a onclick="cmp_pv.ui.showPurposes();">Afficher les utilisations prévues et les accepter ou les refuser</a>.</p>';
+					html += '		<p><a onclick="cmp_pv.ui.showVendors()">Nos partenaires</a> et nous-mêmes utilisons différentes technologies, telles que les cookies, qui nous permettent d\'accéder a votre historique de navigation, votre IP, etc., pour personnaliser les contenus et les publicités, proposer des fonctionnalités sur les réseaux sociaux et analyser le trafic. Merci de cliquer sur le bouton ci-dessous pour donner votre accord. Vous pouvez changer d\'avis et modifier vos choix à tout moment. Le fait de ne pas consentir ne vous empêchera pas d\'accèder à notre service. <a onclick="cmp_pv.ui.showPurposes();">Afficher les utilisations prévues et les accepter ou les refuser</a>.</p>';
 					html += '		<p>Exemples d\'usages : ';
 					for (var key in cmp_pv.conf.firstScreenPurposes) {
 						for (i in cmp_pv.conf.firstScreenPurposes[key]) {
@@ -474,17 +476,17 @@ var cmp_pv = {
 					}
 					html += '		</p>';
 					html += '		<p>Certains de nos partenaires ne demandent pas votre consentement pour traiter vos données, et se basent à la place sur leur intérêt légitime pour le faire. Vous pouvez consulter la liste de ces partenaires, les usages pour lesquels ils traitent vos données et vous y opposer en <a onclick="cmp_pv.ui.showVendorsPurpose(\'LIT\', \'\')">cliquant ici</a>. <br/> Vos choix ne s\'appliqueront sur que les sites du groupe Paruvendu.fr.</p>';
+					html += '		<p>Nous vous invitons à consulter <a href="' + cmp_pv.conf.urlCookiesUsage + '" target="_blank">notre politique de cookies</a>, laquelle décrit comment fonctionnent les cookies susceptibles d’être déposés sur votre appareil.</p>';
 					html += '	</div>';
 					html += '	<div class="container buttons">';
-					html += '		<a onclick="cmp_pv.ui.showVendors()">Voir nos partenaires</a>';
-					// html += '		<button class="inverse" onclick="cmp_pv.ui.showPurposes();">Je personnalise ou Je refuse</button>';
-					html += '		<button onclick="cmp_pv.cookie.saveConsent(true);">J\'accepte</button>';
+					html += '		<a onclick="cmp_pv.ui.showVendors()">Paramétrer</a>';
+					html += '		<button class="validate" onclick="cmp_pv.cookie.saveConsent(true);">Accepter et Fermer</button>';
 					html += '	</div>';
 					html += '</div>';
 					html += '<div id="step2" style="display: none;">';
 					html += '	<div class="container desc">';
 					html += '		<div>';
-					html += '			<p>La collecte des données personnelles se fait en fonction des objectifs listés ci dessous. Choisissez comment vos données personnelles sont utilisées pour chaque finalité et pour chaque partenaire publicitaire. <a href="' + cmp_pv.conf.urlCookiesUsage + '" target="_blank">En savoir plus sur la gestion des cookies.</a></p>';
+					html += '			<p>La collecte des données personnelles se fait en fonction des objectifs listés ci dessous. Choisissez comment vos données personnelles sont utilisées pour chaque finalité et pour chaque partenaire publicitaire.</p>';
 					html += '			<div>';
 					html += '				<button onclick="cmp_pv.ui.switchAllPurposes(false);" class="inverse">Tout refuser</button>';
 					html += '				<button onclick="cmp_pv.ui.switchAllPurposes(true);">Tout accepter</button>';
