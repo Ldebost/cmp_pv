@@ -47,7 +47,6 @@ var cmp_pv = {
 		urlCookiesUsage: 'https://www.paruvendu.fr/communfo/defaultcommunfo/defaultcommunfo/infosLegales#cookies',
 		dayCheckInterval: 5,
 		globalConsentLocation: 'https://paruvendu.mgr.consensu.org/portal.html',
-		uiColor: '#f44336',
 		firstScreenPurposes: {
 			"purposes": [1, 3],
 			"stacks": [31],
@@ -305,6 +304,9 @@ var cmp_pv = {
 					// Create UI
 					cmp_pv.ui.dom = document.createElement('div');
 
+					var uiColor = '#4e4e4e';
+					var uiColor2 = '#4caf50';
+
 					var css = '';
 					css += '.cmpcontainer {position: fixed; top:0; bottom: 0; left: 0; right: 0; z-index: 100000; background: rgba(33,41,52,.66);}';
 					css += '#CMP_PV {background: #fff; padding: 15px;font-family:Tahoma, Geneva, sans-serif; font-size: 14px;box-shadow: 0 0 5px #000000a1;box-sizing: border-box;max-width: 1030px;margin: auto;min-width: 320px;border-radius: 2px;margin-top: 50vh;transform: translateY(-50%);width: 90%;}';
@@ -313,25 +315,23 @@ var cmp_pv = {
 					css += '#CMP_PV p{margin:0;}';
 					css += '#CMP_PV ul{margin:14px 0;padding-left: 40px;}';
 					css += '#CMP_PV li{list-style-type: circle;}';
-					css += '#CMP_PV a{color:' + cmp_pv.conf.uiColor + '; text-decoration: underline; cursor: pointer;}';
-					css += '#CMP_PV a:hover{color:#D41920; text-decoration: none;}';
-					css += '#CMP_PV button{background-color: ' + cmp_pv.conf.uiColor + ';border: 2px solid ' + cmp_pv.conf.uiColor + ';font-size: 20px;font-weight: bold;color: #fff;cursor: pointer;padding:5px; transition: background 300ms;}';
-					css += '#CMP_PV button:hover{background-color: #FFF;color:' + cmp_pv.conf.uiColor + ';}';
-					css += '#CMP_PV button.inverse{background-color: #FFF;color:' + cmp_pv.conf.uiColor + ';}';
-					css += '#CMP_PV button.inverse:hover{background-color: ' + cmp_pv.conf.uiColor + ';color:#FFF;}';
+					css += '#CMP_PV a{color:' + uiColor + '; text-decoration: underline; cursor: pointer;}';
+					css += '#CMP_PV a:hover{color:' + uiColor + '; text-decoration: none;}';
+					css += '#CMP_PV button{background-color: ' + uiColor2 + ';border: 2px solid ' + uiColor2 + ';font-size: 20px;font-weight: bold;color: #fff;cursor: pointer;padding:5px; transition: background 300ms;line-height: 27px;}';
+					css += '#CMP_PV button:hover{background-color: #FFF;color:' + uiColor2 + ';}';
+					css += '#CMP_PV button.inverse{background-color: #FFF;color:' + uiColor + ';border-color: ' + uiColor + ';}';
+					css += '#CMP_PV button.inverse:hover{background-color: ' + uiColor + ';color:#FFF;}';
 					css += '#CMP_PV .switch{position: relative;display: inline-block;width: 56px;height: 22px;cursor: pointer;color:white;vertical-align: middle;}';
 					css += '#CMP_PV .switch input {display:none;}';
-					css += '#CMP_PV .slider{display: block;position: relative; cursor: pointer; background-color: #ccc; -webkit-transition: .2s; transition: .2s;border-radius: 34px;height: 22px; width: 80%;}';
+					css += '#CMP_PV .slider{display: block;position: relative; cursor: pointer; background-color: #656565; -webkit-transition: .2s; transition: .2s;border-radius: 34px;height: 22px; width: 80%;border: 1px solid white;}';
 					css += '#CMP_PV .slider:before{position: absolute;content: "";height: 18px; width: 18px;bottom: 1px;left:1px;background-color: white;-webkit-transition: .2s;transition: .2s;border-radius: 50%;border:1px solid #aaa}';
 					css += '#CMP_PV .switchLI .slider:after{position: absolute;content: "LI";height: 18px; width: 18px;bottom: 1px;left:24px;}';
 					css += '#CMP_PV input:checked + .slider:after{left:8px;}';
 					css += '#CMP_PV input:checked + .slider{background-color: #8BC34A;}';
 					css += '#CMP_PV input:focus + .slider{box-shadow: 0 0 1px #8BC34A;}';
 					css += '#CMP_PV input:checked + .slider:before {transform: translateX(22px);border-color:#7BAA44;}';
-					css += '#CMP_PV #step1 .title{color: #111;font-weight: bold;text-align: center;font-size:20px;padding: 10px;text-transform: uppercase;text-shadow: 0 1px 2px rgba(0, 0, 0, 0.39);}';
+					css += '#CMP_PV #step1 .title{color: #111;font-weight: bold;text-align: center;font-size:16px;padding: 10px;text-shadow: 0 1px 2px rgba(0, 0, 0, 0.39);}';
 					css += '#CMP_PV #step1 .buttons{margin:38px 0 10px 0;}';
-					css += '#CMP_PV #step1 .validate{background-color:#4caf50;border-color:#4caf50;}';
-					css += '#CMP_PV #step1 .validate:hover{background-color:#FFF;color:#4caf50;}';
 					css += '#CMP_PV #step1 > a{color: #a5a4a4;display: block;text-align: right;padding-right: 15px;}';
 					css += '#CMP_PV #step1 .buttons > *{min-width: 210px; font-size: 16px;margin: 0 15px;text-align:center;}';
 					css += '#CMP_PV #step1 .buttons > a{line-height: 43px;}';
@@ -351,19 +351,19 @@ var cmp_pv = {
 					css += '#CMP_PV #step2 .container .purposes ul {margin: 0; padding:0;}';
 					css += '#CMP_PV #step2 .container .purposes {width: 65%;}';
 					css += '#CMP_PV #step2 .container .purposes_desc {width: 35%;}';
-					css += '#CMP_PV #step2 .container .purposes li{background: #3c3c3c; color: white;position:relative; margin:0;display: block;overflow: hidden;}';
+					css += '#CMP_PV #step2 .container .purposes li{background: #eaeaea; color: #515151;position:relative; margin:0;display: block;overflow: hidden;}';
 					css += '#CMP_PV #step2 .container .purposes li:last-child{border-bottom: none;}';
 					css += '#CMP_PV #step2 .container .purposes li>h4:first-child{border-left: 3px solid transparent;}';
 					css += '#CMP_PV #step2 .container .purposes li>h4 .arrow{padding: 0 16px 0 0;width: 28px;text-align: right;}';
 					css += '#CMP_PV #step2 .container .purposes li>h4 .title{padding: 8px}';
 					css += '#CMP_PV #step2 .container .purposes li>h4 .arrow:after{content:\'\\276d\'; font-size: 25px;transition: all 0.5s;display: inline-block;height: 40px;}';
-					css += '#CMP_PV #step2 .container .purposes li>h4{display:table;margin:0;font-weight:normal;cursor:pointer;height: 45px;width: 100%;box-sizing: border-box;border-bottom: 1px solid rgba(51, 51, 51);}';
-					css += '#CMP_PV #step2 .container .purposes li>h4:hover{background: #5f5f5f;}';
+					css += '#CMP_PV #step2 .container .purposes li>h4{display:table;margin:0;font-weight:normal;cursor:pointer;height: 45px;width: 100%;box-sizing: border-box;border-bottom: 1px solid #d8d8d8;}';
+					css += '#CMP_PV #step2 .container .purposes li>h4:hover{background: #fbfbfb;}';
 					css += '#CMP_PV #step2 .container .purposes li.titre{background: #5f5f5f;}';
 					css += '#CMP_PV #step2 .container .purposes li>h4>span{display: table-cell;vertical-align: middle;}';
 					css += '#CMP_PV #step2 .container .purposes li>h4>label{display: table-cell;border-top: 9px solid transparent;border-bottom: 9px solid transparent;}';
-					css += '#CMP_PV #step2 .container .purposes li.active{background: #515151;}';
-					css += '#CMP_PV #step2 .container .purposes li.active>h4:first-child{border-left: 3px solid ' + cmp_pv.conf.uiColor + ';}';
+					css += '#CMP_PV #step2 .container .purposes li.active{background: #FFF;}';
+					css += '#CMP_PV #step2 .container .purposes li.active>h4:first-child{border-left: 3px solid ' + uiColor + ';}';
 					css += '#CMP_PV #step2 .container .purposes li.active>h4 .arrow::after{transform: rotate(0.5turn);}';
 					css += '#CMP_PV #step2 .container .purposes_desc{background: white;position: relative;}';
 					css += '#CMP_PV #step2 .container .vendors li>h4>span{padding: 2px 5px;}';
@@ -380,10 +380,10 @@ var cmp_pv = {
 					css += '#CMP_PV #step2 .container .vendors.pidlit li.pidlit{display: none;}';
 					css += '#CMP_PV .buttons{display:flex;margin-top:10px;}';
 					css += '#CMP_PV .buttons>*{flex:1;}';
-					css += '#CMP_PV .buttons>a{line-height: 27px;}';
+					css += '#CMP_PV .buttons>a{line-height: 40px;}';
 					css += '#CMP_PV .buttons>a:nth-child(2){text-align:center;}';
 					css += '#CMP_PV #step2 .buttons button{font-size: 16px;padding: 5px 15px;}';
-					css += '#CMP_PV #step2 .purposes_desc>h4{display:block;margin:0;padding:5px 0;text-align: center;text-decoration:none;background:#515151;color:#ededed;border-bottom: 3px solid ' + cmp_pv.conf.uiColor + ';}';
+					css += '#CMP_PV #step2 .purposes_desc>h4{display:block;margin:0;padding:5px 0;text-align: center;text-decoration:none;background:#515151;color:#ededed;border-bottom: 3px solid ' + uiColor + ';}';
 					css += '#CMP_PV #step2 .purposes_desc p{padding:10px;white-space: pre-wrap;}';
 					css += '#CMP_PV #step2 .table-header{justify-content: flex-end; width: 64.5%;padding: 3px 0;}';
 					css += '#CMP_PV #step2 .table-header span{font-size: 20px;line-height: 18px;}';
@@ -418,8 +418,8 @@ var cmp_pv = {
 					css += '	#CMP_PV #step2 > .container.showPurposes {transform: translate3d(-46%, 0, 0);}';
 					css += '	#CMP_PV #step2 .desc>div>div{margin-top: 10px;}';
 					css += '	#CMP_PV #step2 .container .purposes li > h4 .title{padding: 8px;}';
-					css += '    #CMP_PV .buttons>a{flex:1 50%;line-height: 42px;}';
-					css += '    #CMP_PV #step1 .buttons > *, #CMP_PV #step2 .buttons{margin: 0;}';
+					css += '    #CMP_PV .buttons>a{flex:1 50%;}';
+					css += '    #CMP_PV #step1 .buttons > *, #CMP_PV #step2 .buttons{margin: 0;border-width: 1px 0;}';
 					css += '    #CMP_PV .buttons>a:first-child{padding-left: 15px;box-sizing: border-box;}';
 					css += '    #CMP_PV .buttons>a:nth-child(2){padding-right: 15px;text-align:right;box-sizing: border-box;}';
 					css += '    #CMP_PV #step2 .table-header{width: 95%;}';
@@ -434,7 +434,7 @@ var cmp_pv = {
 					css += '}';
 					css += '@media screen and (max-height: 770px) {';
 					css += '    #CMP_PV #step2 .container .vendors, #CMP_PV #step2 .container .purposes, #CMP_PV #step2 .container .purposes_desc {height: 272px;}';
-					css += '	#CMP_PV #step1 .desc{max-height: 356px;}';
+					css += '	#CMP_PV #step1 .desc{max-height: 356px;overflow: scroll;}';
 					css += '}';
 					css += '@media screen and (max-height: 650px) {';
 					css += '	#CMP_PV #step1 .desc{max-height: 256px;}';
@@ -462,9 +462,9 @@ var cmp_pv = {
 					var html = '<div id="CMP_PV" data-nosnippet>';
 					html += '<div id="step1">';
 					html += '	<a onclick="cmp_pv.cookie.saveConsent(false);">Continuer sans accepter &rarr;</a>';
-					html += '	<div class="title">Vos choix en matière de cookies</div>';
+					html += '	<div class="title">Gérer mes cookies</div>';
 					html += '	<div class="desc">';
-					html += '		<p><a onclick="cmp_pv.ui.showVendors()">Nos partenaires</a> et nous-mêmes utilisons différentes technologies, telles que les cookies, qui nous permettent d\'accéder a votre historique de navigation, votre IP, etc., pour personnaliser les contenus et les publicités, proposer des fonctionnalités sur les réseaux sociaux et analyser le trafic. Merci de cliquer sur le bouton ci-dessous pour donner votre accord. Vous pouvez changer d\'avis et modifier vos choix à tout moment. Le fait de ne pas consentir ne vous empêchera pas d\'accèder à notre service. <a onclick="cmp_pv.ui.showPurposes();">Afficher les utilisations prévues et les accepter ou les refuser</a>.</p>';
+					html += '		<p><a onclick="cmp_pv.ui.showVendors()">Nos partenaires</a> et nous-mêmes utilisons différentes technologies, telles que les cookies, qui nous permettent d\'accéder a votre historique de navigation, votre IP, etc., pour personnaliser les contenus et les publicités, proposer des fonctionnalités sur les réseaux sociaux et analyser le trafic. Vous pouvez aussi consulter <a href="' + cmp_pv.conf.urlCookiesUsage + '" target="_blank">notre politique de cookies</a> pour plus d\'informations. Merci de cliquer sur le bouton ci-dessous pour donner votre accord. Vous pouvez changer d\'avis et modifier vos choix à tout moment. Le fait de ne pas consentir ne vous empêchera pas d\'accèder à notre service.</p>';
 					html += '		<p>Exemples d\'usages : ';
 					for (var key in cmp_pv.conf.firstScreenPurposes) {
 						for (i in cmp_pv.conf.firstScreenPurposes[key]) {
@@ -475,12 +475,12 @@ var cmp_pv = {
 						}
 					}
 					html += '		</p>';
-					html += '		<p>Certains de nos partenaires ne demandent pas votre consentement pour traiter vos données, et se basent à la place sur leur intérêt légitime pour le faire. Vous pouvez consulter la liste de ces partenaires, les usages pour lesquels ils traitent vos données et vous y opposer en <a onclick="cmp_pv.ui.showVendorsPurpose(\'LIT\', \'\')">cliquant ici</a>. <br/> Vos choix ne s\'appliqueront sur que les sites du groupe Paruvendu.fr.</p>';
-					html += '		<p>Nous vous invitons à consulter <a href="' + cmp_pv.conf.urlCookiesUsage + '" target="_blank">notre politique de cookies</a>, laquelle décrit comment fonctionnent les cookies susceptibles d’être déposés sur votre appareil.</p>';
+					html += '		<p>Certains de nos partenaires ne demandent pas votre consentement pour traiter vos données, et se basent à la place sur leur intérêt légitime pour le faire. Vous pouvez consulter la liste de ces partenaires, les usages pour lesquels ils traitent vos données et vous y opposer en <a onclick="cmp_pv.ui.showVendorsPurpose(\'LIT\', \'\')">cliquant ici</a>.</p>';
+					html += '		<p>Vos choix ne s\'appliqueront que sur les sites du groupe Paruvendu.fr.</p>';
 					html += '	</div>';
 					html += '	<div class="container buttons">';
-					html += '		<a onclick="cmp_pv.ui.showVendors()">Paramétrer</a>';
-					html += '		<button class="validate" onclick="cmp_pv.cookie.saveConsent(true);">Accepter et Fermer</button>';
+					html += '		<button class="inverse" onclick="cmp_pv.ui.showVendors()">Paramétrer</button>';
+					html += '		<button onclick="cmp_pv.cookie.saveConsent(true);">Accepter et Fermer</button>';
 					html += '	</div>';
 					html += '</div>';
 					html += '<div id="step2" style="display: none;">';
