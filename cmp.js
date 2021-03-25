@@ -90,6 +90,9 @@ var cmp_pv = {
 					// Ask consent every X days if purpose 1 is false
 					else if (!cmp_pv.consentString.data.coreString.purposesConsent[1] && lastVerification > cmp_pv.conf.dayCheckNok) {
 						cmp_pv.ui.show(true);
+
+						// Update checked time
+						cmp_pv.cookie.saveVerification(cmp_pv.cookie.vendorCookieName);
 					} else {
 						// Fire tcloaded event
 						cmp_pv.event.send('tcloaded');
