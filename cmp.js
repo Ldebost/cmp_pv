@@ -45,7 +45,8 @@ var cmp_pv = {
 		publisherName: 'ParuVendu.fr',
 		urlVendorList: 'https://media.paruvendu.fr/vendor-list-v2.json?[RND]',
 		urlCookiesUsage: 'https://www.paruvendu.fr/communfo/defaultcommunfo/defaultcommunfo/infosLegales#cookies',
-		dayCheckInterval: 5,
+		dayCheckUpdate: 5,
+		dayCheckNok: 15,
 		globalConsentLocation: 'https://paruvendu.mgr.consensu.org/portal.html',
 		firstScreenPurposes: {
 			"purposes": [1, 3],
@@ -75,7 +76,8 @@ var cmp_pv = {
 					cmp_pv.cmpReady = true;
 					cmp_pv.processCommandQueue();
 					// Ask consent every X days if globalVendorList.version has changed
-					if (parseInt((new Date() - cmp_pv.cookie.lastVerification(cmp_pv.cookie.vendorCookieName)) / (24 * 3600 * 1000)) >= cmp_pv.conf.dayCheckInterval) {
+					var lastVerification = parseInt((new Date() - cmp_pv.cookie.lastVerification(cmp_pv.cookie.vendorCookieName)) / (24 * 3600 * 1000));
+					if (lastVerification >= cmp_pv.conf.dayCheckInterval) {
 						cmp_pv._fetchGlobalVendorList(function () {
 							if (cmp_pv.globalVendorList.vendorListVersion !== cmp_pv.consentString.data.coreString.vendorListVersion) {
 								cmp_pv.ui.show(true);
@@ -84,6 +86,10 @@ var cmp_pv = {
 
 						// Update checked time
 						cmp_pv.cookie.saveVerification(cmp_pv.cookie.vendorCookieName);
+					} 
+					// Ask consent every X days if purpose 1 is false
+					else if (!cmp_pv.consentString.data.coreString.purposesConsent[1] && lastVerification > cmp_pv.conf.dayCheckNok) {
+						cmp_pv.ui.show(true);
 					} else {
 						// Fire tcloaded event
 						cmp_pv.event.send('tcloaded');
@@ -371,13 +377,6 @@ var cmp_pv = {
 					css += '#CMP_PV #step2 .container .vendors li>h4{height: 30px;}';
 					css += '#CMP_PV #step2 .container .vendors li>h4 .arrow::after{height: 20px;font-size:16px;}';
 					css += '#CMP_PV #step2 .container .purposes_desc>div{position: absolute;top: 30px;left: 0;right: 0;bottom: 0;overflow: auto;margin: 0;}';
-					for (var i = 1; i < 11; i++) {
-						css += '#CMP_PV #step2 .container .vendors.pid' + i + ' li:not(.pid' + i + '){display: none;}';
-						css += '#CMP_PV #step2 .container .vendors.pidlit' + i + ' li:not(.pidlit' + i + '){display: none;}';
-					}
-					css += '#CMP_PV #step2 .container .vendors.pids1 li:not(.pids1){display: none;}#CMP_PV #step2 .container .vendors.pids2 li:not(.pids2){display: none;}';
-					css += '#CMP_PV #step2 .container .vendors.pidf1 li:not(.pidf1){display: none;}#CMP_PV #step2 .container .vendors.pidf2 li:not(.pidf2){display: none;}#CMP_PV #step2 .container .vendors.pidf3 li:not(.pidf3){display: none;}';
-					css += '#CMP_PV #step2 .container .vendors.pidlit li.pidlit{display: none;}';
 					css += '#CMP_PV .buttons{display:flex;margin-top:10px;}';
 					css += '#CMP_PV .buttons>*{flex:1;}';
 					css += '#CMP_PV .buttons>a{line-height: 40px;}';
@@ -467,7 +466,7 @@ var cmp_pv = {
 					html += '		<p><a onclick="cmp_pv.ui.showVendors()">Nos partenaires</a> et nous-mêmes utilisons différentes technologies, telles que les cookies, qui nous permettent d\'accéder a votre historique de navigation, votre IP, etc., pour personnaliser les contenus et les publicités, proposer des fonctionnalités sur les réseaux sociaux et analyser le trafic. Vous pouvez consulter <a href="' + cmp_pv.conf.urlCookiesUsage + '" target="_blank">notre politique de cookies</a> pour plus d\'informations. Merci de cliquer sur le bouton ci-dessous pour donner votre accord. Vous pouvez changer d\'avis et modifier vos choix à tout moment. Le fait de ne pas consentir ne vous empêchera pas d\'accèder à notre service.</p>';
 					html += '		<p>Exemples d\'usages : ';
 					for (var key in cmp_pv.conf.firstScreenPurposes) {
-						for (i in cmp_pv.conf.firstScreenPurposes[key]) {
+						for (var i in cmp_pv.conf.firstScreenPurposes[key]) {
 							if (cmp_pv.ui.language['fr'].hasOwnProperty(key)) {
 								var purpose = cmp_pv.ui.language['fr'][key][cmp_pv.conf.firstScreenPurposes[key][i]];
 								if (purpose) html += '<i>' + purpose.name + '. </i>';
@@ -475,11 +474,11 @@ var cmp_pv = {
 						}
 					}
 					html += '		</p>';
-					html += '		<p>Certains de nos partenaires ne demandent pas votre consentement pour traiter vos données, et se basent à la place sur leur intérêt légitime pour le faire. Vous pouvez consulter la liste de ces partenaires, les usages pour lesquels ils traitent vos données et vous y opposer en <a onclick="cmp_pv.ui.showVendorsPurpose(\'LIT\', \'\')">cliquant ici</a>.</p>';
+					html += '		<p>Certains de nos partenaires ne demandent pas votre consentement pour traiter vos données, et se basent à la place sur leur intérêt légitime pour le faire. Vous pouvez consulter la liste de ces partenaires, les usages pour lesquels ils traitent vos données et vous y opposer en <a onclick="cmp_pv.ui.showVendorsPurpose(\'legIntPurposes\', \'\')">cliquant ici</a>.</p>';
 					html += '		<p>Vos choix ne s\'appliqueront que sur les sites du groupe Paruvendu.fr.</p>';
 					html += '	</div>';
 					html += '	<div class="container buttons">';
-					html += '		<button class="inverse" onclick="cmp_pv.ui.showVendors()">Paramétrer</button>';
+					html += '		<button class="inverse" onclick="cmp_pv.ui.showPurposes()">Paramétrer</button>';
 					html += '		<button onclick="cmp_pv.cookie.saveConsent(true);">Accepter et Fermer</button>';
 					html += '	</div>';
 					html += '</div>';
@@ -492,7 +491,7 @@ var cmp_pv = {
 					html += '				<button onclick="cmp_pv.ui.switchAllPurposes(true);">Tout accepter</button>';
 					html += '			</div>';
 					html += '		</div>';
-					html += '		<div><a href="javascript:cmp_pv.ui.showVendorsPurpose();">&lsaquo; Retour</a><p></p><label class="switch"><input type="checkbox"><span class="slider"></span></label></div>';
+					html += '		<div><p></p><label class="switch"><input type="checkbox"><span class="slider"></span></label></div>';
 					html += '		<div class="table-header">Intérêts <br/>Légitimes <span>&#8628;</span><span>&#8628;</span> Consen<br/>tement</div>';
 					html += '	</div>';
 					html += '	<div class="container" id="purposes">';
@@ -563,7 +562,6 @@ var cmp_pv = {
 
 					// Select first
 					cmp_pv.ui.showPurposeDescription('purposes', 1);
-					cmp_pv.ui.showVendorDescription(cmp_pv.globalVendorList.vendorsOrder[0], 0);
 
 					// Fire cmpuishown event
 					cmp_pv.event.send('cmpuishown');
@@ -632,28 +630,30 @@ var cmp_pv = {
 				var s = '';
 				if (field === 'specialFeatures') {
 					s = 's';
-				} else if (field === 'LIT') {
+				} else if (field === 'legIntPurposes') {
 					f = "purposes";
 					s = 'lit';
 				} else if (field === 'features') {
 					s = 'f';
 				}
-				el2.children[0].className = 'purposes vendors pid' + s + purpose;
 				el2.children[0].scrollTop = 0;
 				step.children[0].className += ' liste';
-				step.children[0].children[1].children[1].innerText = (purpose === '' && field === 'LIT') ? 'Partenaires utilisant les traitements de données basés sur l\'intérêt légitime' : ((field === 'LIT') ? 'Intérêt légitime : ' : '') + cmp_pv.ui.language['fr'][f][purpose].name;
-				step.children[3].style.display = 'none';
-				step.children[0].children[1].children[2].style.display = (field === 'features') ? 'none' : 'inline-block';
-				step.children[0].children[1].children[2].className = (s === 'lit') ? 'switch switchLI' : 'switch';
-				step.children[0].children[1].children[2].children[0].onchange = function () {
-					cmp_pv.ui.switchPurposeUI(field, this.checked, purpose);
+				step.children[0].children[1].children[0].innerText = (purpose === '' && field === 'legIntPurposes') ? 'Partenaires utilisant les traitements de données basés sur l\'intérêt légitime' : ((field === 'legIntPurposes') ? 'Intérêt légitime : ' : '') + cmp_pv.ui.language['fr'][f][purpose].name;
+				step.children[0].children[1].children[1].style.display = (field === 'features') ? 'none' : 'inline-block';
+				step.children[0].children[1].children[1].className = (s === 'lit') ? 'switch switchLI' : 'switch';
+				step.children[0].children[1].children[1].children[0].onchange = function () {
+					cmp_pv.ui.switchPurposeUI(field, purpose, this.checked);
 				};
-				step.children[0].children[1].children[2].children[0].checked = (purpose === '') ? true : document.querySelector('#purpose_' + purpose + ' .switch' + ((s === 'lit') ? '.switchLI' : ':not(.switchLI)') + ' input').checked;
-				document.querySelector('#vendors ul li.pid' + s + purpose + ' span').onclick();
+				step.children[0].children[1].children[1].children[0].checked = (purpose === '') ? true : document.querySelector('#purpose_' + purpose + ' .switch' + ((s === 'lit') ? '.switchLI' : ':not(.switchLI)') + ' input').checked;
+				step.children[3].children[0].setAttribute('href', 'javascript:cmp_pv.ui.showVendorsPurpose();');
+				step.children[3].children[1].style.display = 'none';
+				this.virtualList.filter(field, purpose);
 			} else {
 				el2.children[0].className = 'purposes vendors';
 				step.children[0].className = step.children[0].className.replace(' liste', '');
-				step.children[3].style.display = '';
+				step.children[3].children[0].setAttribute('href', 'javascript:cmp_pv.ui.showStep(1);');
+				step.children[3].children[1].style.display = '';
+				if(el2.style.display === 'flex') this.virtualList.filter();
 			}
 			document.getElementById('link_vendors').innerText = (el.style.display === 'none') ? 'Voir nos partenaires' : 'Voir les utilisations';
 			el.style.display = (el.style.display === 'none') ? 'flex' : 'none';
@@ -665,12 +665,12 @@ var cmp_pv = {
 			if (field === 'specialFeatures') id = 's';
 			else if (field === 'features') id = 'f';
 			document.getElementById('purpose_' + id + purpose).className = 'active';
-			document.getElementById('purpose_desc').innerHTML = "<p>" + cmp_pv.ui.language['fr'][field][purpose].description + "</p><p>" + cmp_pv.ui.language['fr'][field][purpose].descriptionLegal.replace(/Les partenaires peuvent :/i, 'Nos partenaires et nous-mêmes pouvons :') + "</p><a onclick='cmp_pv.ui.showVendorsPurpose(\"" + field + "\", " + purpose + ")'>Voir la liste</a>" + ((purpose > 1 && field === "purposes") ? "<br/><a onclick='cmp_pv.ui.showVendorsPurpose(\"LIT\", " + purpose + ")'>Voir la liste intérêt légitime</a>" : "");
+			document.getElementById('purpose_desc').innerHTML = "<p>" + cmp_pv.ui.language['fr'][field][purpose].description + "</p><p>" + cmp_pv.ui.language['fr'][field][purpose].descriptionLegal.replace(/Les partenaires peuvent :/i, 'Nos partenaires et nous-mêmes pouvons :') + "</p><a onclick='cmp_pv.ui.showVendorsPurpose(\"" + field + "\", " + purpose + ")'>Voir la liste</a>" + ((purpose > 1 && field === "purposes") ? "<br/><a onclick='cmp_pv.ui.showVendorsPurpose(\"legIntPurposes\", " + purpose + ")'>Voir la liste intérêt légitime</a>" : "");
 			if (arrow === true) {
 				this.arrow('purposes');
 			}
 		},
-		showVendorDescription: function (id, i, f, arrow) {
+		showVendorDescription: function (i, f, arrow) {
 			var active = document.querySelector('.vendors li.active');
 			if (active != null) active.className = active.className.replace(' active', '');
 			document.querySelector('.vendors li:nth-of-type(' + (i + 1) + ')').className += ' active';
@@ -678,14 +678,14 @@ var cmp_pv = {
 			/*if (f === 'specific') {
 				vendor = cmp_pv.pubvendor[id];
 			} else {*/
-			vendor = cmp_pv.globalVendorList.vendors[id];
+			vendor = cmp_pv.ui.virtualList.items[i];
 			//}
 			if (typeof vendor == 'undefined') return;
 			var html = '<h2>' + vendor.name + '</h2><a href="' + vendor.policyUrl + '" target="_blank">Politique de confidentialité</a><br/>';
 			var y = 0;
 			var fields = ['purposes', 'legIntPurposes', 'specialPurposes', 'features', 'specialFeatures'];
-			for (i in fields) {
-				var field = fields[i];
+			for (var z in fields) {
+				var field = fields[z];
 				if (!vendor.hasOwnProperty(field)) continue;
 				if (vendor[field].length > 0) {
 					var lang;
@@ -722,7 +722,7 @@ var cmp_pv = {
 			if (arrow === true) {
 				this.arrow('vendors');
 			}
-			this.virtualList.active = id;
+			this.virtualList.active = vendor.id;
 		},
 		readableTime: function (seconds) {
 			if (seconds === null || seconds === -100) return "les cookies ne sont pas utilisés";
@@ -781,10 +781,17 @@ var cmp_pv = {
 			cmp_pv.consentString.data.publisherTC['pub' + field[0].toUpperCase() + field.slice(1)][purpose] = checked;
 			var lit = field === 'purposesLITransparency';
 			var matches = document.querySelectorAll("#vendors .pid" + (lit ? 'lit' : '') + purpose + " .switch" + (lit ? '.switchLI' : ':not(.switchLI)') + " input");
-			var vendorField = lit ? 'vendorLegitimateInterest' : 'vendorConsent';
 			for (var i = 0; i < matches.length; i++) {
-				cmp_pv.consentString.data.coreString[vendorField].bitField[matches[i].value] = checked;
 				matches[i].checked = checked;
+			}
+			var vendor;
+			var vendorField = lit ? 'legIntPurposes' : 'purposes';
+			var cmpField = lit ? 'vendorLegitimateInterest' : 'vendorConsent';
+			for (i = 0; i < cmp_pv.globalVendorList.vendors.length; i++) {
+				vendor = cmp_pv.globalVendorList.vendors[i];
+				if (vendor[vendorField].indexOf(purpose) !== -1) {
+					cmp_pv.consentString.data.coreString[cmpField].bitField[vendor.id] = checked;
+				}
 			}
 		},
 		switchAllPurposes: function (checked) {
@@ -803,33 +810,22 @@ var cmp_pv = {
 		switchGoogleVendor: function (vendor, checked) {
 			cmp_pv.consentString.data.googleAC[vendor] = checked;
 		},
-		switchPurposeUI: function (field, checked, purpose) {
+		switchPurposeUI: function (field, purpose, checked) {
 			var s = '';
-			var v = '';
-			var lit = field === 'LIT';
-			var vendorField = lit ? 'vendorLegitimateInterest' : 'vendorConsent';
-
+			var lit = field === 'legIntPurposes';
+			var purposeField = lit ? 'purposesLITransparency' : 'purposesConsent';
 			if (typeof purpose !== 'undefined') {
-				v = '.pid';
 				s = '#purpose_';
 				if (field === 'specialFeatures') {
-					v += 's';
 					s += 's';
-				} else if (lit) {
-					v += 'lit';
 				}
-				v += purpose;
 				s += purpose;
 			}
-			var matches = document.querySelectorAll("#vendors " + v + " .switch" + (lit ? '.switchLI' : ':not(.switchLI)') + " input");
+			var matches = document.querySelectorAll("#purposes " + s + " .switch" + (lit ? '.switchLI' : ':not(.switchLI)') + " input");
 			for (var i = 0; i < matches.length; i++) {
-				cmp_pv.consentString.data.coreString[vendorField].bitField[matches[i].value] = checked;
 				matches[i].checked = checked;
 			}
-			matches = document.querySelectorAll("#purposes " + s + " .switch" + (lit ? '.switchLI' : ':not(.switchLI)') + " input");
-			for (i = 0; i < matches.length; i++) {
-				matches[i].checked = checked;
-			}
+			this.switchPurpose(purposeField, purpose, checked);
 		},
 		detectIE: function () {
 			var ua = window.navigator.userAgent;
@@ -847,8 +843,12 @@ var cmp_pv = {
 			return /iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
 		},
 		sortVendors: function () {
-			cmp_pv.globalVendorList.vendorsOrder = Object.keys(cmp_pv.globalVendorList.vendors).sort(function (a, b) {
-				if (cmp_pv.globalVendorList.vendors[a].name.toLowerCase() < cmp_pv.globalVendorList.vendors[b].name.toLowerCase()) {
+			var vendors = [];
+			for (var i in cmp_pv.globalVendorList.vendors) {
+				vendors.push(cmp_pv.globalVendorList.vendors[i]);
+			}
+			cmp_pv.globalVendorList.vendors = vendors.sort(function (a, b) {
+				if (a.name.toLowerCase() < b.name.toLowerCase()) {
 					return -1;
 				} else {
 					return 1;
@@ -874,7 +874,7 @@ var cmp_pv = {
 			);
 		},
 		virtualList: {
-			itemHeight: 31,
+			itemHeight: 33,
 			container: null,
 			lastRepaintY: null,
 			screenItemsLen: null,
@@ -882,19 +882,19 @@ var cmp_pv = {
 			maxBuffer: null,
 			totalRows: 0,
 			active: null,
+			items: [],
 
 			init: function () {
-				this.totalRows = cmp_pv.globalVendorList.vendorsOrder.length/* + cmp_pv.pubvendorOrder.length*/;
-				if (cmp_pv.conf.googleAC) this.totalRows += cmp_pv.googleACList.length;
-				var container = this.createContainer(this.totalRows * this.itemHeight);
-				this.screenItemsLen = 15;
+				this.filter();
+				var container = this.createContainer();
+				this.screenItemsLen = 11;
 				this.cachedItemsLen = this.screenItemsLen * 3;
 				this.maxBuffer = this.screenItemsLen * this.itemHeight;
 				this.renderChunk(0, this.cachedItemsLen);
 				return container;
 			},
 
-			createContainer: function (h) {
+			createContainer: function () {
 				var c = document.createElement("div");
 				c.style.height = '100%';
 				c.style.overflow = "auto";
@@ -906,7 +906,7 @@ var cmp_pv = {
 				});
 				var v = document.createElement("div");
 				v.style.overflow = "hidden";
-				v.style.height = h + "px";
+				v.style.height = (this.totalRows * this.itemHeight) + "px";
 				v.style.position = "relative";
 				var t = document.createElement("ul");
 				t.style.willChange = "transform";
@@ -925,7 +925,7 @@ var cmp_pv = {
 
 				for (var i = fromPos; i < finalItem; i++) {
 					item = document.createElement("li");
-					y = i - cmp_pv.globalVendorList.vendorsOrder.length;
+					y = i - cmp_pv.globalVendorList.vendors.length;
 					y2 = y /*- cmp_pv.pubvendorOrder.length*/;
 					if (y2 >= 0) {
 						y = y2;
@@ -943,7 +943,7 @@ var cmp_pv = {
 						html += '	<label class="switch"><input type="checkbox" value="" ' + ((cmp_pv.consentString.data.googleAC[vendor[0]]) ? 'checked' : '') + ' onchange="cmp_pv.ui.switchGoogleVendor(' + vendor[0] + ', this.checked);"><span class="slider"></span></label>';
 						html += '	<span class="arrow" onclick="cmp_pv.ui.showGoogleVendorDescription(' + y + ',' + (i - fromPos + i2) + ', true);"></span>';
 						html += '</h4>';
-						item.className = (this.active === 'G' + y) ? ' active' : '';
+						if (this.active === 'G' + y) item.className = 'active';
 					} else {
 						if (y === 0) {
 							item2 = document.createElement("li");
@@ -957,14 +957,14 @@ var cmp_pv = {
 							vendor = cmp_pv.pubvendor[cmp_pv.pubvendorOrder[y]];
 							field = 'specific';
 						} else {*/
-						vendor = cmp_pv.globalVendorList.vendors[cmp_pv.globalVendorList.vendorsOrder[i]];
+						vendor = this.items[i];
 						field = 'coreString';
 						//}
 						html = '<h4>';
-						html += '	<span onclick="cmp_pv.ui.showVendorDescription(' + vendor.id + ',' + (i - fromPos + i2) + ', \'' + field + '\');">' + vendor.name + '</span>';
+						html += '	<span onclick="cmp_pv.ui.showVendorDescription(' + (i - fromPos + i2) + ', \'' + field + '\');">' + vendor.name + '</span>';
 						if (vendor.legIntPurposes.length > 0) html += '<label class="switch switchLI"><input type="checkbox" value="' + vendor.id + '" ' + ((cmp_pv.consentString.data[field].vendorLegitimateInterest.bitField[vendor.id]) ? 'checked' : '') + ' onchange="cmp_pv.ui.switchVendor(\'vendorLegitimateInterest\', ' + vendor.id + ', \'' + field + '\', this.checked);"><span class="slider"></span></label>';
 						html += '	<label class="switch"><input type="checkbox" value="' + vendor.id + '" ' + ((cmp_pv.consentString.data[field].vendorConsent.bitField[vendor.id]) ? 'checked' : '') + ' onchange="cmp_pv.ui.switchVendor(\'vendorConsent\', ' + vendor.id + ', \'' + field + '\', this.checked);"><span class="slider"></span></label>';
-						html += '	<span class="arrow" onclick="cmp_pv.ui.showVendorDescription(' + vendor.id + ',' + (i - fromPos + i2) + ', \'' + field + '\', true);"></span>';
+						html += '	<span class="arrow" onclick="cmp_pv.ui.showVendorDescription(' + (i - fromPos + i2) + ', \'' + field + '\', true);"></span>';
 						html += '</h4>';
 						item.className = 'pid' + vendor.purposes.join(' pid') + ' pidlit' + vendor.legIntPurposes.join(' pidlit') + ' pids' + vendor.specialFeatures.join(' pids') + ' pidf' + vendor.features.join(' pidf') + ((this.active === vendor.id) ? ' active' : '');
 					}
@@ -986,6 +986,24 @@ var cmp_pv = {
 				}
 
 				e.preventDefault && e.preventDefault();
+			},
+
+			filter: function (field, purpose) {
+				if (typeof field == 'undefined') {
+					this.items = cmp_pv.globalVendorList.vendors/* + cmp_pv.pubvendorOrder*/;
+				} else {
+					this.items = cmp_pv.globalVendorList.vendors.filter(function (el) {
+						return el[field].indexOf(purpose) > -1;
+					});
+				}
+				this.totalRows = this.items.length;
+				this.active = this.items[0].id;
+				if (typeof field == 'undefined' && cmp_pv.conf.googleAC) this.totalRows += cmp_pv.googleACList.length;
+				if (this.container) {
+					this.container.parentNode.style.height = (this.totalRows * this.itemHeight) + "px";
+					this.renderChunk(0, this.cachedItemsLen);
+					cmp_pv.ui.showVendorDescription(0);
+				}
 			}
 		},
 		/*acceptOnEvent: function () {
@@ -1661,7 +1679,7 @@ var cmp_pv = {
 				{
 					name: 'maxVendorId', type: 'int', numBits: 16,
 					default: function () {
-						return parseInt(Object.keys(cmp_pv.globalVendorList.vendors).pop());
+						return parseInt(cmp_pv.globalVendorList.vendors.pop().id);
 					}
 				},
 				{name: 'isRangeEncoding', type: 'int', numBits: 1, default: 0},
