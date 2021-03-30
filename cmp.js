@@ -318,7 +318,7 @@ var cmp_pv = {
 
 					var css = '';
 					css += '.cmpcontainer {position: fixed; top:0; bottom: 0; left: 0; right: 0; z-index: 100000; background: rgba(33,41,52,.66);}';
-					css += '#CMP_PV {background: #fff; padding: 15px;font-family:Tahoma, Geneva, sans-serif; font-size: 14px;box-shadow: 0 0 5px #000000a1;box-sizing: border-box;max-width: 1030px;margin: auto;min-width: 320px;border-radius: 2px;margin-top: 50vh;transform: translateY(-50%);width: 90%;}';
+					css += '#CMP_PV {background: #fff; padding: 15px;font-family:sans-serif; font-size: 14px;box-shadow: 0 0 5px #000000a1;box-sizing: border-box;max-width: 1030px;margin: auto;min-width: 320px;border-radius: 2px;margin-top: 50vh;transform: translateY(-50%);width: 90%;}';
 					css += '#CMP_PV h2{font-size: initial;}';
 					css += '#CMP_PV h3{margin:16px 0;}';
 					css += '#CMP_PV p{margin:0;}';
@@ -341,7 +341,7 @@ var cmp_pv = {
 					css += '#CMP_PV input:checked + .slider:before {transform: translateX(22px);border-color:#7BAA44;}';
 					css += '#CMP_PV #step1 .title{color: #111;font-weight: bold;text-align: center;font-size:16px;padding: 10px;text-shadow: 0 1px 2px rgba(0, 0, 0, 0.39);}';
 					css += '#CMP_PV #step1 .buttons{margin:38px 0 10px 0;}';
-					css += '#CMP_PV #step1 > a{color: #a5a4a4;display: block;text-align: right;padding-right: 15px;}';
+					css += '#CMP_PV #step1 > a{display: block;text-align: right;padding-right: 15px;font-size: 16px;font-weight: bold;}';
 					css += '#CMP_PV #step1 .buttons > *{min-width: 210px; font-size: 16px;margin: 0 15px;text-align:center;}';
 					css += '#CMP_PV #step1 .buttons > a{line-height: 43px;}';
 					css += '#CMP_PV #step1 .desc>p{font-size: 15px;padding: 5px 15px;text-align:justify;line-height: 20px;color: #5d5d5d;}';
