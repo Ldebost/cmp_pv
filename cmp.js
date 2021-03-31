@@ -77,7 +77,7 @@ var cmp_pv = {
 					cmp_pv.processCommandQueue();
 					// Ask consent every X days if globalVendorList.version has changed
 					var lastVerification = parseInt((new Date() - cmp_pv.cookie.lastVerification(cmp_pv.cookie.vendorCookieName)) / (24 * 3600 * 1000));
-					if (lastVerification >= cmp_pv.conf.dayCheckInterval) {
+					if (lastVerification >= cmp_pv.conf.dayCheckUpdate) {
 						cmp_pv._fetchGlobalVendorList(function () {
 							if (cmp_pv.globalVendorList.vendorListVersion !== cmp_pv.consentString.data.coreString.vendorListVersion) {
 								cmp_pv.ui.show(true);
@@ -86,14 +86,19 @@ var cmp_pv = {
 
 						// Update checked time
 						cmp_pv.cookie.saveVerification(cmp_pv.cookie.vendorCookieName);
-					} 
+					}
 					// Ask consent every X days if purpose 1 is false
 					else if (!cmp_pv.consentString.data.coreString.purposesConsent[1] && lastVerification > cmp_pv.conf.dayCheckNok) {
 						cmp_pv.ui.show(true);
 
 						// Update checked time
 						cmp_pv.cookie.saveVerification(cmp_pv.cookie.vendorCookieName);
-					} else {
+					}
+						// Bug
+					/*else if (cmp_pv.consentString.data.coreString.vendorLegitimateInterest.maxVendorId < 900) {
+						cmp_pv.ui.show(true);
+					}*/
+					else {
 						// Fire tcloaded event
 						cmp_pv.event.send('tcloaded');
 					}
@@ -341,7 +346,7 @@ var cmp_pv = {
 					css += '#CMP_PV input:checked + .slider:before {transform: translateX(22px);border-color:#7BAA44;}';
 					css += '#CMP_PV #step1 .title{color: #111;font-weight: bold;text-align: center;font-size:16px;padding: 10px;text-shadow: 0 1px 2px rgba(0, 0, 0, 0.39);}';
 					css += '#CMP_PV #step1 .buttons{margin:38px 0 10px 0;}';
-					css += '#CMP_PV #step1 > a{display: block;text-align: right;padding-right: 15px;font-size: 16px;font-weight: bold;}';
+					css += '#CMP_PV #step1 > a{display: block;padding-left: 15px;font-size: 16px;font-weight: bold;text-decoration: none;text-align:left;}';
 					css += '#CMP_PV #step1 .buttons > *{min-width: 210px; font-size: 16px;margin: 0 15px;text-align:center;}';
 					css += '#CMP_PV #step1 .buttons > a{line-height: 43px;}';
 					css += '#CMP_PV #step1 .desc>p{font-size: 15px;padding: 5px 15px;text-align:justify;line-height: 20px;color: #5d5d5d;}';
@@ -405,7 +410,7 @@ var cmp_pv = {
 					css += '    #CMP_PV .buttons{flex-direction: column;margin-bottom: 10px;}';
 					css += '    #CMP_PV #step1 .buttons{margin:0;border-top:1px solid #bbbbbb;}';
 					css += '    #CMP_PV #step1 .title{padding: 15px 20px; font-size: 18px;}';
-					css += '	#CMP_PV #step1 > a{padding: 10px 15px 0 0;}';
+					css += '	#CMP_PV #step1 > a{padding: 10px 10px 10px 24px;}';
 					css += '	#CMP_PV #step2{overflow: hidden;}';
 					css += '	#CMP_PV #step2 .desc>div:first-child{flex-flow: column;justify-content: space-evenly;}';
 					css += '	#CMP_PV #step2 .desc{align-items: initial;margin-top: 0;}';
@@ -463,7 +468,6 @@ var cmp_pv = {
 					}
 					var html = '<div id="CMP_PV" data-nosnippet>';
 					html += '<div id="step1">';
-					html += '	<a onclick="cmp_pv.cookie.saveConsent(false);">Continuer sans accepter &rarr;</a>';
 					html += '	<div class="title">Gérer mes cookies</div>';
 					html += '	<div class="desc">';
 					html += '		<p><a onclick="cmp_pv.ui.showVendors()">Nos partenaires</a> et nous-mêmes utilisons différentes technologies, telles que les cookies, qui nous permettent d\'accéder a votre historique de navigation, votre IP, etc., pour personnaliser les contenus et les publicités, proposer des fonctionnalités sur les réseaux sociaux et analyser le trafic. Vous pouvez consulter <a href="' + cmp_pv.conf.urlCookiesUsage + '" target="_blank">notre politique de cookies</a> pour plus d\'informations. Merci de cliquer sur le bouton ci-dessous pour donner votre accord. Vous pouvez changer d\'avis et modifier vos choix à tout moment. Le fait de ne pas consentir ne vous empêchera pas d\'accèder à notre service.</p>';
@@ -480,6 +484,7 @@ var cmp_pv = {
 					html += '		<p>Certains de nos partenaires ne demandent pas votre consentement pour traiter vos données, et se basent à la place sur leur intérêt légitime pour le faire. Vous pouvez consulter la liste de ces partenaires, les usages pour lesquels ils traitent vos données et vous y opposer en <a onclick="cmp_pv.ui.showVendorsPurpose(\'legIntPurposes\', \'\')">cliquant ici</a>.</p>';
 					html += '		<p>Vos choix ne s\'appliqueront que sur les sites du groupe Paruvendu.fr.</p>';
 					html += '	</div>';
+					html += '	<a onclick="cmp_pv.cookie.saveConsent(false);">Continuer sans accepter</a>';
 					html += '	<div class="container buttons">';
 					html += '		<button class="inverse" onclick="cmp_pv.ui.showPurposes()">Paramétrer</button>';
 					html += '		<button onclick="cmp_pv.cookie.saveConsent(true);">Accepter et Fermer</button>';
@@ -656,7 +661,7 @@ var cmp_pv = {
 				step.children[0].className = step.children[0].className.replace(' liste', '');
 				step.children[3].children[0].setAttribute('href', 'javascript:cmp_pv.ui.showStep(1);');
 				step.children[3].children[1].style.display = '';
-				if(el2.style.display === 'flex') this.virtualList.filter();
+				if (el2.style.display === 'flex') this.virtualList.filter();
 			}
 			document.getElementById('link_vendors').innerText = (el.style.display === 'none') ? 'Voir nos partenaires' : 'Voir les utilisations';
 			el.style.display = (el.style.display === 'none') ? 'flex' : 'none';
@@ -847,9 +852,12 @@ var cmp_pv = {
 		},
 		sortVendors: function () {
 			var vendors = [];
+			var maxId = 0;
 			for (var i in cmp_pv.globalVendorList.vendors) {
+				if (cmp_pv.globalVendorList.vendors[i].id > maxId) maxId = cmp_pv.globalVendorList.vendors[i].id;
 				vendors.push(cmp_pv.globalVendorList.vendors[i]);
 			}
+			cmp_pv.consentString.data.maxVendorId = maxId;
 			cmp_pv.globalVendorList.vendors = vendors.sort(function (a, b) {
 				if (a.name.toLowerCase() < b.name.toLowerCase()) {
 					return -1;
@@ -857,6 +865,7 @@ var cmp_pv = {
 					return 1;
 				}
 			});
+
 		},
 		arrow: function (id) {
 			var container = document.getElementById(id);
@@ -1682,7 +1691,7 @@ var cmp_pv = {
 				{
 					name: 'maxVendorId', type: 'int', numBits: 16,
 					default: function () {
-						return parseInt(cmp_pv.globalVendorList.vendors.pop().id);
+						return cmp_pv.consentString.data.maxVendorId;
 					}
 				},
 				{name: 'isRangeEncoding', type: 'int', numBits: 1, default: 0},
