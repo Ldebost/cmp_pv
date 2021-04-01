@@ -1831,7 +1831,7 @@ var cmp_pv = {
 				string += '.' + this.encodeBase64UrlSafe(inputBits);
 			}
 
-			this.data.tcString = string.substr(0, string.lastIndexOf('.'));
+			this.data.tcString = string/*.substr(0, string.lastIndexOf('.'))*/;
 			return string;
 		},
 		getConsentString: function () {
