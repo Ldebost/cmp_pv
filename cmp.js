@@ -1005,7 +1005,7 @@ var cmp_pv = {
 					this.items = cmp_pv.globalVendorList.vendors/* + cmp_pv.pubvendorOrder*/;
 				} else {
 					this.items = cmp_pv.globalVendorList.vendors.filter(function (el) {
-						return el[field].indexOf(purpose) > -1;
+						return (purpose==='')?el[field].length > 0:el[field].indexOf(purpose) > -1;
 					});
 				}
 				this.totalRows = this.items.length;
