@@ -345,8 +345,8 @@ var cmp_pv = {
 					css += '#CMP_PV input:focus + .slider{box-shadow: 0 0 1px #8BC34A;}';
 					css += '#CMP_PV input:checked + .slider:before {transform: translateX(22px);border-color:#7BAA44;}';
 					css += '#CMP_PV #step1 .title{color: #111;font-weight: bold;text-align: center;font-size:16px;padding: 10px;text-shadow: 0 1px 2px rgba(0, 0, 0, 0.39);}';
-					css += '#CMP_PV #step1 .buttons{margin:38px 0 10px 0;}';
-					css += '#CMP_PV #step1 > a{display: block;padding-left: 15px;font-size: 16px;font-weight: bold;text-decoration: none;text-align:left;}';
+					css += '#CMP_PV #step1 .buttons{margin:20px 0 10px 0;}';
+					css += '#CMP_PV #step1 > a{display: inline-block;padding: 10px 10px 10px 15px;font-size: 16px;font-weight: bold;text-decoration: none;text-align:left;}';
 					css += '#CMP_PV #step1 .buttons > *{min-width: 210px; font-size: 16px;margin: 0 15px;text-align:center;}';
 					css += '#CMP_PV #step1 .buttons > a{line-height: 43px;}';
 					css += '#CMP_PV #step1 .desc>p{font-size: 15px;padding: 5px 15px;text-align:justify;line-height: 20px;color: #5d5d5d;}';
@@ -447,6 +447,10 @@ var cmp_pv = {
 					css += '	#CMP_PV #step1 .desc{max-height: 256px;}';
 					css += '    #CMP_PV #step2 .container .vendors, #CMP_PV #step2 .container .purposes, #CMP_PV #step2 .container .purposes_desc {height: 172px;}';
 					css += '}';
+					css += '@media screen and (max-height: 425px) {';
+					css += '	#CMP_PV #step1 .desc{max-height: 100px;}';
+					css += '    #CMP_PV #step2 .container .vendors, #CMP_PV #step2 .container .purposes, #CMP_PV #step2 .container .purposes_desc {height: 130px;}';
+					css += '}';
 					// Hack IE
 					var ie = this.detectIE();
 					if (ie > 0) {
@@ -470,7 +474,7 @@ var cmp_pv = {
 					html += '<div id="step1">';
 					html += '	<div class="title">Gérer mes cookies</div>';
 					html += '	<div class="desc">';
-					html += '		<p><a onclick="cmp_pv.ui.showVendors()">Nos partenaires</a> et nous-mêmes utilisons différentes technologies, telles que les cookies, qui nous permettent d\'accéder a votre historique de navigation, votre IP, etc., pour personnaliser les contenus et les publicités, proposer des fonctionnalités sur les réseaux sociaux et analyser le trafic. Vous pouvez consulter <a href="' + cmp_pv.conf.urlCookiesUsage + '" target="_blank">notre politique de cookies</a> pour plus d\'informations. Merci de cliquer sur le bouton ci-dessous pour donner votre accord. Vous pouvez changer d\'avis et modifier vos choix à tout moment. Le fait de ne pas consentir ne vous empêchera pas d\'accèder à notre service.</p>';
+					html += '		<p><a onclick="cmp_pv.ui.showVendors()">Nos partenaires</a> et nous-mêmes utilisons différentes technologies, telles que les cookies, qui nous permettent d\'accéder a votre historique de navigation, votre IP, etc., pour vous montrer des contenus et des publicités susceptibles de vous interesser, proposer des fonctionnalités sur les réseaux sociaux et analyser le trafic. Vous pouvez consulter <a href="' + cmp_pv.conf.urlCookiesUsage + '" target="_blank">notre politique de cookies</a> pour plus d\'informations. Merci de cliquer sur le bouton ci-dessous pour donner votre accord. Vous pouvez changer d\'avis et modifier vos choix à tout moment en cliquant en bas à droite de toutes nos pages sur "Consentement - Cookies". Le fait de ne pas consentir ne vous empêchera pas d\'accèder à notre service.</p>';
 					html += '		<p>Exemples d\'usages : ';
 					for (var key in cmp_pv.conf.firstScreenPurposes) {
 						for (var i in cmp_pv.conf.firstScreenPurposes[key]) {
