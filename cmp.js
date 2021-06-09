@@ -345,10 +345,8 @@ var cmp_pv = {
 					css += '#CMP_PV input:focus + .slider{box-shadow: 0 0 1px #8BC34A;}';
 					css += '#CMP_PV input:checked + .slider:before {transform: translateX(22px);border-color:#7BAA44;}';
 					css += '#CMP_PV #step1 .title{color: #111;font-weight: bold;text-align: center;font-size:16px;padding: 10px;text-shadow: 0 1px 2px rgba(0, 0, 0, 0.39);}';
-					css += '#CMP_PV #step1 .buttons{margin:20px 0 10px 0;}';
-					css += '#CMP_PV #step1 > a{display: inline-block;padding: 10px 10px 10px 15px;font-size: 16px;font-weight: bold;text-decoration: none;text-align:left;}';
 					css += '#CMP_PV #step1 .buttons > *{min-width: 210px; font-size: 16px;margin: 0 15px;text-align:center;}';
-					css += '#CMP_PV #step1 .buttons > a{line-height: 43px;}';
+					css += '#CMP_PV #step1 .buttons > a{line-height: 43px; flex-grow: 0;font-weight: bold;text-decoration: none;text-align: left;}';
 					css += '#CMP_PV #step1 .desc>p{font-size: 15px;padding: 5px 15px;text-align:justify;line-height: 20px;color: #5d5d5d;}';
 					css += '#CMP_PV #step1 .desc>p:nth-child(2){line-height: normal;}';
 					css += '#CMP_PV #step1 .desc>p>i{display: inline; font-style: normal;color: #b5b5b5;}';
@@ -385,8 +383,8 @@ var cmp_pv = {
 					css += '#CMP_PV #step2 .container .vendors li>h4{height: 30px;}';
 					css += '#CMP_PV #step2 .container .vendors li>h4 .arrow::after{height: 20px;font-size:16px;}';
 					css += '#CMP_PV #step2 .container .purposes_desc>div{position: absolute;top: 30px;left: 0;right: 0;bottom: 0;overflow: auto;margin: 0;}';
-					css += '#CMP_PV .buttons{display:flex;margin-top:10px;}';
-					css += '#CMP_PV .buttons>*{flex:1;}';
+					css += '#CMP_PV .buttons{display:flex;margin-top:10px; flex-wrap: wrap;}';
+					css += '#CMP_PV .buttons>*{flex:1 1 auto;}';
 					css += '#CMP_PV .buttons>a{line-height: 40px;}';
 					css += '#CMP_PV .buttons>a:nth-child(2){text-align:center;}';
 					css += '#CMP_PV #step2 .buttons button{font-size: 16px;padding: 5px 15px;}';
@@ -401,6 +399,7 @@ var cmp_pv = {
 					css += '#CMP_PV #storageDisclosure table td{padding:2px;}';
 					css += '#CMP_PV #storageDisclosure table tr{border-bottom: 1px solid #dddddd;}';
 					css += '#CMP_PV #storageDisclosure table tr:nth-of-type(even){background-color: #f3f3f3;}';
+					css += '#CMP_PV .line-break{width: 100%; height: 10px}';
 					//Responsive
 					css += '@media screen and (max-width: 640px) {';
 					css += '	#CMP_PV{padding:0;}';
@@ -408,9 +407,9 @@ var cmp_pv = {
 					css += '	#CMP_PV #step1{text-align: center;}';
 					css += '	#CMP_PV #step1 .desc{display:block;padding: 0 10px 10px 10px;height: calc(100vh - 172px);max-height: 456px;overflow-y: auto;}';
 					css += '    #CMP_PV .buttons{flex-direction: column;margin-bottom: 10px;}';
-					css += '    #CMP_PV #step1 .buttons{margin:0;border-top:1px solid #bbbbbb;}';
+					css += '    #CMP_PV #step1 .buttons{margin:0;border-top:1px solid #bbbbbb;flex-direction: column-reverse;}';
+					css += '	#CMP_PV #step1 .buttons > a{text-align: center;}';
 					css += '    #CMP_PV #step1 .title{padding: 15px 20px; font-size: 18px;}';
-					css += '	#CMP_PV #step1 > a{padding: 10px 10px 10px 24px;}';
 					css += '	#CMP_PV #step2{overflow: hidden;}';
 					css += '	#CMP_PV #step2 .desc>div:first-child{flex-flow: column;justify-content: space-evenly;}';
 					css += '	#CMP_PV #step2 .desc{align-items: initial;margin-top: 0;}';
@@ -431,6 +430,7 @@ var cmp_pv = {
 					css += '    #CMP_PV .buttons>a:nth-child(2){padding-right: 15px;text-align:right;box-sizing: border-box;}';
 					css += '    #CMP_PV #step2 .table-header{width: 95%;}';
 					css += '    #CMP_PV #step2 .table-header br{display: block;}';
+					css += '	#CMP_PV .line-break{height: 0}';
 					css += '	@keyframes bounce{';
 					css += '		0% {transform:translate3d(0,0,0);}';
 					css += '		30% {transform:translate3d(5px,0,0);}';
@@ -488,8 +488,9 @@ var cmp_pv = {
 					html += '		<p>Certains de nos partenaires ne demandent pas votre consentement pour traiter vos données, et se basent à la place sur leur intérêt légitime pour le faire. Vous pouvez consulter la liste de ces partenaires, les usages pour lesquels ils traitent vos données et vous y opposer en <a onclick="cmp_pv.ui.showVendorsPurpose(\'legIntPurposes\', \'\')">cliquant ici</a>.</p>';
 					html += '		<p>Vos choix ne s\'appliqueront que sur les sites du groupe Paruvendu.fr.</p>';
 					html += '	</div>';
-					html += '	<a onclick="cmp_pv.cookie.saveConsent(false);">Continuer sans accepter</a>';
 					html += '	<div class="container buttons">';
+					html += '		<a onclick="cmp_pv.cookie.saveConsent(false);">Continuer sans accepter</a>';
+					html += '		<div class="line-break"></div>';
 					html += '		<button class="inverse" onclick="cmp_pv.ui.showPurposes()">Paramétrer</button>';
 					html += '		<button onclick="cmp_pv.cookie.saveConsent(true);">Accepter et Fermer</button>';
 					html += '	</div>';
