@@ -95,9 +95,22 @@ var cmp_pv = {
 						cmp_pv.cookie.saveVerification(cmp_pv.cookie.vendorCookieName);
 					}
 						// Bug
-					/*else if (cmp_pv.consentString.data.coreString.vendorLegitimateInterest.maxVendorId < 900) {
-						cmp_pv.ui.show(true);
-					}*/
+						/*else if (cmp_pv.consentString.data.coreString.vendorLegitimateInterest.maxVendorId < 900) {
+							cmp_pv.ui.show(true);
+						}*/
+					// Bug AdSense
+					else if (cmp_pv.consentString.data.coreString.purposesConsent[11]) {
+						for(var i = 11; i<25; i++){
+							cmp_pv.consentString.data.coreString.purposesConsent[i] = false;
+							cmp_pv.consentString.data.publisherTC.pubPurposesConsent[i] = false;
+							cmp_pv.consentString.data.coreString.purposesLITransparency[i] = false;
+							cmp_pv.consentString.data.publisherTC.pubPurposesLITransparency[i] = false;
+						}
+						for (i in cmp_pv.consentString.data.coreString.specialFeatureOptIns) {
+							cmp_pv.consentString.data.coreString.specialFeatureOptIns[i] = false;
+						}
+						cmp_pv.cookie.saveConsent();
+					}
 					else {
 						// Fire tcloaded event
 						cmp_pv.event.send('tcloaded');
@@ -345,10 +358,8 @@ var cmp_pv = {
 					css += '#CMP_PV input:focus + .slider{box-shadow: 0 0 1px #8BC34A;}';
 					css += '#CMP_PV input:checked + .slider:before {transform: translateX(22px);border-color:#7BAA44;}';
 					css += '#CMP_PV #step1 .title{color: #111;font-weight: bold;text-align: center;font-size:16px;padding: 10px;text-shadow: 0 1px 2px rgba(0, 0, 0, 0.39);}';
-					css += '#CMP_PV #step1 .buttons{margin:20px 0 10px 0;}';
-					css += '#CMP_PV #step1 > a{display: inline-block;padding: 10px 10px 10px 15px;font-size: 16px;font-weight: bold;text-decoration: none;text-align:left;}';
 					css += '#CMP_PV #step1 .buttons > *{min-width: 210px; font-size: 16px;margin: 0 15px;text-align:center;}';
-					css += '#CMP_PV #step1 .buttons > a{line-height: 43px;}';
+					css += '#CMP_PV #step1 .buttons > a{line-height: initial;font-weight: bold;text-decoration: none;text-align: left;margin-bottom: 22px;}';
 					css += '#CMP_PV #step1 .desc>p{font-size: 15px;padding: 5px 15px;text-align:justify;line-height: 20px;color: #5d5d5d;}';
 					css += '#CMP_PV #step1 .desc>p:nth-child(2){line-height: normal;}';
 					css += '#CMP_PV #step1 .desc>p>i{display: inline; font-style: normal;color: #b5b5b5;}';
@@ -385,8 +396,8 @@ var cmp_pv = {
 					css += '#CMP_PV #step2 .container .vendors li>h4{height: 30px;}';
 					css += '#CMP_PV #step2 .container .vendors li>h4 .arrow::after{height: 20px;font-size:16px;}';
 					css += '#CMP_PV #step2 .container .purposes_desc>div{position: absolute;top: 30px;left: 0;right: 0;bottom: 0;overflow: auto;margin: 0;}';
-					css += '#CMP_PV .buttons{display:flex;margin-top:10px;}';
-					css += '#CMP_PV .buttons>*{flex:1;}';
+					css += '#CMP_PV .buttons{display:flex; flex-wrap: wrap;}';
+					css += '#CMP_PV .buttons>*{flex:1 1 auto;}';
 					css += '#CMP_PV .buttons>a{line-height: 40px;}';
 					css += '#CMP_PV .buttons>a:nth-child(2){text-align:center;}';
 					css += '#CMP_PV #step2 .buttons button{font-size: 16px;padding: 5px 15px;}';
@@ -401,6 +412,7 @@ var cmp_pv = {
 					css += '#CMP_PV #storageDisclosure table td{padding:2px;}';
 					css += '#CMP_PV #storageDisclosure table tr{border-bottom: 1px solid #dddddd;}';
 					css += '#CMP_PV #storageDisclosure table tr:nth-of-type(even){background-color: #f3f3f3;}';
+					css += '#CMP_PV .line-break{width: 100%; height: 10px}';
 					//Responsive
 					css += '@media screen and (max-width: 640px) {';
 					css += '	#CMP_PV{padding:0;}';
@@ -408,9 +420,9 @@ var cmp_pv = {
 					css += '	#CMP_PV #step1{text-align: center;}';
 					css += '	#CMP_PV #step1 .desc{display:block;padding: 0 10px 10px 10px;height: calc(100vh - 172px);max-height: 456px;overflow-y: auto;}';
 					css += '    #CMP_PV .buttons{flex-direction: column;margin-bottom: 10px;}';
-					css += '    #CMP_PV #step1 .buttons{margin:0;border-top:1px solid #bbbbbb;}';
+					css += '    #CMP_PV #step1 .buttons{margin:0;border-top:1px solid #bbbbbb;flex-direction: column-reverse;}';
+					css += '	#CMP_PV #step1 .buttons > a{text-align: center;line-height: 46px;margin:0;}';
 					css += '    #CMP_PV #step1 .title{padding: 15px 20px; font-size: 18px;}';
-					css += '	#CMP_PV #step1 > a{padding: 10px 10px 10px 24px;}';
 					css += '	#CMP_PV #step2{overflow: hidden;}';
 					css += '	#CMP_PV #step2 .desc>div:first-child{flex-flow: column;justify-content: space-evenly;}';
 					css += '	#CMP_PV #step2 .desc{align-items: initial;margin-top: 0;}';
@@ -431,6 +443,7 @@ var cmp_pv = {
 					css += '    #CMP_PV .buttons>a:nth-child(2){padding-right: 15px;text-align:right;box-sizing: border-box;}';
 					css += '    #CMP_PV #step2 .table-header{width: 95%;}';
 					css += '    #CMP_PV #step2 .table-header br{display: block;}';
+					css += '	#CMP_PV .line-break{height: 0}';
 					css += '	@keyframes bounce{';
 					css += '		0% {transform:translate3d(0,0,0);}';
 					css += '		30% {transform:translate3d(5px,0,0);}';
@@ -488,8 +501,9 @@ var cmp_pv = {
 					html += '		<p>Certains de nos partenaires ne demandent pas votre consentement pour traiter vos données, et se basent à la place sur leur intérêt légitime pour le faire. Vous pouvez consulter la liste de ces partenaires, les usages pour lesquels ils traitent vos données et vous y opposer en <a onclick="cmp_pv.ui.showVendorsPurpose(\'legIntPurposes\', \'\')">cliquant ici</a>.</p>';
 					html += '		<p>Vos choix ne s\'appliqueront que sur les sites du groupe Paruvendu.fr.</p>';
 					html += '	</div>';
-					html += '	<a onclick="cmp_pv.cookie.saveConsent(false);">Continuer sans accepter</a>';
 					html += '	<div class="container buttons">';
+					html += '		<a onclick="cmp_pv.cookie.saveConsent(false);">Continuer sans accepter</a>';
+					html += '		<div class="line-break"></div>';
 					html += '		<button class="inverse" onclick="cmp_pv.ui.showPurposes()">Paramétrer</button>';
 					html += '		<button onclick="cmp_pv.cookie.saveConsent(true);">Accepter et Fermer</button>';
 					html += '	</div>';
@@ -1448,15 +1462,15 @@ var cmp_pv = {
 				/*for (i = 1; i <= cmp_pv.consentString.data.specific.vendorConsent.maxVendorId; i++) {
 					cmp_pv.consentString.data.specific.vendorConsent.bitField[i] = all;
 				}*/
-				for (i in cmp_pv.consentString.data.coreString.purposesConsent) {
+				for (i = 1; i < 11; i++) {
 					cmp_pv.consentString.data.coreString.purposesConsent[i] = all;
 					cmp_pv.consentString.data.publisherTC.pubPurposesConsent[i] = all;
 					if (i > 1) cmp_pv.consentString.data.coreString.purposesLITransparency[i] = all;
 					if (i > 1) cmp_pv.consentString.data.publisherTC.pubPurposesLITransparency[i] = all;
 				}
-				for (i in cmp_pv.consentString.data.coreString.specialFeatureOptIns) {
+				/*for (i in cmp_pv.consentString.data.coreString.specialFeatureOptIns) {
 					cmp_pv.consentString.data.coreString.specialFeatureOptIns[i] = all;
-				}
+				}*/
 				var matches = document.querySelectorAll("#step2 input");
 				for (i = 0; i < matches.length; i++) {
 					matches[i].checked = all;
@@ -1602,8 +1616,8 @@ var cmp_pv = {
 				},
 				{
 					name: 'purposesLITransparency', type: 'bits', numBits: 24, default: function () {
-						var lit = cmp_pv.consentString.defaultBits(true, this.numBits);
-						lit[1] = false;
+						var lit = cmp_pv.consentString.defaultBits(false, this.numBits);
+						for(var i =2; i<11; i++) lit[i] = true;
 						return lit;
 					}
 				},
@@ -1654,8 +1668,8 @@ var cmp_pv = {
 				},
 				{
 					name: 'pubPurposesLITransparency', type: 'bits', numBits: 24, default: function () {
-						var lit = cmp_pv.consentString.defaultBits(true, this.numBits);
-						lit[1] = false;
+						var lit = cmp_pv.consentString.defaultBits(false, this.numBits);
+						for(var i =2; i<11; i++) lit[i] = true;
 						return lit;
 					}
 				},
