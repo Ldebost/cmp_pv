@@ -39,7 +39,6 @@ var cmp_pv = {
 	/** Configuration **/
 	conf: {
 		gdprApplies: true,
-		hasGlobalScope: false,
 		cookieDomain: 'paruvendu.fr',
 		cookieSecure: true,
 		publisherName: 'ParuVendu.fr',
@@ -183,7 +182,7 @@ var cmp_pv = {
 				 * true - if using a service-specific or publisher-specific TC String
 				 * false - if using a global TC String.
 				 */
-				isServiceSpecific: !cmp_pv.conf.hasGlobalScope,
+				isServiceSpecific: true,
 
 				/**
 				 * true - CMP is using publisher-customized stack descriptions
@@ -209,28 +208,6 @@ var cmp_pv = {
 				 * disclosed normally (consent) as expected by TCF Policy
 				 */
 				purposeOneTreatment: false,
-
-				/**
-				 * Only exists on global-scope TC
-				 */
-				outOfBand: {
-					allowedVendors: {
-
-						/**
-						 * true - Vendor is allowed to use and Out-of-Band Legal Basis
-						 * false - Vendor is NOT allowed to use an Out-of-Band Legal Basis
-						 */
-						//'[vendor id]': Boolean
-					},
-					disclosedVendors: {
-
-						/**
-						 * true - Vendor has been disclosed to the user
-						 * false - Vendor has been disclosed to the user
-						 */
-						//'[vendor id]': Boolean
-					}
-				},
 				purpose: {
 					consents: cmp_pv.consentString.data.coreString.purposesConsent,
 					legitimateInterests: cmp_pv.consentString.data.coreString.purposesLITransparency
@@ -261,7 +238,6 @@ var cmp_pv = {
 					}
 				}
 			};
-			if (!cmp_pv.conf.hasGlobalScope) delete consent.outOfBand;
 			if (cmp_pv.conf.googleAC) consent.addtlConsent = cmp_pv.consentString.data.acString;
 
 			callback(consent, true)
@@ -1421,31 +1397,14 @@ var cmp_pv = {
 			document.cookie = name + "=" + value + ";path=" + path + maxAge + valDomain + secure + ";samesite=lax;";
 			this.saveVerification(name);
 		},
-		_readGlobalCookie: function (name, cb) {
-			cmp_pv.portal.sendPortalCommand({
-				command: 'readVendorConsent'
-			}, function (data) {
-				cb((typeof data === 'object') ? '' : data);
-			});
-		},
-		_writeGlobalCookie: function (name, value) {
-			cmp_pv.portal.sendPortalCommand({
-				command: 'writeVendorConsent',
-				encodedValue: value
-			}, function () {
-				cmp_pv.cookie.saveVerification(name);
-			});
-		},
 		loadCookie: function (cb) {
-			var fnct = (cmp_pv.conf.hasGlobalScope) ? '_readGlobalCookie' : '_readCookie';
-			this[fnct](this.vendorCookieName, function (data) {
+			this._readCookie(this.vendorCookieName, function (data) {
 				cb(("undefined" !== typeof data) ? cmp_pv.consentString.decodeConsentString(data) : false);
 			})
 		},
 		writeCookie: function () {
 			var data = cmp_pv.consentString.generateConsentString();
-			var fnct = (cmp_pv.conf.hasGlobalScope) ? '_writeGlobalCookie' : '_writeCookie';
-			this[fnct](this.vendorCookieName, data, 33696000, '/', cmp_pv.conf.cookieDomain, cmp_pv.conf.cookieSecure);
+			this._writeCookie(this.vendorCookieName, data, 33696000, '/', cmp_pv.conf.cookieDomain, cmp_pv.conf.cookieSecure);
 		},
 		saveConsent: function (all) {
 			// Maj dates
@@ -1600,7 +1559,7 @@ var cmp_pv = {
 				},
 				{
 					name: 'isServiceSpecific', type: 'int', numBits: 1, default: function () {
-						return !cmp_pv.conf.hasGlobalScope
+						return true
 					}
 				},
 				{name: 'useNonStandardStacks', type: 'int', numBits: 1, default: 0},
@@ -1644,20 +1603,6 @@ var cmp_pv = {
 						{name: 'restrictionType', type: 'int', numBits: 2, default: 0},
 					]
 				}*/
-			],
-			disclosedVendors: [ //TODO: OOB only global
-				{name: 'segmentType', type: 'int', numBits: 3, default: 1},
-				{
-					name: ['disclosedVendors'],
-					fields: this._rangeVendor
-				}
-			],
-			allowedVendors: [ //TODO: OOB  only global
-				{name: 'segmentType', type: 'int', numBits: 3, default: 2},
-				{
-					name: ['allowedVendors'],
-					fields: this._rangeVendor
-				}
 			],
 			publisherTC: [
 				{name: 'segmentType', type: 'int', numBits: 3, default: 3},
