@@ -487,7 +487,7 @@ var cmp_pv = {
 					html += '<div id="step2" style="display: none;">';
 					html += '	<div class="container desc">';
 					html += '		<div>';
-					html += '			<p>La collecte des données personnelles se fait en fonction des objectifs listés ci dessous. Choisissez comment vos données personnelles sont utilisées pour chaque finalité et pour chaque partenaire publicitaire.</p>';
+					html += '			<p>La collecte des données personnelles se fait en fonction des objectifs listés ci-dessous. Choisissez comment vos données personnelles sont utilisées pour chaque finalité et pour chaque partenaire publicitaire.</p>';
 					html += '			<div>';
 					html += '				<button onclick="cmp_pv.ui.switchAllPurposes(false);" class="inverse">Tout refuser</button>';
 					html += '				<button onclick="cmp_pv.ui.switchAllPurposes(true);">Tout accepter</button>';
@@ -680,7 +680,7 @@ var cmp_pv = {
 			/*if (f === 'specific') {
 				vendor = cmp_pv.pubvendor[id];
 			} else {*/
-			vendor = cmp_pv.ui.virtualList.items[i];
+			vendor = cmp_pv.ui.virtualList.getItem(i);
 			//}
 			if (typeof vendor == 'undefined') return;
 			var html = '<h2>' + vendor.name + '</h2><a href="' + vendor.policyUrl + '" target="_blank">Politique de confidentialité</a><br/>';
@@ -695,7 +695,7 @@ var cmp_pv = {
 						html += '<h3>Traitements de données basés sur le consentement :</h3>';
 						lang = 'purposes';
 					} else if (field === 'legIntPurposes') {
-						html += '<h3>Traitement de données basés sur l\'intérêt légitime :</h3>';
+						html += '<h3>Traitements de données basés sur l\'intérêt légitime :</h3>';
 						lang = 'purposes';
 					} else if (field === 'specialPurposes') {
 						html += '<h3>Traitements de données spéciaux :</h3>';
@@ -715,7 +715,7 @@ var cmp_pv = {
 				}
 			}
 			html += '<h3>Durée maximale des cookies :</h3><ul><li>' + this.readableTime(vendor.cookieMaxAgeSeconds) + '</li>';
-			if (vendor.usesNonCookieAccess) html += '<li>Utilisation d\'autres méthodes de stockage (ex: Local Storage)</li>';
+			if (vendor.usesNonCookieAccess) html += '<li>Utilisation d\'autres méthodes de stockage (ex : Local Storage)</li>';
 			if (vendor.deviceStorageDisclosureUrl) html += '<li id="showStorage"><a onclick="cmp_pv.ui.showStorageDisclosure(\'' + vendor.deviceStorageDisclosureUrl + '\');" target="_blank">plus d\'informations</a></li>';
 			html += '</ul><div id="storageDisclosure"></div>';
 			var el = document.getElementById('vendor_desc');
@@ -889,6 +889,7 @@ var cmp_pv = {
 			totalRows: 0,
 			active: null,
 			items: [],
+			chunkStart: 0,
 
 			init: function () {
 				this.filter();
@@ -928,6 +929,7 @@ var cmp_pv = {
 				if (finalItem > this.totalRows) finalItem = this.totalRows;
 				var vendor, html, item, item2, y, y2, field;
 				var i2 = 0;
+				this.chunkStart = fromPos;
 
 				for (var i = fromPos; i < finalItem; i++) {
 					item = document.createElement("li");
@@ -1010,6 +1012,9 @@ var cmp_pv = {
 					this.renderChunk(0, this.cachedItemsLen);
 					cmp_pv.ui.showVendorDescription(0);
 				}
+			},
+			getItem: function (i) {
+				return this.items[i + this.chunkStart];
 			}
 		},
 		/*acceptOnEvent: function () {
@@ -1773,7 +1778,6 @@ var cmp_pv = {
 			this.data.coreString.cmpId = cmp_pv.consentString.const.CMP_ID;
 			this.data.coreString.cmpVersion = cmp_pv.consentString.const.CMP_VERSION;
 			// Core
-			var string = '';
 			var names = ['vendorConsent', 'vendorLegitimateInterest'];
 			var data = this.data.coreString;
 			for (var i = 0; i < names.length; i++) {
@@ -1785,7 +1789,7 @@ var cmp_pv = {
 				data[name].isRangeEncoding = (inputBits.length > inputBitsRange.length) ? 1 : 0;
 			}
 			inputBits = this.encodeConsentData(this.const.coreString, data);
-			string = this.encodeBase64UrlSafe(inputBits);
+			var string = this.encodeBase64UrlSafe(inputBits);
 
 			// Publisher, Specific
 			names = ['publisherTC'/*, 'specific'*/];
