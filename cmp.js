@@ -715,6 +715,7 @@ var cmp_pv = {
 				}
 			}
 			html += '<h3>Durée maximale des cookies :</h3><ul><li>' + this.readableTime(vendor.cookieMaxAgeSeconds) + '</li>';
+			if (vendor.cookieRefresh) html += '<li>Le partenaire met a jour le cookie lors de la navigation</li>';
 			if (vendor.usesNonCookieAccess) html += '<li>Utilisation d\'autres méthodes de stockage (ex : Local Storage)</li>';
 			if (vendor.deviceStorageDisclosureUrl) html += '<li id="showStorage"><a onclick="cmp_pv.ui.showStorageDisclosure(\'' + vendor.deviceStorageDisclosureUrl + '\');" target="_blank">plus d\'informations</a></li>';
 			html += '</ul><div id="storageDisclosure"></div>';
