@@ -44,6 +44,7 @@ var cmp_pv = {
 		publisherName: 'ParuVendu.fr',
 		urlVendorList: 'https://media.paruvendu.fr/vendor-list-v2.json?[RND]',
 		urlCookiesUsage: 'https://www.paruvendu.fr/communfo/defaultcommunfo/defaultcommunfo/infosLegales#cookies',
+		urlLogo: 'https://static.paruvendu.fr/2021112308/communfo/img/structuresite/home/logoparuvendufr2016.png',
 		dayCheckUpdate: 5,
 		dayCheckNok: 15,
 		globalConsentLocation: 'https://paruvendu.mgr.consensu.org/portal.html',
@@ -333,7 +334,9 @@ var cmp_pv = {
 					css += '#CMP_PV input:checked + .slider{background-color: #8BC34A;}';
 					css += '#CMP_PV input:focus + .slider{box-shadow: 0 0 1px #8BC34A;}';
 					css += '#CMP_PV input:checked + .slider:before {transform: translateX(22px);border-color:#7BAA44;}';
-					css += '#CMP_PV #step1 .title{color: #111;font-weight: bold;text-align: center;font-size:16px;padding: 10px;text-shadow: 0 1px 2px rgba(0, 0, 0, 0.39);}';
+					css += '#CMP_PV #step1 .head{display: flex; align-items: center;}';
+					css += '#CMP_PV #step1 .head img{height: 40px; margin-right: 15px;}';
+					css += '#CMP_PV #step1 .title{color: #111;font-weight: bold;text-align: center;font-size:16px;padding: 10px 10px 10px 87px;text-shadow: 0 1px 2px rgba(0, 0, 0, 0.39);flex: 1;}';
 					css += '#CMP_PV #step1 .buttons > *{min-width: 210px; font-size: 16px;margin: 0 15px;text-align:center;}';
 					css += '#CMP_PV #step1 .buttons > a{line-height: initial;font-weight: bold;text-decoration: none;text-align: left;margin-bottom: 22px;}';
 					css += '#CMP_PV #step1 .desc>p{font-size: 15px;padding: 5px 15px;text-align:justify;line-height: 20px;color: #5d5d5d;}';
@@ -398,7 +401,7 @@ var cmp_pv = {
 					css += '    #CMP_PV .buttons{flex-direction: column;margin-bottom: 10px;}';
 					css += '    #CMP_PV #step1 .buttons{margin:0;border-top:1px solid #bbbbbb;flex-direction: column-reverse;}';
 					css += '	#CMP_PV #step1 .buttons > a{text-align: center;line-height: 46px;margin:0;}';
-					css += '    #CMP_PV #step1 .title{padding: 15px 20px; font-size: 18px;}';
+					css += '    #CMP_PV #step1 .title{padding: 8px 16px; font-size: 18px;order: 2;}';
 					css += '	#CMP_PV #step2{overflow: hidden;}';
 					css += '	#CMP_PV #step2 .desc>div:first-child{flex-flow: column;justify-content: space-evenly;}';
 					css += '	#CMP_PV #step2 .desc{align-items: initial;margin-top: 0;}';
@@ -420,6 +423,8 @@ var cmp_pv = {
 					css += '    #CMP_PV #step2 .table-header{width: 95%;}';
 					css += '    #CMP_PV #step2 .table-header br{display: block;}';
 					css += '	#CMP_PV .line-break{height: 0}';
+					css += '	#CMP_PV #step1 .head{flex-direction: column;}';
+					css += '	#CMP_PV #step1 .head img{margin-top: 5px;}';
 					css += '	@keyframes bounce{';
 					css += '		0% {transform:translate3d(0,0,0);}';
 					css += '		30% {transform:translate3d(5px,0,0);}';
@@ -461,7 +466,10 @@ var cmp_pv = {
 					}
 					var html = '<div id="CMP_PV" data-nosnippet>';
 					html += '<div id="step1">';
-					html += '	<div class="title">Gérer mes cookies</div>';
+					html += '	<div class="head">';
+					html += '		<div class="title">Gérer mes cookies</div>';
+					html += '		<img src="'+cmp_pv.conf.urlLogo+'" alt="logo">';
+					html += '	</div>';
 					html += '	<div class="desc">';
 					html += '		<p><a onclick="cmp_pv.ui.showVendors()">Nos partenaires</a> et nous-mêmes utilisons différentes technologies, telles que les cookies, qui nous permettent d\'accéder a votre historique de navigation, votre IP, etc., pour personnaliser les contenus et les publicités, proposer des fonctionnalités sur les réseaux sociaux et analyser le trafic. Vous pouvez consulter <a href="' + cmp_pv.conf.urlCookiesUsage + '" target="_blank">notre politique de cookies</a> pour plus d\'informations. Merci de cliquer sur le bouton ci-dessous pour donner votre accord. Vous pouvez changer d\'avis et modifier vos choix à tout moment. Le fait de ne pas consentir ne vous empêchera pas d\'accèder à notre service.</p>';
 					html += '		<p>Exemples d\'usages : ';
