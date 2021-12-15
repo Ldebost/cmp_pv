@@ -45,6 +45,7 @@ var cmp_pv = {
 		publisherName: 'ParuVendu.fr',
 		urlVendorList: 'https://media.paruvendu.fr/vendor-list-v2.json?[RND]',
 		urlCookiesUsage: 'https://www.paruvendu.fr/communfo/defaultcommunfo/defaultcommunfo/infosLegales#cookies',
+		urlLogo: 'https://static.paruvendu.fr/2021112308/communfo/img/structuresite/home/logoparuvendufr2016.png',
 		dayCheckUpdate: 5,
 		dayCheckNok: 15,
 		globalConsentLocation: 'https://paruvendu.mgr.consensu.org/portal.html',
@@ -99,7 +100,7 @@ var cmp_pv = {
 							cmp_pv.ui.show(true);
 						}*/
 					// Bug AdSense
-					else if (cmp_pv.consentString.data.coreString.purposesConsent[11]) {
+					/*else if (cmp_pv.consentString.data.coreString.purposesConsent[11]) {
 						for (var i = 11; i < 25; i++) {
 							cmp_pv.consentString.data.coreString.purposesConsent[i] = false;
 							cmp_pv.consentString.data.publisherTC.pubPurposesConsent[i] = false;
@@ -110,7 +111,7 @@ var cmp_pv = {
 							cmp_pv.consentString.data.coreString.specialFeatureOptIns[i] = false;
 						}
 						cmp_pv.cookie.saveConsent();
-					} else {
+					}*/ else {
 						// Fire tcloaded event
 						cmp_pv.event.send('tcloaded');
 					}
@@ -439,7 +440,7 @@ var cmp_pv = {
 				css += '    #CMP_PV .buttons{flex-direction: column;margin-bottom: 10px;}';
 				css += '    #CMP_PV #step1 .buttons{margin:0;border-top:1px solid #bbbbbb;flex-direction: column-reverse;}';
 				css += '	#CMP_PV #step1 .buttons > a{text-align: center;line-height: 46px;margin:0;}';
-				css += '    #CMP_PV #step1 .title{padding: 15px 20px; font-size: 18px;}';
+				css += '    #CMP_PV #step1 .title{padding: 8px 16px; font-size: 18px;order: 2;}';
 				css += '	#CMP_PV #step2{overflow: hidden;}';
 				css += '	#CMP_PV #step2 .desc>div:first-child{flex-flow: column;justify-content: space-evenly;}';
 				css += '	#CMP_PV #step2 .desc{align-items: initial;margin-top: 0;}';
