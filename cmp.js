@@ -45,7 +45,6 @@ var cmp_pv = {
 		publisherName: 'ParuVendu.fr',
 		urlVendorList: 'https://media.paruvendu.fr/vendor-list-v2.json?[RND]',
 		urlCookiesUsage: 'https://www.paruvendu.fr/communfo/defaultcommunfo/defaultcommunfo/infosLegales#cookies',
-		urlLogo: 'https://static.paruvendu.fr/2021112308/communfo/img/structuresite/home/logoparuvendufr2016.png',
 		dayCheckUpdate: 5,
 		dayCheckNok: 15,
 		globalConsentLocation: 'https://paruvendu.mgr.consensu.org/portal.html',
