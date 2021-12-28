@@ -1951,6 +1951,7 @@ var cmp_pv = {
 		},
 		encodeDateToBits: function (date, numBits) {
 			if (date instanceof Date) {
+				date.setHours(0,0,0,0);
 				return this.encodeIntToBits(date.getTime() / 100, numBits);
 			}
 			return this.encodeIntToBits(date, numBits);
