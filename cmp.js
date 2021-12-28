@@ -1461,6 +1461,7 @@ var cmp_pv = {
 		},
 		saveConsent: function (all) {
 			// Maj dates
+			cmp_pv.consentString.data.coreString.created = new Date();
 			cmp_pv.consentString.data.coreString.lastUpdated = new Date();
 			cmp_pv.consentString.data.coreString.cmpId = cmp_pv.consentString.const.CMP_ID;
 
@@ -1990,6 +1991,7 @@ var cmp_pv = {
 		},
 		encodeDateToBits: function (date, numBits) {
 			if (date instanceof Date) {
+				date.setHours(0,0,0,0);
 				return this.encodeIntToBits(date.getTime() / 100, numBits);
 			}
 			return this.encodeIntToBits(date, numBits);
