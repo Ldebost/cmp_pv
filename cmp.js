@@ -45,6 +45,7 @@ var cmp_pv = {
 		publisherName: 'ParuVendu.fr',
 		urlVendorList: 'https://media.paruvendu.fr/vendor-list-v2.json?[RND]',
 		urlCookiesUsage: 'https://www.paruvendu.fr/communfo/defaultcommunfo/defaultcommunfo/infosLegales#cookies',
+		urlLogo: 'https://static.paruvendu.fr/2021112308/communfo/img/structuresite/home/logoparuvendufr2016.png',
 		dayCheckUpdate: 5,
 		dayCheckNok: 15,
 		globalConsentLocation: 'https://paruvendu.mgr.consensu.org/portal.html',
@@ -98,7 +99,7 @@ var cmp_pv = {
 						/*else if (cmp_pv.consentString.data.coreString.vendorLegitimateInterest.maxVendorId < 900) {
 							cmp_pv.ui.show(true);
 						}*/
-					// Bug AdSense
+						// Bug AdSense
 					/*else if (cmp_pv.consentString.data.coreString.purposesConsent[11]) {
 						for (var i = 11; i < 25; i++) {
 							cmp_pv.consentString.data.coreString.purposesConsent[i] = false;
@@ -286,49 +287,6 @@ var cmp_pv = {
 			// Security
 			if (cmp_pv.ui.dom !== null) return cmp_pv.ui.show(true);
 
-			if (cmp_pv.globalVendorList.vendorListVersion == 0) {
-				cmp_pv._fetchGlobalVendorList(function () {
-					try {
-						// Update VendorList Version
-						cmp_pv.consentString.data.coreString.vendorListVersion = cmp_pv.globalVendorList.vendorListVersion;
-						// Update UI
-						html = '';
-						for (i in cmp_pv.globalVendorList.purposes) {
-							purpose = cmp_pv.ui.language['fr'].purposes[i];
-							html += '		<li id="purpose_' + purpose.id + '"><h4>';
-							html += '			<span class="title" onclick="cmp_pv.ui.showPurposeDescription(\'purposes\', ' + purpose.id + ');">' + purpose.name + '</span>';
-							if (i > 1) {
-								html += '			<label class="switch switchLI"><input type="checkbox" onchange="cmp_pv.ui.switchPurpose(\'purposesLITransparency\',' + purpose.id + ', this.checked);"' + ((cmp_pv.consentString.data.coreString.purposesLITransparency[purpose.id]) ? 'checked' : '') + '><span class="slider"></span></label>';
-							}
-							html += '			<label class="switch"><input type="checkbox" onchange="cmp_pv.ui.switchPurpose(\'purposesConsent\',' + purpose.id + ', this.checked);"' + ((cmp_pv.consentString.data.coreString.purposesConsent[purpose.id]) ? 'checked' : '') + '><span class="slider"></span></label>';
-							html += '			<span class="arrow" onclick="cmp_pv.ui.showPurposeDescription(\'purposes\', ' + purpose.id + ', true);"></span>';
-							html += '		</h4></li>';
-						}
-						html += '			<li class="titre"></li>';
-						for (i in cmp_pv.globalVendorList.specialFeatures) {
-							purpose = cmp_pv.ui.language['fr'].specialFeatures[i];
-							html += '		<li id="purpose_s' + purpose.id + '"><h4>';
-							html += '			<span class="title" onclick="cmp_pv.ui.showPurposeDescription(\'specialFeatures\', ' + purpose.id + ');">' + purpose.name + '</span>';
-							html += '			<label class="switch"><input type="checkbox" onchange="cmp_pv.ui.switchPurpose(\'specialFeatureOptIns\',' + purpose.id + ', this.checked);"' + ((cmp_pv.consentString.data.coreString.specialFeatureOptIns[purpose.id]) ? 'checked' : '') + '><span class="slider"></span></label>';
-							html += '			<span class="arrow" onclick="cmp_pv.ui.showPurposeDescription(\'specialFeatures\', ' + purpose.id + ', true);"></span>';
-							html += '		</h4></li>';
-						}
-						html += '			<li class="titre"></li>';
-						for (i in cmp_pv.globalVendorList.features) {
-							purpose = cmp_pv.ui.language['fr'].features[i];
-							html += '		<li id="purpose_f' + purpose.id + '"><h4>';
-							html += '			<span class="title" onclick="cmp_pv.ui.showPurposeDescription(\'features\', ' + purpose.id + ');">' + purpose.name + '</span>';
-							html += '			<span class="arrow" onclick="cmp_pv.ui.showPurposeDescription(\'features\', ' + purpose.id + ', true);"></span>';
-							html += '		</h4></li>';
-						}
-						document.querySelector('#purposes ul').innerHTML = html;
-						var el = document.querySelector('#step1 .buttons');
-						el.className = el.className.replace(' loading', '');
-					} catch (e) {
-						cmp_pv.ui.show(false);
-					}
-				});
-			} /*else {*/
 			try {
 				// Check CMP visibility : if any problem then hide background
 				setTimeout(function () {
@@ -506,7 +464,7 @@ var cmp_pv = {
 				html += '<div id="step1">';
 				html += '	<div class="head">';
 				html += '		<div class="title">Gérer mes cookies</div>';
-				html += '		<img src="'+cmp_pv.conf.urlLogo+'" alt="logo">';
+				html += '		<img src="' + cmp_pv.conf.urlLogo + '" alt="logo">';
 				html += '	</div>';
 				html += '	<div class="desc">';
 				html += '		<p><a onclick="cmp_pv.ui.showVendors()">Nos partenaires</a> et nous-mêmes utilisons différentes technologies, telles que les cookies, qui nous permettent d\'accéder a votre historique de navigation, votre IP, etc., pour personnaliser les contenus et les publicités, proposer des fonctionnalités sur les réseaux sociaux et analyser le trafic. Vous pouvez consulter <a href="' + cmp_pv.conf.urlCookiesUsage + '" target="_blank">notre politique de cookies</a> pour plus d\'informations. Merci de cliquer sur le bouton ci-dessous pour donner votre accord. Vous pouvez changer d\'avis et modifier vos choix à tout moment. Le fait de ne pas consentir ne vous empêchera pas d\'accèder à notre service.</p>';
@@ -544,34 +502,6 @@ var cmp_pv = {
 				html += '	</div>';
 				html += '	<div class="container" id="purposes">';
 				html += '		<ul class="purposes">';
-				/*for (i in cmp_pv.globalVendorList.purposes) {
-					purpose = cmp_pv.ui.language['fr'].purposes[i];
-					html += '		<li id="purpose_' + purpose.id + '"><h4>';
-					html += '			<span class="title" onclick="cmp_pv.ui.showPurposeDescription(\'purposes\', ' + purpose.id + ');">' + purpose.name + '</span>';
-					if (i > 1) {
-						html += '			<label class="switch switchLI"><input type="checkbox" onchange="cmp_pv.ui.switchPurpose(\'purposesLITransparency\',' + purpose.id + ', this.checked);"' + ((cmp_pv.consentString.data.coreString.purposesLITransparency[purpose.id]) ? 'checked' : '') + '><span class="slider"></span></label>';
-					}
-					html += '			<label class="switch"><input type="checkbox" onchange="cmp_pv.ui.switchPurpose(\'purposesConsent\',' + purpose.id + ', this.checked);"' + ((cmp_pv.consentString.data.coreString.purposesConsent[purpose.id]) ? 'checked' : '') + '><span class="slider"></span></label>';
-					html += '			<span class="arrow" onclick="cmp_pv.ui.showPurposeDescription(\'purposes\', ' + purpose.id + ', true);"></span>';
-					html += '		</h4></li>';
-				}
-				html += '			<li class="titre"></li>';
-				for (i in cmp_pv.globalVendorList.specialFeatures) {
-					purpose = cmp_pv.ui.language['fr'].specialFeatures[i];
-					html += '		<li id="purpose_s' + purpose.id + '"><h4>';
-					html += '			<span class="title" onclick="cmp_pv.ui.showPurposeDescription(\'specialFeatures\', ' + purpose.id + ');">' + purpose.name + '</span>';
-					html += '			<label class="switch"><input type="checkbox" onchange="cmp_pv.ui.switchPurpose(\'specialFeatureOptIns\',' + purpose.id + ', this.checked);"' + ((cmp_pv.consentString.data.coreString.specialFeatureOptIns[purpose.id]) ? 'checked' : '') + '><span class="slider"></span></label>';
-					html += '			<span class="arrow" onclick="cmp_pv.ui.showPurposeDescription(\'specialFeatures\', ' + purpose.id + ', true);"></span>';
-					html += '		</h4></li>';
-				}
-				html += '			<li class="titre"></li>';
-				for (i in cmp_pv.globalVendorList.features) {
-					purpose = cmp_pv.ui.language['fr'].features[i];
-					html += '		<li id="purpose_f' + purpose.id + '"><h4>';
-					html += '			<span class="title" onclick="cmp_pv.ui.showPurposeDescription(\'features\', ' + purpose.id + ');">' + purpose.name + '</span>';
-					html += '			<span class="arrow" onclick="cmp_pv.ui.showPurposeDescription(\'features\', ' + purpose.id + ', true);"></span>';
-					html += '		</h4></li>';
-				}*/
 				html += '		</ul>';
 				html += '		<div class="purposes_desc">';
 				html += '			<h4>Description</h4>';
@@ -608,9 +538,6 @@ var cmp_pv = {
 				var list = this.virtualList.init();
 				document.getElementById("vendors").children[0].appendChild(list);
 
-				// Select first
-				if (cmp_pv.globalVendorList.vendorListVersion != 0) cmp_pv.ui.showPurposeDescription('purposes', 1);
-
 				// Fire cmpuishown event
 				cmp_pv.event.send('cmpuishown');
 
@@ -620,7 +547,58 @@ var cmp_pv = {
 				console.error(e);
 				cmp_pv.ui.show(false);
 			}
-			/*}*/
+
+			// On charge la vendorlist
+			if (cmp_pv.globalVendorList.vendorListVersion == 0) {
+				cmp_pv._fetchGlobalVendorList(this.updateVendorList);
+			} else {
+				this.updateVendorList()
+			}
+		},
+		updateVendorList: function () {
+			try {
+				// Update VendorList Version
+				cmp_pv.consentString.data.coreString.vendorListVersion = cmp_pv.globalVendorList.vendorListVersion;
+				// Update UI
+				var html = '';
+				var purpose;
+				for (var i in cmp_pv.globalVendorList.purposes) {
+					purpose = cmp_pv.ui.language['fr'].purposes[i];
+					html += '		<li id="purpose_' + purpose.id + '"><h4>';
+					html += '			<span class="title" onclick="cmp_pv.ui.showPurposeDescription(\'purposes\', ' + purpose.id + ');">' + purpose.name + '</span>';
+					if (i > 1) {
+						html += '			<label class="switch switchLI"><input type="checkbox" onchange="cmp_pv.ui.switchPurpose(\'purposesLITransparency\',' + purpose.id + ', this.checked);"' + ((cmp_pv.consentString.data.coreString.purposesLITransparency[purpose.id]) ? 'checked' : '') + '><span class="slider"></span></label>';
+					}
+					html += '			<label class="switch"><input type="checkbox" onchange="cmp_pv.ui.switchPurpose(\'purposesConsent\',' + purpose.id + ', this.checked);"' + ((cmp_pv.consentString.data.coreString.purposesConsent[purpose.id]) ? 'checked' : '') + '><span class="slider"></span></label>';
+					html += '			<span class="arrow" onclick="cmp_pv.ui.showPurposeDescription(\'purposes\', ' + purpose.id + ', true);"></span>';
+					html += '		</h4></li>';
+				}
+				html += '			<li class="titre"></li>';
+				for (i in cmp_pv.globalVendorList.specialFeatures) {
+					purpose = cmp_pv.ui.language['fr'].specialFeatures[i];
+					html += '		<li id="purpose_s' + purpose.id + '"><h4>';
+					html += '			<span class="title" onclick="cmp_pv.ui.showPurposeDescription(\'specialFeatures\', ' + purpose.id + ');">' + purpose.name + '</span>';
+					html += '			<label class="switch"><input type="checkbox" onchange="cmp_pv.ui.switchPurpose(\'specialFeatureOptIns\',' + purpose.id + ', this.checked);"' + ((cmp_pv.consentString.data.coreString.specialFeatureOptIns[purpose.id]) ? 'checked' : '') + '><span class="slider"></span></label>';
+					html += '			<span class="arrow" onclick="cmp_pv.ui.showPurposeDescription(\'specialFeatures\', ' + purpose.id + ', true);"></span>';
+					html += '		</h4></li>';
+				}
+				html += '			<li class="titre"></li>';
+				for (i in cmp_pv.globalVendorList.features) {
+					purpose = cmp_pv.ui.language['fr'].features[i];
+					html += '		<li id="purpose_f' + purpose.id + '"><h4>';
+					html += '			<span class="title" onclick="cmp_pv.ui.showPurposeDescription(\'features\', ' + purpose.id + ');">' + purpose.name + '</span>';
+					html += '			<span class="arrow" onclick="cmp_pv.ui.showPurposeDescription(\'features\', ' + purpose.id + ', true);"></span>';
+					html += '		</h4></li>';
+				}
+				document.querySelector('#purposes ul').innerHTML = html;
+				var el = document.querySelector('#step1 .buttons');
+				el.className = el.className.replace(' loading', '');
+
+				// Select first
+				cmp_pv.ui.showPurposeDescription('purposes', 1);
+			} catch (e) {
+				cmp_pv.ui.show(false);
+			}
 		},
 		observer: new MutationObserver(function (mutations) {
 			mutations.forEach(function () {
@@ -1991,7 +1969,7 @@ var cmp_pv = {
 		},
 		encodeDateToBits: function (date, numBits) {
 			if (date instanceof Date) {
-				date.setHours(0,0,0,0);
+				date.setHours(0, 0, 0, 0);
 				return this.encodeIntToBits(date.getTime() / 100, numBits);
 			}
 			return this.encodeIntToBits(date, numBits);
