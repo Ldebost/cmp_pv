@@ -6,7 +6,7 @@ var cmp_pv = {
 	isLoaded: false,
 	cmpReady: false,
 	lastEvent: '',
-	commandQueue: (typeof window.__tcfapi !== 'undefined') ? window.__tcfapi.a : [],
+	commandQueue: [],
 	googleACList: [],
 	globalVendorList: {vendorListVersion: 0, purposes: [], specialFeatures: [], features: [], vendors: [], tcfPolicyVersion: 0},
 	processCommand: function (command, version, callback, parameter) {
