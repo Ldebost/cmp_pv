@@ -111,10 +111,10 @@ var cmp_pv = {
 							cmp_pv.consentString.data.coreString.specialFeatureOptIns[i] = false;
 						}
 						cmp_pv.cookie.saveConsent();
-					}*/ else {
-						// Fire tcloaded event
-						cmp_pv.event.send('tcloaded');
-					}
+					}*/
+
+					// Fire tcloaded event
+					cmp_pv.event.send('tcloaded');
 				}
 			});
 		},
