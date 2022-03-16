@@ -2168,7 +2168,7 @@ var cmp_pv = {
 	/** **/
 	_fetchGlobalVendorList: function (callback) {
 		var dt = new Date();
-		cmp_pv._fetch(cmp_pv.conf.urlVendorList.replace('[RND]', dt.getFullYear() + dt.getMonth() + dt.getDate()), function (res) {
+		cmp_pv._fetch(cmp_pv.conf.urlVendorList.replace('[RND]', dt.getFullYear().toString() + dt.getMonth() + dt.getDate()), function (res) {
 			try {
 				if (res.status === 200) {
 					cmp_pv.globalVendorList = JSON.parse(res.responseText);
