@@ -353,30 +353,30 @@ var cmp_pv = {
 				css += '#CMP_PV #step2 .container .purposes_desc {width: 35%;}';
 				css += '#CMP_PV #step2 .container .purposes li{background: #eaeaea; color: #515151;position:relative; margin:0;display: block;overflow: hidden;}';
 				css += '#CMP_PV #step2 .container .purposes li:last-child{border-bottom: none;}';
-				css += '#CMP_PV #step2 .container .purposes li>h4:first-child{border-left: 3px solid transparent;font-size:14px;}';
-				css += '#CMP_PV #step2 .container .purposes li>h4 .arrow{padding: 0 16px 0 0;width: 28px;text-align: right;}';
-				css += '#CMP_PV #step2 .container .purposes li>h4 .title{padding: 8px}';
-				css += '#CMP_PV #step2 .container .purposes li>h4 .arrow:after{content:\'\\276d\'; font-size: 25px;transition: all 0.5s;display: inline-block;height: 40px;}';
-				css += '#CMP_PV #step2 .container .purposes li>h4{display:table;margin:0;font-weight:normal;cursor:pointer;height: 45px;width: 100%;box-sizing: border-box;border-bottom: 1px solid #d8d8d8;}';
-				css += '#CMP_PV #step2 .container .purposes li>h4:hover{background: #fbfbfb;}';
+				css += '#CMP_PV #step2 .container .purposes li>.h4:first-child{border-left: 3px solid transparent;font-size:14px;}';
+				css += '#CMP_PV #step2 .container .purposes li>.h4 .arrow{padding: 0 16px 0 0;width: 28px;text-align: right;}';
+				css += '#CMP_PV #step2 .container .purposes li>.h4 .title{padding: 8px}';
+				css += '#CMP_PV #step2 .container .purposes li>.h4 .arrow:after{content:\'\\276d\'; font-size: 25px;transition: all 0.5s;display: inline-block;height: 40px;}';
+				css += '#CMP_PV #step2 .container .purposes li>.h4{display:table;margin:0;font-weight:normal;cursor:pointer;height: 45px;width: 100%;box-sizing: border-box;border-bottom: 1px solid #d8d8d8;}';
+				css += '#CMP_PV #step2 .container .purposes li>.h4:hover{background: #fbfbfb;}';
 				css += '#CMP_PV #step2 .container .purposes li.titre{background: #5f5f5f;}';
-				css += '#CMP_PV #step2 .container .purposes li>h4>span{display: table-cell;vertical-align: middle;}';
-				css += '#CMP_PV #step2 .container .purposes li>h4>label{display: table-cell;border-top: 9px solid transparent;border-bottom: 9px solid transparent;}';
+				css += '#CMP_PV #step2 .container .purposes li>.h4>span{display: table-cell;vertical-align: middle;}';
+				css += '#CMP_PV #step2 .container .purposes li>.h4>label{display: table-cell;border-top: 9px solid transparent;border-bottom: 9px solid transparent;}';
 				css += '#CMP_PV #step2 .container .purposes li.active{background: #FFF;}';
-				css += '#CMP_PV #step2 .container .purposes li.active>h4:first-child{border-left: 3px solid ' + uiColor + ';}';
-				css += '#CMP_PV #step2 .container .purposes li.active>h4 .arrow::after{transform: rotate(0.5turn);}';
+				css += '#CMP_PV #step2 .container .purposes li.active>.h4:first-child{border-left: 3px solid ' + uiColor + ';}';
+				css += '#CMP_PV #step2 .container .purposes li.active>.h4 .arrow::after{transform: rotate(0.5turn);}';
 				css += '#CMP_PV #step2 .container .purposes_desc{background: white;position: relative;}';
-				css += '#CMP_PV #step2 .container .vendors li>h4>span{padding: 2px 5px;}';
+				css += '#CMP_PV #step2 .container .vendors li>.h4>span{padding: 2px 5px;}';
 				css += '#CMP_PV #step2 .container .vendors li .switch{border-top: 4px solid transparent;border-bottom: 4px solid transparent;}';
-				css += '#CMP_PV #step2 .container .vendors li>h4{height: 30px;}';
-				css += '#CMP_PV #step2 .container .vendors li>h4 .arrow::after{height: 20px;font-size:16px;}';
-				css += '#CMP_PV #step2 .container .purposes_desc>div{position: absolute;top: 30px;left: 0;right: 0;bottom: 0;overflow: auto;margin: 0;}';
+				css += '#CMP_PV #step2 .container .vendors li>.h4{height: 30px;}';
+				css += '#CMP_PV #step2 .container .vendors li>.h4 .arrow::after{height: 20px;font-size:16px;}';
+				css += '#CMP_PV #step2 .container .purposes_desc>div:nth-child(2){position: absolute;top: 30px;left: 0;right: 0;bottom: 0;overflow: auto;margin: 0;}';
 				css += '#CMP_PV .buttons{display:flex; flex-wrap: wrap;}';
 				css += '#CMP_PV .buttons>*{flex:1 1 auto;}';
 				css += '#CMP_PV .buttons>a{line-height: 40px;}';
 				css += '#CMP_PV .buttons>a:nth-child(2){text-align:center;}';
 				css += '#CMP_PV #step2 .buttons button{font-size: 16px;padding: 5px 15px;}';
-				css += '#CMP_PV #step2 .purposes_desc>h4{display:block;margin:0;padding:5px 0;text-align: center;text-decoration:none;background:#515151;color:#ededed;font-size:14px;line-height: 20px;}';
+				css += '#CMP_PV #step2 .purposes_desc>.h4{display:block;margin:0;padding:5px 0;text-align: center;text-decoration:none;background:#515151;color:#ededed;font-size:14px;line-height: 20px;}';
 				css += '#CMP_PV #step2 .purposes_desc p{padding:10px;white-space: pre-wrap;}';
 				css += '#CMP_PV #step2 .table-header{justify-content: flex-end; width: 64.5%;padding: 3px 0;}';
 				css += '#CMP_PV #step2 .table-header span{font-size: 20px;line-height: 18px;}';
@@ -406,12 +406,12 @@ var cmp_pv = {
 				css += '	#CMP_PV #step2 .container .purposes{width:50%;}';
 				css += '	#CMP_PV #step2 .container .purposes_desc{width:46%;}';
 				css += '	#CMP_PV #step2 .container .purposes li{width:auto;}';
-				css += '	#CMP_PV #step2 .container .purposes li.active > h4 .arrow::after{transform: none;animation: bounce 0.6s ease-out;}';
-				css += '	#CMP_PV #step2 > .container.showPurposes .purposes li > h4 .arrow::after{visibility: hidden;}';
-				css += '	#CMP_PV #step2 > .container.showPurposes .purposes li.active > h4 .arrow::after{visibility: visible;transform: rotate(0.5turn);}';
+				css += '	#CMP_PV #step2 .container .purposes li.active > .h4 .arrow::after{transform: none;animation: bounce 0.6s ease-out;}';
+				css += '	#CMP_PV #step2 > .container.showPurposes .purposes li > .h4 .arrow::after{visibility: hidden;}';
+				css += '	#CMP_PV #step2 > .container.showPurposes .purposes li.active > .h4 .arrow::after{visibility: visible;transform: rotate(0.5turn);}';
 				css += '	#CMP_PV #step2 > .container.showPurposes {transform: translate3d(-46%, 0, 0);}';
 				css += '	#CMP_PV #step2 .desc>div>div{margin-top: 10px;}';
-				css += '	#CMP_PV #step2 .container .purposes li > h4 .title{padding: 8px;}';
+				css += '	#CMP_PV #step2 .container .purposes li > .h4 .title{padding: 8px;}';
 				css += '    #CMP_PV .buttons>a{flex:1 50%;}';
 				css += '    #CMP_PV #step1 .buttons > *, #CMP_PV #step2 .buttons{margin: 0;border-width: 1px 0;}';
 				css += '    #CMP_PV .buttons>a:first-child{padding-left: 15px;box-sizing: border-box;}';
@@ -504,7 +504,7 @@ var cmp_pv = {
 				html += '		<ul class="purposes">';
 				html += '		</ul>';
 				html += '		<div class="purposes_desc">';
-				html += '			<h4>Description</h4>';
+				html += '			<div class="h4">Description</div>';
 				html += '			<div><p id="purpose_desc"></p></div>';
 				html += '		</div>';
 				html += '	</div>';
@@ -512,7 +512,7 @@ var cmp_pv = {
 				html += '		<div class="purposes vendors">';
 				html += '		</div>';
 				html += '		<div class="purposes_desc">';
-				html += '			<h4>Description</h4>';
+				html += '			<div class="h4">Description</div>';
 				html += '			<div><p id="vendor_desc"></p></div>';
 				html += '		</div>';
 				html += '	</div>';
@@ -564,31 +564,31 @@ var cmp_pv = {
 				var purpose;
 				for (var i in cmp_pv.globalVendorList.purposes) {
 					purpose = cmp_pv.ui.language['fr'].purposes[i];
-					html += '		<li id="purpose_' + purpose.id + '"><h4>';
+					html += '		<li id="purpose_' + purpose.id + '"><div class="h4">';
 					html += '			<span class="title" onclick="cmp_pv.ui.showPurposeDescription(\'purposes\', ' + purpose.id + ');">' + purpose.name + '</span>';
 					if (i > 1) {
 						html += '			<label class="switch switchLI"><input type="checkbox" onchange="cmp_pv.ui.switchPurpose(\'purposesLITransparency\',' + purpose.id + ', this.checked);"' + ((cmp_pv.consentString.data.coreString.purposesLITransparency[purpose.id]) ? 'checked' : '') + '><span class="slider"></span></label>';
 					}
 					html += '			<label class="switch"><input type="checkbox" onchange="cmp_pv.ui.switchPurpose(\'purposesConsent\',' + purpose.id + ', this.checked);"' + ((cmp_pv.consentString.data.coreString.purposesConsent[purpose.id]) ? 'checked' : '') + '><span class="slider"></span></label>';
 					html += '			<span class="arrow" onclick="cmp_pv.ui.showPurposeDescription(\'purposes\', ' + purpose.id + ', true);"></span>';
-					html += '		</h4></li>';
+					html += '		</div></li>';
 				}
 				html += '			<li class="titre"></li>';
 				for (i in cmp_pv.globalVendorList.specialFeatures) {
 					purpose = cmp_pv.ui.language['fr'].specialFeatures[i];
-					html += '		<li id="purpose_s' + purpose.id + '"><h4>';
+					html += '		<li id="purpose_s' + purpose.id + '"><div class="h4">';
 					html += '			<span class="title" onclick="cmp_pv.ui.showPurposeDescription(\'specialFeatures\', ' + purpose.id + ');">' + purpose.name + '</span>';
 					html += '			<label class="switch"><input type="checkbox" onchange="cmp_pv.ui.switchPurpose(\'specialFeatureOptIns\',' + purpose.id + ', this.checked);"' + ((cmp_pv.consentString.data.coreString.specialFeatureOptIns[purpose.id]) ? 'checked' : '') + '><span class="slider"></span></label>';
 					html += '			<span class="arrow" onclick="cmp_pv.ui.showPurposeDescription(\'specialFeatures\', ' + purpose.id + ', true);"></span>';
-					html += '		</h4></li>';
+					html += '		</div></li>';
 				}
 				html += '			<li class="titre"></li>';
 				for (i in cmp_pv.globalVendorList.features) {
 					purpose = cmp_pv.ui.language['fr'].features[i];
-					html += '		<li id="purpose_f' + purpose.id + '"><h4>';
+					html += '		<li id="purpose_f' + purpose.id + '"><div class="h4">';
 					html += '			<span class="title" onclick="cmp_pv.ui.showPurposeDescription(\'features\', ' + purpose.id + ');">' + purpose.name + '</span>';
 					html += '			<span class="arrow" onclick="cmp_pv.ui.showPurposeDescription(\'features\', ' + purpose.id + ', true);"></span>';
-					html += '		</h4></li>';
+					html += '		</div></li>';
 				}
 				document.querySelector('#purposes ul').innerHTML = html;
 				var el = document.querySelector('#step1 .buttons');
@@ -964,23 +964,23 @@ var cmp_pv = {
 						y = y2;
 						if (y === 0) {
 							item2 = document.createElement("li");
-							html = '<h4><span>Partenaires Google</span></h4>';
+							html = '<div class="h4"><span>Partenaires Google</span></div>';
 							item2.className = 'titre';
 							item2.innerHTML = html;
 							fragment.appendChild(item2);
 							i2 += 1;
 						}
 						vendor = cmp_pv.googleACList[y];
-						html = '<h4>';
+						html = '<div class="h4">';
 						html += '	<span onclick="cmp_pv.ui.showGoogleVendorDescription(' + y + ',' + (i - fromPos + i2) + ');">' + vendor[1] + '</span>';
 						html += '	<label class="switch"><input type="checkbox" value="" ' + ((cmp_pv.consentString.data.googleAC[vendor[0]]) ? 'checked' : '') + ' onchange="cmp_pv.ui.switchGoogleVendor(' + vendor[0] + ', this.checked);"><span class="slider"></span></label>';
 						html += '	<span class="arrow" onclick="cmp_pv.ui.showGoogleVendorDescription(' + y + ',' + (i - fromPos + i2) + ', true);"></span>';
-						html += '</h4>';
+						html += '</div>';
 						if (this.active === 'G' + y) item.className = 'active';
 					} else {
 						if (y === 0) {
 							item2 = document.createElement("li");
-							html = '<h4><span>Partenaires ParuVendu.fr</span></h4>';
+							html = '<div class="h4"><span>Partenaires ParuVendu.fr</span></div>';
 							item2.className = 'titre';
 							item2.innerHTML = html;
 							fragment.appendChild(item2);
@@ -993,12 +993,12 @@ var cmp_pv = {
 						vendor = this.items[i];
 						field = 'coreString';
 						//}
-						html = '<h4>';
+						html = '<div class="h4">';
 						html += '	<span onclick="cmp_pv.ui.showVendorDescription(' + (i - fromPos + i2) + ', \'' + field + '\');">' + vendor.name + '</span>';
 						if (vendor.legIntPurposes.length > 0) html += '<label class="switch switchLI"><input type="checkbox" value="' + vendor.id + '" ' + ((cmp_pv.consentString.data[field].vendorLegitimateInterest.bitField[vendor.id]) ? 'checked' : '') + ' onchange="cmp_pv.ui.switchVendor(\'vendorLegitimateInterest\', ' + vendor.id + ', \'' + field + '\', this.checked);"><span class="slider"></span></label>';
 						html += '	<label class="switch"><input type="checkbox" value="' + vendor.id + '" ' + ((cmp_pv.consentString.data[field].vendorConsent.bitField[vendor.id]) ? 'checked' : '') + ' onchange="cmp_pv.ui.switchVendor(\'vendorConsent\', ' + vendor.id + ', \'' + field + '\', this.checked);"><span class="slider"></span></label>';
 						html += '	<span class="arrow" onclick="cmp_pv.ui.showVendorDescription(' + (i - fromPos + i2) + ', \'' + field + '\', true);"></span>';
-						html += '</h4>';
+						html += '</div>';
 						item.className = 'pid' + vendor.purposes.join(' pid') + ' pidlit' + vendor.legIntPurposes.join(' pidlit') + ' pids' + vendor.specialFeatures.join(' pids') + ' pidf' + vendor.features.join(' pidf') + ((this.active === vendor.id) ? ' active' : '');
 					}
 					item.innerHTML = html;
