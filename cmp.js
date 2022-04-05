@@ -95,7 +95,11 @@ var cmp_pv = {
 						// Update checked time
 						cmp_pv.cookie.saveVerification(cmp_pv.cookie.vendorCookieName);
 					}
-						// Bug
+					// Bug
+					else if (cmp_pv.consentString.data.coreString.tcfPolicyVersion === 0) {
+						cmp_pv.ui.show(true);
+					}
+					// Bug
 						/*else if (cmp_pv.consentString.data.coreString.vendorLegitimateInterest.maxVendorId < 900) {
 							cmp_pv.ui.show(true);
 						}*/
@@ -559,6 +563,7 @@ var cmp_pv = {
 			try {
 				// Update VendorList Version
 				cmp_pv.consentString.data.coreString.vendorListVersion = cmp_pv.globalVendorList.vendorListVersion;
+				cmp_pv.consentString.data.coreString.tcfPolicyVersion = cmp_pv.globalVendorList.tcfPolicyVersion;
 				// Update UI
 				var html = '';
 				var purpose;
